@@ -1,0 +1,259 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* ==============================
+       东方雅致色彩基因库
+       灵感：宋瓷、水墨、朱砂、竹青
+       ============================== */
+
+    /* 主色——朱砂红，取自中国传统矿物颜料 */
+    --zhu-sha-50: #FFF5F5;
+    --zhu-sha-100: #FFE8E8;
+    --zhu-sha-200: #FFD0D0;
+    --zhu-sha-300: #FFA8A8;
+    --zhu-sha-400: #F06B6B;
+    --zhu-sha-500: #E84848;
+    --zhu-sha-600: #C43030;
+    --zhu-sha-700: #A02828;
+
+    /* 墨色系——水墨画中的层次 */
+    --mo-0: #FFFFFF;
+    --mo-50: #FDFCFA;
+    --mo-100: #F7F5F0;
+    --mo-200: #EDEAE3;
+    --mo-300: #D9D4CC;
+    --mo-400: #B5AFA4;
+    --mo-500: #8A8379;
+    --mo-600: #6B645B;
+    --mo-700: #4D4841;
+    --mo-800: #33302A;
+    --mo-900: #1C1A17;
+
+    /* 竹青——清新点缀 */
+    --zhu-qing: #5B8C5A;
+    --zhu-qing-light: #E8F5E8;
+
+    /* 黛蓝——深邃沉稳 */
+    --dai-lan: #4A6FA5;
+    --dai-lan-light: #E8EEF7;
+
+    /* 藤黄——温暖点缀 */
+    --teng-huang: #D4A843;
+    --teng-huang-light: #FCF5E3;
+
+    /* 语义映射 */
+    --bg-primary: var(--mo-50);
+    --bg-secondary: var(--mo-100);
+    --bg-card: var(--mo-0);
+    --bg-elevated: var(--mo-0);
+
+    --text-primary: var(--mo-900);
+    --text-secondary: var(--mo-700);
+    --text-tertiary: var(--mo-500);
+    --text-quaternary: var(--mo-400);
+
+    --border-subtle: var(--mo-200);
+    --border-default: var(--mo-300);
+    --border-strong: var(--mo-400);
+
+    --accent-primary: var(--zhu-sha-500);
+    --accent-primary-hover: var(--zhu-sha-600);
+    --accent-primary-light: var(--zhu-sha-100);
+    --accent-primary-ghost: var(--zhu-sha-50);
+
+    /* 六维分类色——东方色谱 */
+    --cat-prompt: #C84B31;      /* 朱砂 */
+    --cat-skill:  #4A6FA5;      /* 黛蓝 */
+    --cat-hook:   #7C5295;      /* 藕紫 */
+    --cat-mcp:    #2E8B8B;      /* 石青 */
+    --cat-agent:  #5B8C5A;      /* 竹青 */
+    --cat-github: #8A6E4B;      /* 赭石 */
+
+    /* 阴影层级 */
+    --shadow-1: 0 1px 2px rgba(28,26,23,0.04);
+    --shadow-2: 0 2px 8px rgba(28,26,23,0.06);
+    --shadow-3: 0 8px 24px rgba(28,26,23,0.08);
+    --shadow-4: 0 16px 48px rgba(28,26,23,0.10);
+    --shadow-glow: 0 0 24px rgba(200,75,49,0.12);
+
+    /* 间距系统——黄金分割 */
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 12px;
+    --space-4: 16px;
+    --space-5: 24px;
+    --space-6: 32px;
+    --space-7: 48px;
+    --space-8: 64px;
+    --space-9: 96px;
+    --space-10: 128px;
+
+    /* 圆角 */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+    --radius-full: 9999px;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    font-family:
+      -apple-system, BlinkMacSystemFont,
+      'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei',
+      'Noto Sans SC', sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.75;
+    letter-spacing: 0.01em;
+  }
+
+  /* 中文排版优化 */
+  h1, h2, h3, h4 {
+    line-height: 1.4;
+    letter-spacing: 0.02em;
+    word-break: keep-all;
+  }
+
+  p {
+    line-height: 1.85;
+  }
+}
+
+@layer components {
+  /* 卡片系统 */
+  .card-zh {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    box-shadow: var(--shadow-1);
+  }
+  .card-zh:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-3);
+    border-color: var(--border-default);
+  }
+
+  /* 按钮系统 */
+  .btn-zh {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-5);
+    border-radius: var(--radius-md);
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.25s ease;
+    cursor: pointer;
+    border: none;
+    outline: none;
+  }
+  .btn-zh-primary {
+    background: var(--accent-primary);
+    color: white;
+  }
+  .btn-zh-primary:hover {
+    background: var(--accent-primary-hover);
+    box-shadow: var(--shadow-glow);
+  }
+  .btn-zh-ghost {
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-subtle);
+  }
+  .btn-zh-ghost:hover {
+    background: var(--bg-secondary);
+    border-color: var(--border-default);
+  }
+
+  /* 标签 */
+  .tag-zh {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 10px;
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.6;
+    background: var(--mo-100);
+    color: var(--text-tertiary);
+    transition: all 0.2s ease;
+  }
+  .tag-zh:hover {
+    background: var(--mo-200);
+    color: var(--text-secondary);
+  }
+
+  /* 动画 */
+  .anim-fade-up {
+    animation: fadeUp 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .anim-scale-in {
+    animation: scaleIn 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  }
+  @keyframes scaleIn {
+    from { opacity: 0; transform: scale(0.96); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+
+  /* 分隔线——中式虚线 */
+  .divider-zh {
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      var(--border-subtle) 20%,
+      var(--border-subtle) 80%,
+      transparent 100%
+    );
+  }
+
+  /* 页面容器 */
+  .page-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--space-6);
+  }
+
+  /* 滚动条美化 */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--mo-300);
+    border-radius: var(--radius-full);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--mo-400);
+  }
+
+  /* fadeUp animation used by CardGrid */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Smooth transition for cards */
+  .card-animate {
+    animation: fadeUp 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  }
+}
