@@ -1,73 +1,74 @@
-# React + TypeScript + Vite
+# 灵词 PromptForge — app
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+六维分类体系的 AI 知识库前端应用。
 
-Currently, two official plugins are available:
+## 功能
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- 六维分类浏览：提示词（193）/ 技能（306）/ 钩子（72）/ MCP（72）/ 智能体（73）/ 开源（87）
+- 全文搜索 + 角色筛选 + 搜索历史 + 热门建议
+- 卡片展开查看完整内容，一键复制
+- 提示词方法论洞察：TOP188 调教语句 + TOP10 架构模式
+- 暗色/浅色自适应主题（CSS 变量）
 
-## React Compiler
+## 快速开始
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+cp .env.example .env   # 填写 DATABASE_URL
+npm run dev            # http://localhost:5173
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 脚本
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+```bash
+npm run dev          # 开发模式（Vite HMR）
+npm run build        # 生产构建（Vite + esbuild API）
+npm run check        # TypeScript 类型检查
+npm run lint         # ESLint
+npm run test         # Vitest
+npm run db:push      # 推送 schema（Drizzle）
+npm run db:generate  # 生成迁移文件
+npm run start        # 运行生产构建
+```
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## 技术栈
+
+| 层 | 技术 |
+|---|---|
+| 前端 | React 19 + React Router 7 |
+| 构建 | Vite 7 + esbuild |
+| 样式 | Tailwind CSS v3 + shadcn/ui |
+| API | tRPC v11 + Hono（Node.js） |
+| DB | Drizzle ORM + MySQL2 |
+| 类型 | TypeScript 5.9 |
+
+## 目录结构
+
+```
+app/
+├── api/              # tRPC 路由 + Hono 服务端
+│   ├── boot.ts       # 服务启动入口
+│   ├── router.ts     # tRPC 根路由
+│   ├── prompts-router.ts
+│   ├── skills-router.ts
+│   └── workflows-router.ts
+├── db/               # Drizzle schema + seed
+├── scripts/          # 一次性数据导入脚本
+├── src/
+│   ├── components/   # 页面组件（CardGrid, SearchBar, PageHero, PromptAnalytics…）
+│   ├── components/ui/ # shadcn/ui 组件库（40+）
+│   ├── data/         # 静态数据（staticData.ts, promptAnalytics.ts…）
+│   ├── pages/        # 路由页面
+│   ├── hooks/        # 自定义 hooks
+│   ├── providers/    # tRPC provider
+│   └── types/        # 类型定义
+└── public/           # 静态资源
+```
+
+## 环境变量
+
+```bash
+APP_ID=           # 应用 ID
+APP_SECRET=       # JWT 签名密钥
+DATABASE_URL=     # MySQL 连接串（mysql://user:pass@host:port/db）
 ```

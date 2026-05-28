@@ -103,7 +103,7 @@ export function getUniqueTags(items: Item[]): string[] {
 }
 
 export const CATEGORY_META: Record<Category, { label: string; subtitle: string; color: string; colorLight: string; desc: string }> = {
-  prompt: { label: '提示词', subtitle: 'Prompts', color: 'var(--cat-prompt)', colorLight: '#C84B3115', desc: '经过验证的提示词模板，覆盖创作、产品、开发等12个职业场景' },
+  prompt: { label: '提示词', subtitle: 'Prompts', color: 'var(--cat-prompt)', colorLight: '#C84B3115', desc: '经过验证的提示词模板，覆盖创作、产品、开发等14个职业角色' },
   skill: { label: '技能', subtitle: 'Skills', color: 'var(--cat-skill)', colorLight: '#4A6FA515', desc: '职业场景技能库，从Claude Code到跨境电商的全域覆盖' },
   hook: { label: '钩子', subtitle: 'Hooks', color: 'var(--cat-hook)', colorLight: '#7C529515', desc: '事件驱动的自动化工作流，让AI自己管理自己' },
   mcp: { label: 'MCP', subtitle: 'Model Context Protocol', color: 'var(--cat-mcp)', colorLight: '#2E8B8B15', desc: '模型上下文协议工具，连接AI与外部世界' },

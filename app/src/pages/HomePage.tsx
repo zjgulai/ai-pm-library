@@ -8,12 +8,12 @@ import { getAllCounts, CATEGORY_META } from '@/data/dataUtils'
 import type { Category } from '@/data/dataUtils'
 
 const CATS: { key: Category; icon: typeof MessageSquare; stat: string; statLabel: string }[] = [
-  { key: 'prompt', icon: MessageSquare, stat: '123', statLabel: '覆盖12个职业场景' },
-  { key: 'skill', icon: Terminal, stat: '236', statLabel: '从Claude Code到跨境电商' },
-  { key: 'hook', icon: GitBranch, stat: '2', statLabel: '事件驱动自动化' },
-  { key: 'mcp', icon: Puzzle, stat: '2', statLabel: '模型上下文协议' },
-  { key: 'agent', icon: Bot, stat: '3', statLabel: 'AI智能体框架' },
-  { key: 'github', icon: Github, stat: '17', statLabel: '精选开源项目' },
+  { key: 'prompt', icon: MessageSquare, stat: '193', statLabel: '覆盖14个职业角色' },
+  { key: 'skill', icon: Terminal, stat: '306', statLabel: '从Claude Code到跨境电商' },
+  { key: 'hook', icon: GitBranch, stat: '72', statLabel: '事件驱动自动化' },
+  { key: 'mcp', icon: Puzzle, stat: '72', statLabel: '模型上下文协议' },
+  { key: 'agent', icon: Bot, stat: '73', statLabel: 'AI智能体框架' },
+  { key: 'github', icon: Github, stat: '87', statLabel: '精选开源项目' },
 ]
 
 const FEATURES = [
