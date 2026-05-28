@@ -7,8 +7,8 @@ import path from "path";
 type App = Hono<{ Bindings: HttpBindings }>;
 
 export function serveStaticFiles(app: App) {
-  // When boot.js runs, its directory is the project root (contains index.html, assets/, images/)
-  const rootDir = import.meta.dirname;
+  const distDir = import.meta.dirname;
+  const rootDir = path.resolve(distDir, "public");
 
   app.use("*", serveStatic({ root: rootDir }));
 
