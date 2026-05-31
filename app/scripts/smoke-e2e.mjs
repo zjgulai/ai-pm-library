@@ -12,7 +12,7 @@ const baseUrl = normalizeBaseUrl(process.env.PROMPTFORGE_SMOKE_BASE_URL ?? 'http
 const baseHost = new URL(baseUrl).hostname
 const checkCohosts = readBool(
   process.env.PROMPTFORGE_SMOKE_CHECK_COHOSTS,
-  baseHost === 'person.lute-tlz-dddd.top',
+  baseHost === 'kg.lute-tlz-dddd.top',
 )
 const writeScreenshots = readBool(process.env.PROMPTFORGE_SMOKE_SCREENSHOTS, true)
 const outputPath = resolve(

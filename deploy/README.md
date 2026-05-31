@@ -5,7 +5,7 @@ module: deploy
 topic: production-deployment
 status: stable
 created: 2026-05-31
-updated: 2026-05-31
+updated: 2026-06-01
 owner: self
 source: human+ai
 ---
@@ -17,6 +17,14 @@ source: human+ai
 使用独立 Docker Compose 环境部署 PromptForge，不把密钥放入仓库，不污染同机其他服务。
 
 当前生产应用为 static-first：站点从构建产物中的 `public/catalog/*.json` 读取内容，公开 tRPC 只保留 `ping` 健康检查。`DATABASE_URL`、MySQL、Drizzle 工具链只服务于可选 DB 工具/迁移路线，不是静态站运行的硬依赖。
+
+## 当前生产入口
+
+- PromptForge 当前生产域名：`https://kg.lute-tlz-dddd.top/`
+- nginx server block：`deploy/nginx-kg-block.conf`
+- 远端 app 容器：`promptforge_app`
+- 当前宿主域名 `https://lute-tlz-dddd.top/` 是静态 landing page；PromptForge 卡片入口仍处于设计待实施状态。
+- `https://person.lute-tlz-dddd.top/` 当前不作为 PromptForge 生产入口使用。
 
 ## 本地前置条件
 
@@ -70,7 +78,7 @@ cd app
 npm run smoke:e2e:prod
 ```
 
-默认报告写入 `tmp/outputs/`，截图写入 `tmp/screenshots/`。CI 使用本地 `npm run start` 的生产 server 跑同一套 smoke，生产部署使用 `PROMPTFORGE_SMOKE_BASE_URL=https://person.lute-tlz-dddd.top/`。
+默认报告写入 `tmp/outputs/`，截图写入 `tmp/screenshots/`。CI 使用本地 `npm run start` 的生产 server 跑同一套 smoke，生产部署使用 `PROMPTFORGE_SMOKE_BASE_URL=https://kg.lute-tlz-dddd.top/`。
 
 ## DB-backed 路线
 
@@ -82,6 +90,8 @@ npm run smoke:e2e:prod
 - 幂等 seed 或明确的清表导入策略。
 - catalog read API 的分页、搜索、限流、认证授权和审计路径。
 - 生产回滚步骤和数据备份步骤。
+
+管理员内容新增与发布路线已有正式设计，但尚未实施：`docs/superpowers/specs/2026-05-31-admin-content-publishing-design.md`。
 
 旧的远端 `promptforge_mysql` 容器和 `mysql_data` volume 如果已经存在，不会被新的 static-first compose 使用。删除前必须先备份并单独确认。
 

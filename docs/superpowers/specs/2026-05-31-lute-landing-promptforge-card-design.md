@@ -5,7 +5,7 @@ module: landing
 topic: promptforge-card-link
 status: stable
 created: 2026-05-31
-updated: 2026-05-31
+updated: 2026-06-01
 owner: self
 source: human+ai
 ---
@@ -14,7 +14,7 @@ source: human+ai
 
 ## 目标
 
-在宿主域名 `https://lute-tlz-dddd.top/` 的 landing page 中，以卡片链接形式展示已部署的 PromptForge 站点 `https://person.lute-tlz-dddd.top/`，让它和现有 `video`、`voc`、`mkt` 三个入口处于同一信息架构层级。
+在宿主域名 `https://lute-tlz-dddd.top/` 的 landing page 中，以卡片链接形式展示已部署的 PromptForge 站点 `https://kg.lute-tlz-dddd.top/`，让它和现有 `video`、`voc`、`mkt` 三个入口处于同一信息架构层级。
 
 ## 现状
 
@@ -42,7 +42,7 @@ source: human+ai
 新增卡片链接：
 
 ```text
-https://person.lute-tlz-dddd.top/
+https://kg.lute-tlz-dddd.top/
 ```
 
 展示文案：
@@ -53,7 +53,7 @@ https://person.lute-tlz-dddd.top/
 - 英文描述：`Prompt, skill and agent library for AI product management workflows`
 - Chips：`803 Resources`、`6 Categories`、`Static-first`
 - CTA：`打开灵词库`
-- Footer 短链：`person.lute`
+- Footer 短链：`kg.lute`
 
 ## 视觉方案
 
@@ -89,7 +89,7 @@ cp /opt/ai-video/deploy/lighthouse/landing/index.html \
 
 - 增加 PromptForge accent CSS。
 - 在 `.grid` 中追加第四张 PromptForge card。
-- 在 footer 中追加 `person.lute` 链接。
+- 在 footer 中追加 `kg.lute` 链接。
 - 更新 meta description，加入 PromptForge。
 
 4. 上传本地副本覆盖远程 `index.html`。
@@ -98,18 +98,18 @@ cp /opt/ai-video/deploy/lighthouse/landing/index.html \
 
 ```bash
 curl -fsSI https://lute-tlz-dddd.top/
-curl -fsSL https://lute-tlz-dddd.top/ | rg 'person.lute|PromptForge|AI PM Knowledge Library'
+curl -fsSL https://lute-tlz-dddd.top/ | rg 'kg.lute|PromptForge|AI PM Knowledge Library'
 curl -fsSI https://video.lute-tlz-dddd.top/
 curl -fsSI https://voc.lute-tlz-dddd.top/
 curl -fsSI https://mkt.lute-tlz-dddd.top/
-curl -fsSI https://person.lute-tlz-dddd.top/
+curl -fsSI https://kg.lute-tlz-dddd.top/
 ```
 
 6. 视觉验证：
 
 - 桌面端卡片样式与现有三张一致，第四张自然换行。
 - 移动端无横向滚动。
-- 新卡片点击跳转到 `https://person.lute-tlz-dddd.top/`。
+- 新卡片点击跳转到 `https://kg.lute-tlz-dddd.top/`。
 
 7. 回滚策略：
 
@@ -125,7 +125,7 @@ curl -fsSI https://person.lute-tlz-dddd.top/
 ## 验收标准
 
 - `https://lute-tlz-dddd.top/` 返回 `200`。
-- 页面 HTML 包含 `https://person.lute-tlz-dddd.top/`。
+- 页面 HTML 包含 `https://kg.lute-tlz-dddd.top/`。
 - 新增卡片文案可见。
-- `video`、`voc`、`mkt`、`person` 四个站点均保持可访问。
+- `video`、`voc`、`mkt`、`kg` 四个站点均保持可访问。
 - 桌面和移动端没有横向滚动或明显布局破坏。

@@ -97,7 +97,7 @@ if [[ "$RUN_SMOKE" -eq 1 ]]; then
   log "Running production E2E smoke ..."
   (
     cd "$PROJECT_ROOT/app"
-    PROMPTFORGE_SMOKE_BASE_URL="${PROMPTFORGE_PUBLIC_URL:-https://person.lute-tlz-dddd.top/}" \
+    PROMPTFORGE_SMOKE_BASE_URL="${PROMPTFORGE_PUBLIC_URL:-https://kg.lute-tlz-dddd.top/}" \
       PROMPTFORGE_SMOKE_CHECK_COHOSTS="${PROMPTFORGE_SMOKE_CHECK_COHOSTS:-1}" \
       npm run smoke:e2e
   )

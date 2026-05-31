@@ -8,6 +8,18 @@
 
 ---
 
+## 当前产品状态
+
+- 当前线上 PromptForge 入口为 `https://kg.lute-tlz-dddd.top/`，由宿主 nginx 反代到 `promptforge_app:3000`。
+- 当前公开站点是 static-first read-only：六大类内容由 `public/catalog/*.json` 提供，公开 tRPC 仅保留 `ping` 健康检查。
+- 当前线上内容规模为 803 条：提示词 193、技能 306、钩子 72、MCP 72、智能体 73、开源 87。
+- 线上 E2E smoke 已固化为正式流程：`npm run smoke:e2e`、`npm run smoke:e2e:prod` 和 `deploy/deploy.sh --smoke`。
+- 管理员内容新增与发布系统仍处于已批准设计阶段，尚未进入实现；设计文档见 `docs/superpowers/specs/2026-05-31-admin-content-publishing-design.md`。
+- 宿主页新增 PromptForge 卡片仍处于已批准设计阶段，尚未修改远程 landing page；设计文档见 `docs/superpowers/specs/2026-05-31-lute-landing-promptforge-card-design.md`。
+- 旧 `promptforge_mysql`、`promptforge_net` 和相关 volume 是后续归档项，不属于当前 static-first 生产运行链路。
+
+---
+
 ## 内容规模
 
 | 分类 | 数量 | 说明 |
@@ -82,9 +94,13 @@ npm run test         # Vitest
 npm run verify       # check + lint + test + build + high audit
 npm run start        # 运行生产构建（需先 build）
 npm run catalog:export  # 从 staticData 生成 public/catalog/*.json
+npm run docs:check   # Markdown frontmatter 与本地链接治理检查
 npm run audit:prod   # 仅生产依赖安全审计
+npm run smoke:e2e    # Playwright 生产形态 smoke（默认本地 3000）
+npm run smoke:e2e:prod  # 对当前线上 kg 域名执行 smoke
 npm run db:push      # 推送 schema 到数据库（Drizzle）
 npm run db:generate  # 生成迁移文件
+npm run db:migrate   # 执行 Drizzle migration
 ```
 
 ### 环境变量
@@ -125,12 +141,13 @@ npx tsx --tsconfig tsconfig.json db/seed-full.ts
 | `deploy.sh` | 一键部署/更新脚本 |
 | `.env.prod` | 生产密钥（gitignore，不提交） |
 | `secrets.env` | 密钥备份（gitignore，不提交） |
-| `nginx-kg-block.conf` | nginx server block 参考 |
+| `nginx-kg-block.conf` | 当前 PromptForge `kg.lute-tlz-dddd.top` nginx server block 参考 |
 
 **日常更新：**
 ```bash
 cd deploy
 ./deploy.sh          # 代码更新（不重置数据）
+./deploy.sh --smoke  # 部署后执行生产 E2E smoke
 ```
 
 ---
@@ -180,6 +197,8 @@ nexscope/
 ## docs/
 
 - [Prompt 标签方法论深度分析报告](./docs/analysis/prompt_methodology_report.md) — 173个提示词的标签分布、角色矩阵与方法论洞察
+- [管理员内容新增与发布系统设计](./docs/superpowers/specs/2026-05-31-admin-content-publishing-design.md) — 后台新增、PostgreSQL、deploy-worker、版本化 catalog 与回滚方案
+- [宿主页 PromptForge 卡片链接展示设计](./docs/superpowers/specs/2026-05-31-lute-landing-promptforge-card-design.md) — 在 `lute-tlz-dddd.top` landing page 增加 PromptForge 卡片入口的实施方案
 
 ---
 
@@ -187,6 +206,6 @@ nexscope/
 
 - Node.js 20+
 - Python 3.10+（draco-content 工具使用）
-- MySQL 8.0+（app 数据库）
+- MySQL 8.0+（仅旧 DB 工具/归档或未来 DB-backed 路线需要）
 - Docker + Docker Compose v2（生产部署）
 - Git
