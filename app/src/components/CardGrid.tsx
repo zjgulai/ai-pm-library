@@ -38,6 +38,7 @@ export default function CardGrid({ items, color, categoryLabel }: CardGridProps)
   const [copiedId, setCopiedId] = useState<number | null>(null)
   const [likedIds, setLikedIds] = useState<Set<number>>(new Set())
   const [expandedId, setExpandedId] = useState<number | null>(null)
+  const [searchResetSignal, setSearchResetSignal] = useState(0)
   const deferredSearch = useDeferredValue(search)
   const gridRef = useRef<HTMLDivElement>(null)
 
@@ -96,6 +97,12 @@ export default function CardGrid({ items, color, categoryLabel }: CardGridProps)
     resetVisibleItems()
   }, [resetVisibleItems])
 
+  const clearFilters = useCallback(() => {
+    setSearch('')
+    handleRoleChange('all')
+    setSearchResetSignal(signal => signal + 1)
+  }, [handleRoleChange])
+
   const handleCopy = useCallback(async (content: string, id: number) => {
     try {
       await navigator.clipboard.writeText(content)
@@ -137,6 +144,7 @@ export default function CardGrid({ items, color, categoryLabel }: CardGridProps)
           onRoleFilter={handleRoleChange}
           activeRole={activeRole}
           resultCount={filtered.length}
+          resetSignal={searchResetSignal}
         />
       </div>
 
@@ -179,7 +187,7 @@ export default function CardGrid({ items, color, categoryLabel }: CardGridProps)
             未找到匹配 &ldquo;{search}&rdquo; 的内容
           </p>
           <button
-            onClick={() => { setSearch(''); handleRoleChange('all') }}
+            onClick={clearFilters}
             className="mt-3 text-xs underline"
             style={{ color }}
           >

@@ -59,4 +59,15 @@ describe("safe markdown parsing", () => {
     expect(source).not.toContain("formatContent(");
     expect(source).toContain("SafeMarkdownContent");
   });
+
+  it("keeps empty-state filter reset synchronized with SearchBar input", () => {
+    const cardGridSource = readFileSync(path.resolve(import.meta.dirname, "CardGrid.tsx"), "utf8");
+    const searchBarSource = readFileSync(path.resolve(import.meta.dirname, "SearchBar.tsx"), "utf8");
+
+    expect(cardGridSource).toContain("searchResetSignal");
+    expect(cardGridSource).toContain("resetSignal={searchResetSignal}");
+    expect(searchBarSource).toContain("resetSignal");
+    expect(searchBarSource).toContain("setQuery('')");
+    expect(searchBarSource).toContain("suppressSuggestionsOnNextFocus");
+  });
 });

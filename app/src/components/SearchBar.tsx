@@ -12,6 +12,7 @@ interface SearchBarProps {
   onRoleFilter: (role: string) => void
   activeRole: string
   resultCount: number
+  resetSignal?: number
 }
 
 // 从items中提取热门标签作为搜索建议
@@ -29,7 +30,7 @@ function extractPopularTags(items: Item[], limit = 8): string[] {
 }
 
 export default function SearchBar({
-  items, color, onSearch, activeRole, resultCount
+  items, color, onSearch, activeRole, resultCount, resetSignal
 }: SearchBarProps) {
   const [query, setQuery] = useState('')
   const [isFocused, setIsFocused] = useState(false)
@@ -45,6 +46,13 @@ export default function SearchBar({
   const inputRef = useRef<HTMLInputElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const debounceTimer = useRef<ReturnType<typeof setTimeout>>(undefined)
+  const suppressSuggestionsOnNextFocus = useRef(false)
+
+  useEffect(() => {
+    setQuery('')
+    setSelectedIndex(-1)
+    setShowSuggestions(false)
+  }, [resetSignal])
 
   // 提取热门标签
   useEffect(() => {
@@ -165,6 +173,7 @@ export default function SearchBar({
     setQuery('')
     onSearch('')
     setShowSuggestions(false)
+    suppressSuggestionsOnNextFocus.current = true
     inputRef.current?.focus()
   }
 
@@ -222,7 +231,14 @@ export default function SearchBar({
             type="text"
             value={query}
             onChange={e => handleInputChange(e.target.value)}
-            onFocus={() => { setIsFocused(true); setShowSuggestions(true) }}
+            onFocus={() => {
+              setIsFocused(true)
+              if (suppressSuggestionsOnNextFocus.current) {
+                suppressSuggestionsOnNextFocus.current = false
+                return
+              }
+              setShowSuggestions(true)
+            }}
             onBlur={() => setTimeout(() => setIsFocused(false), 150)}
             placeholder={`搜索${items.length}条内容...`}
             className="w-full h-12 pl-11 pr-20 rounded-[14px] text-[13px] outline-none transition-all duration-200"
