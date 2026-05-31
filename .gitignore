@@ -1,7 +1,12 @@
 # ── 部署密钥（绝不提交）──────────────────────────────────────────
 deploy/secrets.env
 deploy/.env.prod
+*.pem
+ai_video.pem
 
+# ── 本地代理/规划状态 ────────────────────────────────────────────
+.sisyphus/
+.kiro/
 
 node_modules/
 npm-debug.log*

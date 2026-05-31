@@ -3,7 +3,7 @@ import {
   Search, X, Command, TrendingUp, Clock, Tag,
   ArrowRight
 } from 'lucide-react'
-import type { Item } from '@/data/dataUtils'
+import type { Item } from '@/data/catalogItems'
 
 interface SearchBarProps {
   items: Item[]

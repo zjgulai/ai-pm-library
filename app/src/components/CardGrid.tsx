@@ -1,7 +1,8 @@
-import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
+import { useState, useEffect, useRef, useCallback, useMemo, useDeferredValue } from 'react'
 import { Copy, Check, Heart, Eye, AlertTriangle, ChevronDown, ChevronUp } from 'lucide-react'
-import type { Item } from '@/data/dataUtils'
-import { ROLE_LABELS } from '@/data/dataUtils'
+import type { Item } from '@/data/catalogItems'
+import { ROLE_LABELS } from '@/data/catalogMeta'
+import SafeMarkdownContent from './SafeMarkdownContent'
 import SearchBar from './SearchBar'
 
 interface CardGridProps {
@@ -10,20 +11,7 @@ interface CardGridProps {
   categoryLabel: string
 }
 
-// Safe HTML rendering - prevent XSS while supporting basic formatting
-function formatContent(content: string): string {
-  return content
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/^### (.*$)/gim, '<h4 class="text-xs font-semibold mt-3 mb-1" style="color:var(--text-primary)">$1</h4>')
-    .replace(/^## (.*$)/gim, '<h3 class="text-sm font-semibold mt-3 mb-1.5" style="color:var(--text-primary)">$1</h3>')
-    .replace(/^# (.*$)/gim, '<h3 class="text-sm font-semibold mt-3 mb-1.5" style="color:var(--text-primary)">$1</h3>')
-    .replace(/^\d+[.,、)]\s+(.*$)/gim, '<div class="flex gap-2 mt-1"><span class="shrink-0 text-[11px] font-mono" style="color:' + '${color}' + '">$&</span></div>')
-    .replace(/```(\w+)?\n([\s\S]*?)```/g, '<pre class="rounded-lg p-2 mt-2 text-[11px] font-mono overflow-x-auto" style="background:#1a1a2e;color:#a8b4d0;border:1px solid #2a2a3e">$2</pre>')
-    .replace(/`([^`]+)`/g, '<code class="px-1 py-0.5 rounded text-[11px] font-mono" style="background:var(--mo-100);color:var(--text-primary)">$1</code>')
-    .replace(/^(?!\s*[-*•#\d`\s])(.*$)/gim, '<p class="text-[11px] leading-relaxed mt-1" style="color:var(--text-secondary)">$1</p>')
-}
+const PAGE_SIZE = 48
 
 // Highlight search matches safely
 function highlightText(text: string, query: string): React.ReactNode {
@@ -46,9 +34,11 @@ function highlightText(text: string, query: string): React.ReactNode {
 export default function CardGrid({ items, color, categoryLabel }: CardGridProps) {
   const [search, setSearch] = useState('')
   const [activeRole, setActiveRole] = useState('all')
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
   const [copiedId, setCopiedId] = useState<number | null>(null)
   const [likedIds, setLikedIds] = useState<Set<number>>(new Set())
   const [expandedId, setExpandedId] = useState<number | null>(null)
+  const deferredSearch = useDeferredValue(search)
   const gridRef = useRef<HTMLDivElement>(null)
 
   // CSS custom properties for highlight colors
@@ -63,8 +53,8 @@ export default function CardGrid({ items, color, categoryLabel }: CardGridProps)
     if (activeRole !== 'all') {
       result = result.filter(item => item.role === activeRole)
     }
-    if (search.trim()) {
-      const q = search.toLowerCase()
+    if (deferredSearch.trim()) {
+      const q = deferredSearch.toLowerCase()
       result = result.filter(item =>
         item.title.toLowerCase().includes(q) ||
         item.description.toLowerCase().includes(q) ||
@@ -73,7 +63,10 @@ export default function CardGrid({ items, color, categoryLabel }: CardGridProps)
       )
     }
     return result
-  }, [items, search, activeRole])
+  }, [items, deferredSearch, activeRole])
+
+  const visibleItems = useMemo(() => filtered.slice(0, visibleCount), [filtered, visibleCount])
+  const hasMore = visibleItems.length < filtered.length
 
   // Role counts
   const roleCounts = useMemo(() => {
@@ -86,7 +79,22 @@ export default function CardGrid({ items, color, categoryLabel }: CardGridProps)
       .sort((a, b) => b[1] - a[1])
   }, [items])
 
-  const filterKey = `${search}::${activeRole}`
+  const filterKey = `${deferredSearch}::${activeRole}`
+
+  const resetVisibleItems = useCallback(() => {
+    setVisibleCount(PAGE_SIZE)
+    setExpandedId(null)
+  }, [])
+
+  const handleSearch = useCallback((value: string) => {
+    setSearch(value)
+    resetVisibleItems()
+  }, [resetVisibleItems])
+
+  const handleRoleChange = useCallback((role: string) => {
+    setActiveRole(role)
+    resetVisibleItems()
+  }, [resetVisibleItems])
 
   const handleCopy = useCallback(async (content: string, id: number) => {
     try {
@@ -125,8 +133,8 @@ export default function CardGrid({ items, color, categoryLabel }: CardGridProps)
         <SearchBar
           items={items}
           color={color}
-          onSearch={setSearch}
-          onRoleFilter={setActiveRole}
+          onSearch={handleSearch}
+          onRoleFilter={handleRoleChange}
           activeRole={activeRole}
           resultCount={filtered.length}
         />
@@ -135,7 +143,7 @@ export default function CardGrid({ items, color, categoryLabel }: CardGridProps)
       {/* Role pills */}
       <div className="flex flex-wrap gap-1.5 mb-6">
         <button
-          onClick={() => setActiveRole('all')}
+          onClick={() => handleRoleChange('all')}
           className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all"
           style={{
             background: activeRole === 'all' ? color : 'transparent',
@@ -149,7 +157,7 @@ export default function CardGrid({ items, color, categoryLabel }: CardGridProps)
         {roleCounts.map(([role, count]) => (
           <button
             key={role}
-            onClick={() => setActiveRole(role)}
+            onClick={() => handleRoleChange(role)}
             className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all"
             style={{
               background: activeRole === role ? color : 'transparent',
@@ -171,7 +179,7 @@ export default function CardGrid({ items, color, categoryLabel }: CardGridProps)
             未找到匹配 &ldquo;{search}&rdquo; 的内容
           </p>
           <button
-            onClick={() => { setSearch(''); setActiveRole('all') }}
+            onClick={() => { setSearch(''); handleRoleChange('all') }}
             className="mt-3 text-xs underline"
             style={{ color }}
           >
@@ -179,23 +187,40 @@ export default function CardGrid({ items, color, categoryLabel }: CardGridProps)
           </button>
         </div>
       ) : (
-        <div ref={gridRef} key={filterKey} className="grid md:grid-cols-2 gap-5">
-          {filtered.map((item) => (
-            <CardItem
-              key={item.id}
-              item={item}
-              color={color}
-              categoryLabel={categoryLabel}
-              search={search}
-              isExpanded={expandedId === item.id}
-              isCopied={copiedId === item.id}
-              isLiked={likedIds.has(item.id)}
-              onToggleExpand={() => setExpandedId(expandedId === item.id ? null : item.id)}
-              onCopy={() => handleCopy(item.content || item.description, item.id)}
-              onToggleLike={() => toggleLike(item.id)}
-            />
-          ))}
-        </div>
+        <>
+          <div ref={gridRef} key={filterKey} className="grid md:grid-cols-2 gap-5">
+            {visibleItems.map((item) => (
+              <CardItem
+                key={item.id}
+                item={item}
+                color={color}
+                categoryLabel={categoryLabel}
+                search={deferredSearch}
+                isExpanded={expandedId === item.id}
+                isCopied={copiedId === item.id}
+                isLiked={likedIds.has(item.id)}
+                onToggleExpand={() => setExpandedId(expandedId === item.id ? null : item.id)}
+                onCopy={() => handleCopy(item.content || item.description, item.id)}
+                onToggleLike={() => toggleLike(item.id)}
+              />
+            ))}
+          </div>
+
+          {hasMore && (
+            <div className="mt-8 flex justify-center">
+              <button
+                onClick={() => setVisibleCount(count => count + PAGE_SIZE)}
+                className="px-5 py-2.5 rounded-xl text-sm font-medium transition-all hover:opacity-85"
+                style={{ color, border: `1px solid ${color}30`, background: color + '10' }}
+              >
+                加载更多 {Math.min(PAGE_SIZE, filtered.length - visibleItems.length)} 条
+                <span className="ml-2 text-xs" style={{ color: 'var(--text-quaternary)' }}>
+                  {visibleItems.length}/{filtered.length}
+                </span>
+              </button>
+            </div>
+          )}
+        </>
       )}
     </div>
   )
@@ -281,8 +306,9 @@ function CardItem({ item, color, categoryLabel, search, isExpanded, isCopied, is
             <div
               className="text-xs leading-relaxed max-h-96 overflow-y-auto pr-2"
               style={{ color: 'var(--text-secondary)' }}
-              dangerouslySetInnerHTML={{ __html: formatContent(item.content) }}
-            />
+            >
+              <SafeMarkdownContent content={item.content} markerColor={color} />
+            </div>
           </div>
         )}
       </div>

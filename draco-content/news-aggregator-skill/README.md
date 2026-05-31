@@ -4,8 +4,6 @@
 
 它不是“真相机器”。它负责把候选捞上来，最终是否写进报告，还要看官方发布、GitHub release/PR、API 文档或权威媒体。
 
-![工作流预览](./assets/news-aggregator-flow.svg)
-
 ## 适合做什么
 
 | 场景 | 输出 |

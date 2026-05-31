@@ -7,79 +7,6 @@ x-logging: &default-logging
     max-file: "3"
 
 services:
-  mysql:
-    image: mysql:8.0
-    container_name: promptforge_mysql
-    restart: unless-stopped
-    env_file:
-      - .env.prod
-    environment:
-      MYSQL_DATABASE: promptforge
-      MYSQL_USER: promptforge
-    volumes:
-      - mysql_data:/var/lib/mysql
-    networks:
-      - promptforge_net
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost",
-             "-u", "promptforge", "--password=${MYSQL_PASSWORD}"]
-      interval: 10s
-      timeout: 5s
-      retries: 12
-      start_period: 60s
-    logging: *default-logging
-
-  migrate:
-    build:
-      context: ./app
-      dockerfile: Dockerfile
-      target: deps
-    image: promptforge_deps
-    container_name: promptforge_migrate
-    restart: "no"
-    working_dir: /app
-    command: sh -c "npx drizzle-kit push --config drizzle.config.ts"
-    env_file:
-      - .env.prod
-    volumes:
-      - ./app/src:/app/src:ro
-      - ./app/db:/app/db:ro
-      - ./app/api:/app/api:ro
-      - ./app/drizzle.config.ts:/app/drizzle.config.ts:ro
-      - ./app/tsconfig.json:/app/tsconfig.json:ro
-      - ./app/tsconfig.server.json:/app/tsconfig.server.json:ro
-    networks:
-      - promptforge_net
-    depends_on:
-      mysql:
-        condition: service_healthy
-
-  seed:
-    build:
-      context: ./app
-      dockerfile: Dockerfile
-      target: deps
-    image: promptforge_deps
-    container_name: promptforge_seed
-    restart: "no"
-    working_dir: /app
-    command: >
-      sh -c "npx --yes tsx --tsconfig tsconfig.json db/seed-full.ts"
-    env_file:
-      - .env.prod
-    volumes:
-      - ./app/src:/app/src:ro
-      - ./app/db:/app/db:ro
-      - ./app/api:/app/api:ro
-      - ./app/contracts:/app/contracts:ro
-      - ./app/tsconfig.json:/app/tsconfig.json:ro
-      - ./app/tsconfig.server.json:/app/tsconfig.server.json:ro
-    networks:
-      - promptforge_net
-    depends_on:
-      mysql:
-        condition: service_healthy
-
   app:
     build:
       context: ./app
@@ -92,11 +19,7 @@ services:
     env_file:
       - .env.prod
     networks:
-      - promptforge_net
       - lighthouse_ai_video_net
-    depends_on:
-      mysql:
-        condition: service_healthy
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://localhost:3000/ > /dev/null || exit 1"]
       interval: 30s
@@ -105,12 +28,6 @@ services:
       start_period: 90s
     logging: *default-logging
 
-volumes:
-  mysql_data:
-
 networks:
-  promptforge_net:
-    name: promptforge_net
-    driver: bridge
   lighthouse_ai_video_net:
     external: true

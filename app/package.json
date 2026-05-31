@@ -6,12 +6,20 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build && esbuild api/boot.ts --platform=node --bundle --format=esm --outdir=dist --banner:js=\"import { createRequire } from 'module';const require = createRequire(import.meta.url);\"",
+    "predev": "npm run catalog:export",
+    "prebuild": "npm run catalog:export",
+    "pretest": "npm run catalog:export",
     "lint": "eslint .",
     "preview": "vite preview",
     "start": "NODE_ENV=production node dist/boot.js",
     "check": "tsc -b",
     "format": "prettier --write .",
     "test": "vitest run",
+    "verify": "npm run check && npm run lint && npm run docs:check && npm run test && npm run build && npm run audit:high",
+    "audit:high": "npm audit --audit-level=high",
+    "audit:prod": "npm audit --omit=dev",
+    "catalog:export": "node scripts/export-catalog-data.mjs",
+    "docs:check": "node scripts/check-doc-governance.mjs",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push"
@@ -65,19 +73,13 @@
     "tailwind-merge": "^3.4.0",
     "three": "^0.184.0",
     "vaul": "^1.1.2",
-    "zod": "^4.3.5",
-    "@tanstack/react-query": "^5.90.16",
-    "@trpc/client": "^11.8.1",
-    "@trpc/react-query": "^11.8.1",
     "@trpc/server": "^11.8.1",
-    "dotenv": "^17.2.3",
     "hono": "^4.8.3",
     "@hono/node-server": "^1.14.3",
-    "superjson": "^2.2.6",
-    "drizzle-orm": "^0.45.1",
-    "mysql2": "^3.14.1"
+    "superjson": "^2.2.6"
   },
   "devDependencies": {
+    "@tanstack/react-query": "^5.90.16",
     "@eslint/js": "^9.39.1",
     "@types/node": "^24.10.1",
     "@types/react": "^19.2.5",
@@ -100,6 +102,17 @@
     "esbuild": "^0.27.2",
     "prettier": "^3.7.4",
     "vitest": "^4.0.16",
-    "drizzle-kit": "^0.31.8"
+    "@trpc/client": "^11.8.1",
+    "@trpc/react-query": "^11.8.1",
+    "dotenv": "^17.2.3",
+    "drizzle-kit": "^0.31.8",
+    "drizzle-orm": "^0.45.1",
+    "mysql2": "^3.14.1",
+    "zod": "^4.3.5"
+  },
+  "overrides": {
+    "@esbuild-kit/core-utils": {
+      "esbuild": "^0.25.12"
+    }
   }
 }

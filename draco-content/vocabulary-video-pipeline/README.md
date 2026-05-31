@@ -2,14 +2,6 @@
 
 基于 [Remotion](https://www.remotion.dev) 的词汇视频自动化生成 skill。输入一个英文单词，自动生成带有中文讲解、TTS 音频和动态视觉效果的教育视频。
 
-## 效果预览
-
-<div align="center">
-  <img src="./assets/preview-breakfast.jpg" width="45%" />
-  <img src="./assets/preview-lemonade.jpg" width="45%" />
-  <br><br>
-</div>
-
 ## 为什么做这个 skill
 
 面向中小学生的英文视频内容通常需要：

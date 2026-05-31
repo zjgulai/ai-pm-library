@@ -4,8 +4,6 @@
 
 这个工具不是简单抓原始 HTML，而是先用 `camofox-browser` 打开真实页面，读取结构化 snapshot 和图片信息，再做公众号专用清洗，所以更适合处理：正文区、图片顺序、列表、引用块、折行这些问题。
 
-![wechat-article-camofox 工作流预览](./assets/wechat-article-camofox-flow.svg)
-
 ## 适合谁用
 
 - 想把公众号文章稳定保存成 Markdown / JSON 的人

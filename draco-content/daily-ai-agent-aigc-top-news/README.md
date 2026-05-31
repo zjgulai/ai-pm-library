@@ -4,8 +4,6 @@
 
 它适合每天固定时间自动跑：抓取过去 24 小时的重要更新，核验来源，写成中文早报，发布到飞书文档，并可同步归档到飞书多维表。
 
-![工作流预览](./assets/daily-ai-agent-aigc-top-news-flow.svg)
-
 ## 它解决什么问题
 
 每天看 AI 新闻很容易变成三件事：
@@ -155,8 +153,8 @@ ai-news-bitable-archive
 | 文件 | 作用 |
 |---|---|
 | [`SKILL.md`](./SKILL.md) | Hermes skill 主体 |
-| [`templates/cron-prompt.zh.md`](./templates/cron-prompt.zh.md) | 可直接改造的定时任务 prompt |
-| [`assets/daily-ai-agent-aigc-top-news-flow.svg`](./assets/daily-ai-agent-aigc-top-news-flow.svg) | 工作流示意图 |
+
+最小 cron prompt 已内联在本文“快速开始”部分；当前仓库快照未提交独立模板和预览图资产。
 
 ## 一句话
 

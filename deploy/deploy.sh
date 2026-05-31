@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 # PromptForge 部署脚本
 # 用法：
-#   首次部署（含 seed）: ./deploy.sh --seed
-#   日常更新:            ./deploy.sh
+#   部署 / 更新: ./deploy.sh
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
@@ -10,17 +9,29 @@ PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 REMOTE_USER=ubuntu
 REMOTE_HOST=101.34.52.232
 REMOTE_DIR=/opt/promptforge
-SSH_KEY="$PROJECT_ROOT/ai_video.pem"
-SSH_OPTS="-i $SSH_KEY -o StrictHostKeyChecking=no"
+SSH_KEY="${PROMPTFORGE_SSH_KEY:-$HOME/.ssh/promptforge_ai_video.pem}"
+SSH_OPTS="-i $SSH_KEY -o StrictHostKeyChecking=accept-new"
 
-SEED=false
 if [[ "${1:-}" == "--seed" ]]; then
-  SEED=true
+  echo "ERROR: --seed is not supported in the static-first production deploy path." >&2
+  echo "Catalog data is generated into public/catalog/*.json during npm run build." >&2
+  echo "If DB-backed content is needed, design a separate migration and seed workflow first." >&2
+  exit 1
+elif [[ -n "${1:-}" ]]; then
+  echo "ERROR: unknown argument: $1" >&2
+  echo "Usage: ./deploy.sh" >&2
+  exit 1
 fi
 
 log() { echo "[$(date '+%H:%M:%S')] $*"; }
 
 log "=== PromptForge Deploy ==="
+
+if [[ ! -f "$SSH_KEY" ]]; then
+  echo "ERROR: SSH key not found: $SSH_KEY" >&2
+  echo "Set PROMPTFORGE_SSH_KEY or place the key at ~/.ssh/promptforge_ai_video.pem" >&2
+  exit 1
+fi
 
 # ── 1. 同步文件到服务器 ──────────────────────────────────────────
 log "Syncing app/ to $REMOTE_HOST:$REMOTE_DIR/app ..."
@@ -53,27 +64,8 @@ ssh $SSH_OPTS $REMOTE_USER@$REMOTE_HOST "
   set -e
   cd $REMOTE_DIR
 
-  # build deps & app 镜像
   docker compose build --no-cache app
-  docker compose build migrate
-
-  # 确保 MySQL 运行并 healthy
-  docker compose up -d mysql
-  echo 'Waiting for MySQL ...'
-  docker compose run --rm migrate echo 'MySQL ready'  2>/dev/null || true
-
-  # 运行 schema 迁移
-  echo 'Running drizzle push ...'
-  docker compose run --rm migrate
 "
-
-if [[ "$SEED" == "true" ]]; then
-  log "Running seed (803 records) ..."
-  ssh $SSH_OPTS $REMOTE_USER@$REMOTE_HOST "
-    cd $REMOTE_DIR
-    docker compose run --rm seed
-  "
-fi
 
 log "Starting / restarting app ..."
 ssh $SSH_OPTS $REMOTE_USER@$REMOTE_HOST "

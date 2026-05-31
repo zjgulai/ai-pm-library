@@ -4,8 +4,6 @@
 
 它适合接在 `daily-ai-agent-aigc-top-news` 后面：日报先发成飞书文档，然后把标题、Top3、摘要、文档链接等字段同步到多维表。
 
-![工作流预览](./assets/ai-news-bitable-archive-flow.svg)
-
 ## 快速开始
 
 ```bash
