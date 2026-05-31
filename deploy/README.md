@@ -48,6 +48,30 @@ cd deploy
 
 更新代码并重启 app。catalog 数据在 `npm run build` 阶段由 `staticData.ts` 生成到 `public/catalog/*.json`。
 
+部署后执行线上 E2E smoke：
+
+```bash
+cd deploy
+./deploy.sh --smoke
+```
+
+`--smoke` 会在 app 更新后调用 `app/scripts/smoke-e2e.mjs`，覆盖生产 HTML/assets、favicon、catalog JSON、只读 tRPC 边界、全路由渲染、`/skills` 共享交互、桌面/移动端横向溢出和浏览器 console 错误。首次运行前需要本地安装依赖和 Chromium：
+
+```bash
+cd app
+npm ci
+npx playwright install chromium
+```
+
+也可不重新部署，单独对线上域名运行：
+
+```bash
+cd app
+npm run smoke:e2e:prod
+```
+
+默认报告写入 `tmp/outputs/`，截图写入 `tmp/screenshots/`。CI 使用本地 `npm run start` 的生产 server 跑同一套 smoke，生产部署使用 `PROMPTFORGE_SMOKE_BASE_URL=https://person.lute-tlz-dddd.top/`。
+
 ## DB-backed 路线
 
 默认生产部署不启动 MySQL，不执行 `drizzle-kit push`，也不运行 seed。`./deploy.sh --seed` 会直接失败，防止误以为静态站部署会写数据库。
@@ -60,6 +84,15 @@ cd deploy
 - 生产回滚步骤和数据备份步骤。
 
 旧的远端 `promptforge_mysql` 容器和 `mysql_data` volume 如果已经存在，不会被新的 static-first compose 使用。删除前必须先备份并单独确认。
+
+## 旧 DB 归档 TODO
+
+旧 `promptforge_mysql`、`promptforge_net` 和相关 volume 是后续归档项，不属于日常部署动作。归档前必须完成：
+
+1. 备份 `/opt/promptforge`、`docker inspect promptforge_mysql`、`docker logs promptforge_mysql`、相关 volume 元数据，以及可用凭据下的 MySQL dump。
+2. 确认 `promptforge_app`、`ai_video_nginx` 和其他同机应用没有引用 `promptforge_net` 或 `promptforge_mysql`。
+3. 在维护窗口先 `stop` 而不是删除，观察生产域名、同机域名和 smoke 结果。
+4. 只有在单独确认后，才允许执行容器、网络或 volume 的最终归档/删除。
 
 ## 密钥规则
 

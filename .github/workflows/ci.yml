@@ -1,0 +1,71 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - 'codex/**'
+
+permissions:
+  contents: read
+
+jobs:
+  app:
+    name: App Verify And Smoke
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+
+      - name: Install dependencies
+        working-directory: app
+        run: npm ci
+
+      - name: Verify app
+        working-directory: app
+        run: npm run verify
+
+      - name: Install Playwright Chromium
+        working-directory: app
+        run: npx playwright install --with-deps chromium
+
+      - name: Start production server
+        working-directory: app
+        run: |
+          mkdir -p ../tmp/outputs ../tmp/screenshots
+          npm run start > ../tmp/outputs/ci-app-server.log 2>&1 &
+          echo "$!" > ../tmp/outputs/ci-app-server.pid
+
+      - name: Wait for production server
+        run: |
+          for i in {1..30}; do
+            if curl -fsS http://127.0.0.1:3000/api/trpc/ping?batch=1\&input=%7B%7D > /dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat tmp/outputs/ci-app-server.log
+          exit 1
+
+      - name: Run E2E smoke
+        working-directory: app
+        run: npm run smoke:e2e
+
+      - name: Upload smoke artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: promptforge-smoke-artifacts
+          path: |
+            tmp/outputs/
+            tmp/screenshots/
+          if-no-files-found: ignore

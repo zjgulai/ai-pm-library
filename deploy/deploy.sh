@@ -2,6 +2,7 @@
 # PromptForge 部署脚本
 # 用法：
 #   部署 / 更新: ./deploy.sh
+#   部署后执行线上 E2E smoke: ./deploy.sh --smoke
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
@@ -11,17 +12,26 @@ REMOTE_HOST=101.34.52.232
 REMOTE_DIR=/opt/promptforge
 SSH_KEY="${PROMPTFORGE_SSH_KEY:-$HOME/.ssh/promptforge_ai_video.pem}"
 SSH_OPTS="-i $SSH_KEY -o StrictHostKeyChecking=accept-new"
+RUN_SMOKE=0
 
-if [[ "${1:-}" == "--seed" ]]; then
-  echo "ERROR: --seed is not supported in the static-first production deploy path." >&2
-  echo "Catalog data is generated into public/catalog/*.json during npm run build." >&2
-  echo "If DB-backed content is needed, design a separate migration and seed workflow first." >&2
-  exit 1
-elif [[ -n "${1:-}" ]]; then
-  echo "ERROR: unknown argument: $1" >&2
-  echo "Usage: ./deploy.sh" >&2
-  exit 1
-fi
+for arg in "$@"; do
+  case "$arg" in
+    --smoke)
+      RUN_SMOKE=1
+      ;;
+    --seed)
+      echo "ERROR: --seed is not supported in the static-first production deploy path." >&2
+      echo "Catalog data is generated into public/catalog/*.json during npm run build." >&2
+      echo "If DB-backed content is needed, design a separate migration and seed workflow first." >&2
+      exit 1
+      ;;
+    *)
+      echo "ERROR: unknown argument: $arg" >&2
+      echo "Usage: ./deploy.sh [--smoke]" >&2
+      exit 1
+      ;;
+  esac
+done
 
 log() { echo "[$(date '+%H:%M:%S')] $*"; }
 
@@ -82,5 +92,15 @@ ssh $SSH_OPTS $REMOTE_USER@$REMOTE_HOST "docker compose -f $REMOTE_DIR/docker-co
 log "App health check:"
 ssh $SSH_OPTS $REMOTE_USER@$REMOTE_HOST \
   "curl -sf http://localhost:3000/ > /dev/null && echo 'OK: app responding on :3000' || echo 'WARN: app not yet ready (may still be starting)'"
+
+if [[ "$RUN_SMOKE" -eq 1 ]]; then
+  log "Running production E2E smoke ..."
+  (
+    cd "$PROJECT_ROOT/app"
+    PROMPTFORGE_SMOKE_BASE_URL="${PROMPTFORGE_PUBLIC_URL:-https://person.lute-tlz-dddd.top/}" \
+      PROMPTFORGE_SMOKE_CHECK_COHOSTS="${PROMPTFORGE_SMOKE_CHECK_COHOSTS:-1}" \
+      npm run smoke:e2e
+  )
+fi
 
 log "=== Deploy complete ==="
