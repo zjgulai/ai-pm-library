@@ -92,9 +92,9 @@ source: human+ai
 7. 更新 `README.md` 的当前内容规模。
 8. 执行验证：`npm run docs:check`、`npm run verify`、必要时执行 `npm run smoke:e2e`。
 
-## 本轮 2026-06-02 采集计划
+## 本轮 2026-06-02 执行记录
 
-本轮采用 12 条增量：
+第一阶段采用“小批量高置信”策略，入库 12 条：
 
 - `prompt`: 2 条，聚焦 agent use-case gate、模型/记忆/成本迁移决策。
 - `skill`: 2 条，聚焦 agent skill 供应链和跨工具规则同步。
@@ -103,4 +103,22 @@ source: human+ai
 - `agent`: 2 条，聚焦 sandboxed agents 和 Opus 4.8 dynamic workflows。
 - `github`: 2 条，聚焦 TypeScript AI SDK 与 agent configuration lint。
 
-本轮不采纳纯社区讨论，不采纳无法定位到来源页面的二手汇总，不采纳与现有跨境电商批次重复的内容。
+第二阶段按用户要求执行 50 个检索 loop：
+
+- 检索窗口：`2026-05-26` 到 `2026-06-02`。
+- 候选报告：`tmp/outputs/content-refresh-50-loop-candidates-20260602021120.json`。
+- 完成 loop：50。
+- 唯一候选：257。
+- 通过 75 分门槛候选：220。
+- 最终入库：30 条，每类 5 条。
+
+本轮总增量为 42 条，最终内容规模为 845 条：
+
+- `prompt`: 200
+- `skill`: 313
+- `hook`: 79
+- `mcp`: 79
+- `agent`: 80
+- `github`: 94
+
+本轮不采纳纯社区讨论，不采纳无法定位到来源页面的二手汇总，不采纳与现有内容用途重复的候选。

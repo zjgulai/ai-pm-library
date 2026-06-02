@@ -4,12 +4,12 @@ import { describe, expect, it } from "vitest";
 import { getAllCounts, getItemsByCategory, type Category } from "./dataUtils";
 
 const expectedCounts: Record<Category, number> = {
-  prompt: 195,
-  skill: 308,
-  hook: 74,
-  mcp: 74,
-  agent: 75,
-  github: 89,
+  prompt: 200,
+  skill: 313,
+  hook: 79,
+  mcp: 79,
+  agent: 80,
+  github: 94,
 };
 
 describe("dataUtils", () => {
