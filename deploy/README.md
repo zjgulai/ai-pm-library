@@ -5,7 +5,7 @@ module: deploy
 topic: production-deployment
 status: stable
 created: 2026-05-31
-updated: 2026-06-01
+updated: 2026-06-02
 owner: self
 source: human+ai
 ---
@@ -152,8 +152,31 @@ docker compose -f deploy/docker-compose.yml config
 
 预期默认服务只包含 `app`，不包含 `mysql`、`migrate` 或 `seed`。
 
-远端检查：
+远端检查必须按容器网络边界执行。当前 `promptforge_app` 不把 `3000` 暴露到宿主机，因此不要用宿主机 `curl http://localhost:3000` 判断服务状态。
 
 ```bash
-curl -sf http://localhost:3000/ > /dev/null && echo OK
+ssh -i ~/.ssh/promptforge_ai_video.pem ubuntu@101.34.52.232 '
+docker ps --format "{{.Names}}\t{{.Status}}\t{{.Networks}}" | grep -E "^(promptforge_app|promptforge_mysql|ai_video_nginx)\b" || true
+docker inspect --format "{{json .State.Health}}" promptforge_app
+docker exec promptforge_app node -e "fetch(\"http://127.0.0.1:3000/api/trpc/ping?batch=1&input=%7B%7D\").then(async r=>{const t=await r.text(); console.log(r.status,t.includes(\"ok\")); if(!r.ok||!t.includes(\"ok\")) process.exit(1)})"
+docker exec ai_video_nginx sh -lc "curl -fsS \"http://promptforge_app:3000/api/trpc/ping?batch=1&input=%7B%7D\" | grep -q \"\\\"ok\\\":true\""
+docker exec ai_video_nginx nginx -t
+stat -c "%a %n" /opt/promptforge/.env.prod
+'
 ```
+
+公网 smoke：
+
+```bash
+cd app
+npm run smoke:e2e:prod
+```
+
+远端验证通过标准：
+
+- `promptforge_app` 为 `healthy`。
+- `ai_video_nginx` 能通过 Docker 网络访问 `promptforge_app:3000`。
+- `nginx -t` 通过。
+- `/opt/promptforge/.env.prod` 权限为 `600`。
+- 线上 `catalog/*.json` 计数与本地一致。
+- 旧 `promptforge_mysql` 如仍存在，必须保持未触碰状态，直到单独归档窗口确认。

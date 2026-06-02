@@ -1,12 +1,12 @@
 export type Category = 'prompt' | 'skill' | 'hook' | 'mcp' | 'agent' | 'github'
 
 export const CATEGORY_COUNTS: Record<Category, number> = {
-  prompt: 200,
-  skill: 313,
-  hook: 79,
-  mcp: 79,
-  agent: 80,
-  github: 94,
+  prompt: 201,
+  skill: 314,
+  hook: 80,
+  mcp: 80,
+  agent: 81,
+  github: 95,
 }
 
 export function getAllCounts(): Record<Category, number> {

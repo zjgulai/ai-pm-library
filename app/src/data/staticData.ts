@@ -37678,6 +37678,171 @@ const staticData = {
           "problemFocusEn": "Open-source AI tools move quickly; without source verification, permission boundaries, and pilot gates, teams mistake popularity for production value",
           "createdAt": "2026-06-02 10:14:00",
           "category": "github"
+    },
+    {
+        "id": 1307439,
+        "title": "Agent Skill Creator跨工具技能资产化流程",
+        "role": "developer",
+        "tags": [
+            "Agent Skills",
+            "跨工具迁移",
+            "SKILL.md",
+            "工作流资产",
+            "AI Coding"
+        ],
+        "content": "## 技能定位\nAgent Skill Creator 用于把一次性工作流沉淀成可复用的AI agent skill，并评估它是否能跨 Claude Code、Copilot、Cursor、Codex、Gemini、Kiro 等工具迁移。\n\n## 适用场景\n- 团队已有高频AI协作流程，但每次都靠口头提示重复执行。\n- 需要把流程转成 `SKILL.md`、安装说明、输入输出契约和验证命令。\n- 希望同一套技能资产能在多个agent工具中保持一致行为。\n\n## 执行清单\n1. 选择一个高频流程，明确触发条件、输入、输出和禁止事项。\n2. 写成最小 `SKILL.md`，先描述何时使用，再描述步骤和验收。\n3. 在至少两个agent工具中试跑同一任务，记录差异。\n4. 补充失败案例、权限边界、依赖和回滚方式。\n5. 将成熟技能纳入版本管理，并建立每月复核。\n\n## 质量门禁\n- 不把工具兼容性当成质量，必须有真实任务验证。\n- 技能不得要求默认读取密钥、删除文件或跳过测试。\n- 每个技能必须能被新人通过README独立执行。\n\n## 来源\n- FrancyJGLisboa/agent-skill-creator: https://github.com/FrancyJGLisboa/agent-skill-creator\n- 近一周信号：GitHub API pushed_at 2026-06-01T12:53:02Z\n- License: MIT",
+        "description": "把高频AI协作流程资产化为跨工具 Agent Skill 的执行模板，强调迁移验证、权限边界和版本治理",
+        "scenario": "团队希望把一次性提示词或工作流升级为可安装、可复核、可迁移的AI agent技能资产",
+        "author": "Workflow Test Weekly Search · Curated",
+        "likes": 71,
+        "views": "3.4K",
+        "comments": 9,
+        "titleEn": "Agent Skill Creator: Cross-Tool Skill Assetization Workflow",
+        "tagsEn": [
+            "Agent Skills",
+            "Cross-tool Migration",
+            "SKILL.md",
+            "Workflow Assets",
+            "AI Coding"
+        ],
+        "descriptionEn": "A workflow for turning repeated AI collaboration routines into versioned, testable, cross-tool agent skills",
+        "scenarioEn": "Teams need to upgrade one-off prompts and workflows into installable, reviewable, portable AI agent skills",
+        "problemFocus": "AI工作流如果只停留在聊天记录里，会重复丢失上下文、无法迁移、无法验证质量",
+        "problemFocusEn": "AI workflows trapped in chat history lose context, resist migration, and lack quality verification",
+        "createdAt": "2026-06-02 15:45:00",
+        "category": "skill"
+    },
+    {
+        "id": 1307440,
+        "title": "Probity过程纪律Hook：把AI编码会话变成可审计流程",
+        "role": "developer",
+        "tags": [
+            "Hooks",
+            "过程纪律",
+            "Guardrails",
+            "AI Coding",
+            "审计"
+        ],
+        "content": "## Hook定位\nProbity 用于给AI coding agent增加过程纪律：在关键节点强制记录计划、测试、风险和证据，避免agent只产出代码、不留下可验收过程。\n\n## 触发时机\n- 开始修改正式文件前。\n- 执行危险命令、部署命令或远端操作前。\n- 声称任务完成前。\n\n## Hook动作\n1. 检查是否已有明确目标、范围和排除项。\n2. 要求列出将修改的文件和潜在风险。\n3. 修改后要求记录验证命令、结果和失败处理。\n4. 完成前检查是否有未说明的残余风险。\n5. 对高风险操作要求人工确认或转入维护窗口。\n\n## 接入门禁\n- 先在本地开发仓库试点，不直接接入生产部署脚本。\n- Hook失败必须阻断危险操作，但不能吞掉原始错误。\n- 所有豁免必须写明原因和有效期。\n\n## 来源\n- nizos/probity: https://github.com/nizos/probity\n- 近一周信号：GitHub API pushed_at 2026-05-31T10:48:11Z\n- License: MIT",
+        "description": "面向AI coding agent的过程纪律Hook模板，在修改、危险操作和完成声明前强制留下可审计证据",
+        "scenario": "团队使用AI代理频繁修改代码或部署时，需要防止跳过计划、测试、风险说明和完成证据",
+        "author": "Workflow Test Weekly Search · Curated",
+        "likes": 62,
+        "views": "2.6K",
+        "comments": 8,
+        "titleEn": "Probity Process Discipline Hook for Auditable AI Coding Sessions",
+        "tagsEn": [
+            "Hooks",
+            "Process Discipline",
+            "Guardrails",
+            "AI Coding",
+            "Audit"
+        ],
+        "descriptionEn": "A hook template that forces AI coding agents to leave auditable planning, testing, risk, and completion evidence",
+        "scenarioEn": "Teams using AI agents for code changes and deployment need guardrails against skipped plans, tests, risk notes, and proof",
+        "problemFocus": "AI代理容易直接改代码并宣称完成，但缺少过程证据、风险说明和可回滚判断",
+        "problemFocusEn": "AI agents can jump straight to code and claim completion without process evidence, risk notes, or rollback judgement",
+        "createdAt": "2026-06-02 15:45:00",
+        "category": "hook"
+    },
+    {
+        "id": 1307441,
+        "title": "FastMCP Pythonic MCP服务构建评估",
+        "role": "developer",
+        "tags": [
+            "FastMCP",
+            "MCP Server",
+            "Python",
+            "工具协议",
+            "Agent工具"
+        ],
+        "content": "## MCP工具定位\nFastMCP 是构建 MCP servers 和 clients 的 Pythonic 框架。本模板用于评估它是否适合把内部工具、数据源或自动化能力暴露给AI agent。\n\n## 适用场景\n- 团队以 Python 为主，需要快速封装内部工具为 MCP server。\n- 需要同时评估 server、client、tool schema、鉴权和错误处理。\n- 希望先用低风险只读工具验证MCP链路。\n\n## 执行清单\n1. 选择一个只读、低风险、可模拟的数据源。\n2. 定义工具输入输出 schema，明确超时、错误码和日志字段。\n3. 用 FastMCP 建立最小 server，并接入一个本地 MCP client。\n4. 验证权限边界：无密钥泄露、无默认写操作、无越权路径。\n5. 记录延迟、失败模式、agent误用案例和人工兜底。\n\n## 质量门禁\n- 首个试点只允许只读工具。\n- 所有写操作必须有认证、授权、审计和回滚。\n- 不允许把MCP可连接等同于生产可用。\n\n## 来源\n- PrefectHQ/fastmcp: https://github.com/PrefectHQ/fastmcp\n- 近一周信号：GitHub API pushed_at 2026-06-01T02:46:02Z\n- License: Apache-2.0",
+        "description": "FastMCP评估模板，用于把Python内部工具安全封装为MCP server，并先以只读链路验证agent工具接入",
+        "scenario": "Python团队准备把内部数据源、运维工具或业务API通过MCP开放给AI agent使用",
+        "author": "Workflow Test Weekly Search · Curated",
+        "likes": 94,
+        "views": "4.8K",
+        "comments": 13,
+        "titleEn": "FastMCP Pythonic MCP Server Evaluation",
+        "tagsEn": [
+            "FastMCP",
+            "MCP Server",
+            "Python",
+            "Tool Protocol",
+            "Agent Tools"
+        ],
+        "descriptionEn": "An evaluation template for safely wrapping Python internal tools as MCP servers, starting with read-only agent tool paths",
+        "scenarioEn": "Python teams preparing to expose internal data sources, ops tools, or business APIs to AI agents through MCP",
+        "problemFocus": "MCP接入很容易从能连通跳到能写生产，缺少只读试点、权限边界和误用验证",
+        "problemFocusEn": "MCP adoption can jump from connectivity to production writes without read-only pilots, permission boundaries, and misuse tests",
+        "createdAt": "2026-06-02 15:45:00",
+        "category": "mcp"
+    },
+    {
+        "id": 1307442,
+        "title": "Learn Claude Code Nano Agent Harness拆解模板",
+        "role": "developer",
+        "tags": [
+            "Agent Harness",
+            "Claude Code",
+            "教学拆解",
+            "Bash",
+            "Agent架构"
+        ],
+        "content": "## Agent定位\nlearn-claude-code 以“从0到1构建 nano Claude Code-like agent harness”为主线，适合作为团队理解agent循环、工具调用、状态记录和最小运行时的教学拆解模板。\n\n## 适用场景\n- 团队想理解agent harness，而不是只使用黑盒工具。\n- 需要培训新人理解 plan-act-observe、工具边界和日志。\n- 准备自研轻量agent，但要先确认哪些能力必须保留。\n\n## 拆解步骤\n1. 画出最小agent循环：输入、计划、工具调用、观察、下一步。\n2. 标注哪些能力来自 shell、文件系统、模型和人工确认。\n3. 用一个低风险任务复现 harness 行为，不接入真实密钥。\n4. 列出生产化缺口：权限、隔离、日志、重试、成本、回滚。\n5. 形成采用决策：教学参考、自研原型或不采用。\n\n## 质量门禁\n- 教学项目不得直接当生产框架。\n- 不允许在训练样例中执行破坏性命令。\n- 每个工具调用都必须能被日志追踪。\n\n## 来源\n- shareAI-lab/learn-claude-code: https://github.com/shareAI-lab/learn-claude-code\n- 近一周信号：GitHub API pushed_at 2026-05-31T14:22:38Z\n- License: MIT",
+        "description": "用 learn-claude-code 拆解最小 agent harness，帮助团队理解agent循环、工具边界、日志和生产化缺口",
+        "scenario": "团队准备培训AI coding agent使用者，或评估是否需要自研轻量agent harness",
+        "author": "Workflow Test Weekly Search · Curated",
+        "likes": 96,
+        "views": "5.1K",
+        "comments": 16,
+        "titleEn": "Learn Claude Code Nano Agent Harness Decomposition Template",
+        "tagsEn": [
+            "Agent Harness",
+            "Claude Code",
+            "Learning",
+            "Bash",
+            "Agent Architecture"
+        ],
+        "descriptionEn": "A decomposition template for understanding minimal agent harness loops, tool boundaries, logs, and production gaps through learn-claude-code",
+        "scenarioEn": "Teams training AI coding agent users or evaluating whether to build a lightweight agent harness",
+        "problemFocus": "团队只会使用黑盒agent工具，却不了解循环、工具边界、日志和生产隔离，难以做架构判断",
+        "problemFocusEn": "Teams can use black-box agent tools but do not understand loops, tool boundaries, logs, and production isolation well enough for architecture decisions",
+        "createdAt": "2026-06-02 15:45:00",
+        "category": "agent"
+    },
+    {
+        "id": 1307443,
+        "title": "Vercel Workflow SDK：TypeScript持久化AI工作流",
+        "role": "developer",
+        "tags": [
+            "Vercel Workflow",
+            "TypeScript",
+            "Durable Workflow",
+            "AI Agents",
+            "可观测性"
+        ],
+        "content": "## 开源项目定位\nVercel Workflow SDK 用于构建 durable、reliable、observable 的 TypeScript 应用和 AI Agents。本模板用于评估它是否适合作为AI产品中的长任务、重试和可观测工作流底座。\n\n## 适用场景\n- AI任务超过单次请求生命周期，需要持久化、重试和状态追踪。\n- 前端/全栈团队以 TypeScript 和 Vercel 生态为主。\n- 需要把agent任务从临时脚本升级为可监控工作流。\n\n## 评估清单\n1. 列出长任务：生成、检索、评估、发布、通知、回滚。\n2. 标注每步是否需要幂等、重试、超时和人工确认。\n3. 设计可观测字段：run id、step id、成本、耗时、失败原因。\n4. 用一个低风险任务验证 workflow 的恢复和重复执行行为。\n5. 与 Temporal、队列、serverless cron 和现有部署方式比较边界。\n\n## 采用门禁\n- 不把 durable workflow 当成权限系统。\n- 写操作必须独立补认证、授权、审计和回滚。\n- 如果业务已依赖非Vercel运行环境，先评估迁移成本。\n\n## 来源\n- vercel/workflow: https://github.com/vercel/workflow\n- 近一周信号：GitHub API pushed_at 2026-06-02T07:36:29Z\n- License: Apache-2.0",
+        "description": "Vercel Workflow SDK评估模板，关注TypeScript AI Agent长任务的持久化、重试、可观测性和运行环境取舍",
+        "scenario": "TypeScript团队需要把AI生成、评估、发布等长任务从临时脚本升级为可靠工作流",
+        "author": "Workflow Test Weekly Search · Curated",
+        "likes": 88,
+        "views": "4.2K",
+        "comments": 12,
+        "titleEn": "Vercel Workflow SDK: Durable TypeScript AI Workflows",
+        "tagsEn": [
+            "Vercel Workflow",
+            "TypeScript",
+            "Durable Workflow",
+            "AI Agents",
+            "Observability"
+        ],
+        "descriptionEn": "An evaluation template for durable, retryable, observable TypeScript AI agent workflows using Vercel Workflow SDK",
+        "scenarioEn": "TypeScript teams upgrading AI generation, evaluation, publishing, or notification tasks from scripts into reliable workflows",
+        "problemFocus": "AI长任务如果只靠请求或脚本执行，容易在超时、重试、状态追踪和失败恢复上失控",
+        "problemFocusEn": "AI long-running tasks become unreliable when handled only by requests or scripts without timeout, retry, state tracking, and recovery design",
+        "createdAt": "2026-06-02 15:45:00",
+        "category": "github"
     }
   ],
   "prompts_full": [
@@ -44084,6 +44249,39 @@ const staticData = {
           "problemFocusEn": "Open-source AI tools move quickly; without source verification, permission boundaries, and pilot gates, teams mistake popularity for production value",
           "createdAt": "2026-06-02 10:14:00",
           "category": "prompt"
+    },
+    {
+        "id": 1307438,
+        "title": "AgentEval评估设计提示词：把工具调用、RAG质量与模型对比纳入验收",
+        "role": "developer",
+        "tags": [
+            "AgentEval",
+            "Agent评估",
+            "RAG质量",
+            "工具调用",
+            "模型对比"
+        ],
+        "content": "你是一位AI Agent评估架构师。请基于 AgentEvalHQ/AgentEval 的能力，为我的AI系统设计一套可执行的Agent评估方案。\n\n## 输入\n- Agent任务类型：[代码生成/RAG问答/业务流程/多工具调用]\n- 当前技术栈：[模型、框架、语言、数据源]\n- 已有验证方式：[人工评审/单元测试/离线样本/线上日志]\n- 风险重点：[工具误用、RAG幻觉、随机性、模型迁移、成本]\n\n## 请输出\n1. 评估目标：哪些行为必须被量化验收。\n2. 用例分层：黄金路径、边界样本、失败样本、红队样本。\n3. 指标设计：工具调用正确率、RAG质量、随机性稳定度、模型对比、回归阈值。\n4. CI接入方式：哪些评估每次提交跑，哪些每日/每周跑。\n5. 决策规则：通过、警告、阻断发布、人工复核。\n6. 一周试点计划：样本规模、负责人、证据包和回滚方式。\n\n## 约束\n- 不允许只看平均分，必须列出失败样本。\n- 不允许把评估工具直接接入生产写链路。\n- 输出必须能转成测试任务和发布门禁。\n\n## 来源\n- AgentEvalHQ/AgentEval: https://github.com/AgentEvalHQ/AgentEval\n- 近一周信号：GitHub API pushed_at 2026-05-31T16:15:32Z\n- License: MIT",
+        "description": "基于 AgentEvalHQ/AgentEval 的Agent评估设计提示词，把工具调用、RAG质量、随机性和模型对比纳入发布验收",
+        "scenario": "团队准备上线或迁移AI Agent时，需要把主观体验转成可追踪、可回归、可阻断发布的评估体系",
+        "author": "Workflow Test Weekly Search · Curated",
+        "likes": 54,
+        "views": "1.7K",
+        "comments": 6,
+        "titleEn": "AgentEval Evaluation Design Prompt: Tool Use, RAG Quality, and Model Comparison Gates",
+        "tagsEn": [
+            "AgentEval",
+            "Agent Evaluation",
+            "RAG Quality",
+            "Tool Use",
+            "Model Comparison"
+        ],
+        "descriptionEn": "An Agent evaluation design prompt based on AgentEvalHQ/AgentEval, turning tool-use, RAG quality, stochastic behavior, and model comparison into release gates",
+        "scenarioEn": "Teams preparing to ship or migrate AI agents need measurable evaluation gates instead of subjective demos",
+        "problemFocus": "Agent上线常停留在演示可用，缺少工具调用、RAG质量、随机性和模型迁移的可回归证据",
+        "problemFocusEn": "Agent launches often rely on demos without regression evidence for tool use, RAG quality, stochastic behavior, and model migration",
+        "createdAt": "2026-06-02 15:45:00",
+        "category": "prompt"
     }
   ],
   "workflows_full": [

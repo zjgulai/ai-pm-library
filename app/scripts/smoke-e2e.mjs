@@ -23,22 +23,22 @@ const screenshotDir = resolve(
 )
 
 const categoryRoutes = [
-  { hash: '/', label: '灵词', count: 845, cards: 0 },
-  { hash: '/prompts', label: '提示词', count: 200, cards: 48 },
-  { hash: '/skills', label: '技能', count: 313, cards: 48 },
-  { hash: '/hooks', label: '钩子', count: 79, cards: 48 },
-  { hash: '/mcp', label: 'MCP', count: 79, cards: 48 },
-  { hash: '/agents', label: '智能体', count: 80, cards: 48 },
-  { hash: '/github', label: '开源', count: 94, cards: 48 },
+  { hash: '/', label: '灵词', count: 851, cards: 0 },
+  { hash: '/prompts', label: '提示词', count: 201, cards: 48 },
+  { hash: '/skills', label: '技能', count: 314, cards: 48 },
+  { hash: '/hooks', label: '钩子', count: 80, cards: 48 },
+  { hash: '/mcp', label: 'MCP', count: 80, cards: 48 },
+  { hash: '/agents', label: '智能体', count: 81, cards: 48 },
+  { hash: '/github', label: '开源', count: 95, cards: 48 },
 ]
 
 const catalogCounts = {
-  prompt: 200,
-  skill: 313,
-  hook: 79,
-  mcp: 79,
-  agent: 80,
-  github: 94,
+  prompt: 201,
+  skill: 314,
+  hook: 80,
+  mcp: 80,
+  agent: 81,
+  github: 95,
 }
 
 const report = {
@@ -265,7 +265,11 @@ async function runDesktopChecks(browser) {
       if (route.cards > 0) {
         await waitForCards(page, route.cards)
       } else {
-        await page.waitForFunction(() => document.body.textContent?.includes('845'), null, { timeout: 10000 })
+        await page.waitForFunction(
+          expected => document.body.textContent?.includes(String(expected)),
+          route.count,
+          { timeout: 10000 },
+        )
       }
       routeResults.push({ route: route.hash, label: route.label, overflow })
     }
@@ -279,7 +283,7 @@ async function runDesktopChecks(browser) {
     const button = page.getByRole('button', { name: /加载更多/ })
     await button.click()
     await waitForCards(page, 96)
-    await page.getByText('96/313').waitFor({ timeout: 5000 })
+    await page.getByText('96/314').waitFor({ timeout: 5000 })
     await takeScreenshot(page, 'desktop-skills-load-more')
     return { visibleCards: 96 }
   })
