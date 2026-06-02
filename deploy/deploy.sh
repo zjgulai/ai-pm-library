@@ -67,6 +67,7 @@ rsync -az \
   -e "ssh $SSH_OPTS" \
   "$SCRIPT_DIR/.env.prod" \
   "$REMOTE_USER@$REMOTE_HOST:$REMOTE_DIR/.env.prod"
+ssh $SSH_OPTS $REMOTE_USER@$REMOTE_HOST "chmod 600 $REMOTE_DIR/.env.prod"
 
 # ── 2. 服务器上 build + 启动 ────────────────────────────────────
 log "Building images on server ..."
@@ -91,7 +92,7 @@ ssh $SSH_OPTS $REMOTE_USER@$REMOTE_HOST "docker compose -f $REMOTE_DIR/docker-co
 
 log "App health check:"
 ssh $SSH_OPTS $REMOTE_USER@$REMOTE_HOST \
-  "curl -sf http://localhost:3000/ > /dev/null && echo 'OK: app responding on :3000' || echo 'WARN: app not yet ready (may still be starting)'"
+  "docker exec promptforge_app node -e \"fetch('http://127.0.0.1:3000/api/trpc/ping?batch=1&input=%7B%7D').then(async r=>{const t=await r.text(); if(!r.ok||!t.includes('ok')) process.exit(1); console.log('OK: app responding inside promptforge_app')}).catch(()=>process.exit(1))\" || echo 'WARN: app not yet ready (may still be starting)'"
 
 if [[ "$RUN_SMOKE" -eq 1 ]]; then
   log "Running production E2E smoke ..."
