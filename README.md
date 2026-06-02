@@ -12,7 +12,7 @@
 
 - 当前线上 PromptForge 入口为 `https://kg.lute-tlz-dddd.top/`，由宿主 nginx 反代到 `promptforge_app:3000`。
 - 当前公开站点是 static-first read-only：六大类内容由 `public/catalog/*.json` 提供，公开 tRPC 仅保留 `ping` 健康检查。
-- 当前线上内容规模为 803 条：提示词 193、技能 306、钩子 72、MCP 72、智能体 73、开源 87。
+- 当前线上内容规模为 815 条：提示词 195、技能 308、钩子 74、MCP 74、智能体 75、开源 89。
 - 线上 E2E smoke 已固化为正式流程：`npm run smoke:e2e`、`npm run smoke:e2e:prod` 和 `deploy/deploy.sh --smoke`。
 - 管理员内容新增与发布系统仍处于已批准设计阶段，尚未进入实现；设计文档见 `docs/superpowers/specs/2026-05-31-admin-content-publishing-design.md`。
 - 宿主页新增 PromptForge 卡片仍处于已批准设计阶段，尚未修改远程 landing page；设计文档见 `docs/superpowers/specs/2026-05-31-lute-landing-promptforge-card-design.md`。
@@ -24,13 +24,13 @@
 
 | 分类 | 数量 | 说明 |
 |---|---|---|
-| 提示词 | 193 | 覆盖创作、产品、开发等 14 个职业角色 |
-| 技能 | 306 | 从 Claude Code 到跨境电商的全域技能库 |
-| 钩子 | 72 | 事件驱动的自动化工作流 |
-| MCP | 72 | 模型上下文协议工具 |
-| 智能体 | 73 | AI Agent 框架与编排方案 |
-| 开源 | 87 | 精选开源项目 |
-| **合计** | **803** | **14 个职业角色** |
+| 提示词 | 195 | 覆盖创作、产品、开发等 14 个职业角色 |
+| 技能 | 308 | 从 Claude Code 到跨境电商的全域技能库 |
+| 钩子 | 74 | 事件驱动的自动化工作流 |
+| MCP | 74 | 模型上下文协议工具 |
+| 智能体 | 75 | AI Agent 框架与编排方案 |
+| 开源 | 89 | 精选开源项目 |
+| **合计** | **815** | **14 个职业角色** |
 
 ---
 
@@ -68,12 +68,12 @@ ai_pm_library/
 | 路径 | 内容 |
 |---|---|
 | `/` | 首页，六维分类入口 + 数据总览 |
-| `/prompts` | 提示词库（193条），含方法论洞察模块 |
-| `/skills` | 技能库（306条） |
-| `/hooks` | 钩子（72条） |
-| `/mcp` | MCP 工具（72条） |
-| `/agents` | 智能体（73条） |
-| `/github` | 开源项目（87条） |
+| `/prompts` | 提示词库（195条），含方法论洞察模块 |
+| `/skills` | 技能库（308条） |
+| `/hooks` | 钩子（74条） |
+| `/mcp` | MCP 工具（74条） |
+| `/agents` | 智能体（75条） |
+| `/github` | 开源项目（89条） |
 
 ### 本地开发
 
@@ -197,6 +197,7 @@ nexscope/
 ## docs/
 
 - [Prompt 标签方法论深度分析报告](./docs/analysis/prompt_methodology_report.md) — 173个提示词的标签分布、角色矩阵与方法论洞察
+- [每周高质量内容检索与增量更新流程](./docs/workflows/content-weekly-refresh-stable.md) — 六大类内容的网络检索、评分筛选和增量发布流程
 - [管理员内容新增与发布系统设计](./docs/superpowers/specs/2026-05-31-admin-content-publishing-design.md) — 后台新增、PostgreSQL、deploy-worker、版本化 catalog 与回滚方案
 - [宿主页 PromptForge 卡片链接展示设计](./docs/superpowers/specs/2026-05-31-lute-landing-promptforge-card-design.md) — 在 `lute-tlz-dddd.top` landing page 增加 PromptForge 卡片入口的实施方案
 

@@ -36522,6 +36522,337 @@ const staticData = {
       "createdAt": "2026-05-25 14:42:28",
       "category": "github"
     }
+  ,
+    {
+          "id": 1307398,
+          "title": "rulesync跨Agent规则同步技能",
+          "role": "developer",
+          "tags": [
+                "rulesync",
+                "AGENTS.md",
+                "Claude Code",
+                "Codex",
+                "配置同步"
+          ],
+          "content": "## 技能定位\n把一个项目的AI协作规则统一维护为可同步资产，避免AGENTS.md、CLAUDE.md、Cursor rules、Copilot instructions和MCP配置互相漂移。\n\n## 使用场景\n- 一个仓库同时被Codex、Claude Code、Cursor、Copilot CLI使用。\n- 团队需要统一rules、commands、MCP、subagents、skills、hooks和permissions。\n- 多个AI工具之间复制粘贴规则后出现格式漂移。\n\n## 工作流程\n1. 盘点当前AI配置文件：AGENTS.md、CLAUDE.md、.cursor、.github、.claude、MCP配置。\n2. 将稳定规则收敛到统一source-of-truth。\n3. 使用rulesync生成各工具目标格式。\n4. 对生成结果运行diff检查，避免覆盖用户本地配置。\n5. 把跨工具差异记录为明确的兼容性规则，而不是靠人工记忆维护。\n\n## 质量门禁\n- 生成前必须备份已有规则文件。\n- 生成后必须确认每个目标工具仍能读取规则。\n- 禁止把密钥、个人路径或临时项目状态写入共享规则。\n\n## 来源\n- rulesync repository: https://github.com/dyoshikawa/rulesync\n- 近一周信号：GitHub release v8.23.0, 2026-05-29；GitHub API pushed_at 2026-06-02",
+          "description": "统一生成和同步多种AI coding agent配置的技能，降低跨工具规则漂移",
+          "scenario": "团队同时使用Codex、Claude Code、Cursor、Copilot等工具，需要一套可审计的AI规则同步流程",
+          "author": "GitHub Active Repos · Weekly Curated",
+          "likes": 77,
+          "views": "2.8K",
+          "comments": 10,
+          "titleEn": "Rulesync Cross-Agent Configuration Skill",
+          "tagsEn": [
+                "rulesync",
+                "AGENTS.md",
+                "Claude Code",
+                "Codex",
+                "Configuration Sync"
+          ],
+          "descriptionEn": "A skill for keeping AI coding agent rules synchronized across AGENTS.md, Claude Code, Cursor, Copilot, and MCP configs",
+          "scenarioEn": "Teams using multiple AI coding agents need one auditable workflow for rule synchronization",
+          "problemFocus": "多Agent工具各自读取不同规则文件，长期会导致行为不一致、规则失效和审计困难",
+          "problemFocusEn": "Multiple agent tools read different rule files, causing inconsistent behavior, stale rules, and hard audits",
+          "createdAt": "2026-06-02 09:40:00",
+          "category": "skill"
+    },
+    {
+          "id": 1307399,
+          "title": "agnix Agent配置静态检查技能",
+          "role": "developer",
+          "tags": [
+                "agnix",
+                "Agent配置",
+                "SKILL.md",
+                "MCP",
+                "静态检查"
+          ],
+          "content": "## 技能定位\n在提交AI协作配置前，用静态检查发现AGENTS.md、CLAUDE.md、SKILL.md、hooks和MCP配置中的格式错误、无效字段和不可触发规则。\n\n## 适用输入\n- AGENTS.md / CLAUDE.md\n- SKILL.md frontmatter\n- hooks配置\n- MCP server配置\n- Copilot、Codex、Cursor、OpenCode等agent配置\n\n## 执行流程\n1. 确认本次变更是否包含AI配置文件。\n2. 运行配置lint，优先查看error，再处理warning。\n3. 对fixable问题使用安全修复；对unsafe修复先读diff再决定。\n4. 对无法自动修复的问题，回到官方schema或项目规则定位根因。\n5. 重新运行lint，直到没有阻断项。\n\n## 输出模板\n- 检查范围：\n- 阻断问题：\n- 可自动修复问题：\n- 手动修复建议：\n- 剩余风险：\n\n## 来源\n- agnix repository: https://github.com/agent-sh/agnix\n- 近一周信号：GitHub API pushed_at 2026-06-02；README说明其覆盖Claude Code、Codex CLI、OpenCode、Cursor、Copilot等配置校验",
+          "description": "把AI agent配置纳入静态检查，提前发现技能、hooks和MCP配置失效问题",
+          "scenario": "新增或修改AGENTS.md、SKILL.md、hooks、MCP配置后，需要在提交前确认agent真的能读取和触发",
+          "author": "GitHub Active Repos · Weekly Curated",
+          "likes": 69,
+          "views": "2.3K",
+          "comments": 9,
+          "titleEn": "Agnix Agent Configuration Lint Skill",
+          "tagsEn": [
+                "agnix",
+                "Agent Config",
+                "SKILL.md",
+                "MCP",
+                "Static Analysis"
+          ],
+          "descriptionEn": "A skill for linting AI agent configuration files before they silently break agent workflows",
+          "scenarioEn": "After editing AGENTS.md, SKILL.md, hooks, or MCP configs, teams need static validation before commit",
+          "problemFocus": "AI配置文件格式错一点就可能完全不触发，但人工审查很难发现schema级错误",
+          "problemFocusEn": "Small schema mistakes can make agent configs invisible, and manual review rarely catches them reliably",
+          "createdAt": "2026-06-02 09:40:00",
+          "category": "skill"
+    },
+    {
+          "id": 1307400,
+          "title": "PreToolUse危险命令拦截Hook",
+          "role": "developer",
+          "tags": [
+                "PreToolUse",
+                "安全钩子",
+                "rm -rf",
+                "权限控制",
+                "Claude Code"
+          ],
+          "content": "## Hook目标\n在agent执行Bash前拦截破坏性命令，尤其是删除、强制重置、覆盖密钥、force push和生产环境误操作。\n\n## 触发事件\n- Event: PreToolUse\n- Matcher: Bash\n- 条件：命令包含高风险模式，例如 rm -rf、git reset --hard、git clean -fd、chmod 777、force push、覆盖.env或SSH key。\n\n## 决策逻辑\n1. 读取tool_input.command。\n2. 将命令与denylist和项目保护路径匹配。\n3. 如果命中，返回deny并说明原因。\n4. 如果是可疑但不确定命令，返回ask或要求人工确认。\n5. 没有命中时不输出决策，交给正常权限流程。\n\n## 最小配置草案\n~~~json\n{\n  \"hooks\": {\n    \"PreToolUse\": [\n      {\n        \"matcher\": \"Bash\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"if\": \"Bash(rm *|git reset *|git clean *|git push *--force*)\",\n            \"command\": \"./scripts/security-check.sh\"\n          }\n        ]\n      }\n    ]\n  }\n}\n~~~\n\n## 来源\n- Claude Code Hooks reference: https://code.claude.com/docs/en/hooks\n- cc-safe-setup repository: https://github.com/yurukusa/cc-safe-setup",
+          "description": "在Bash执行前阻断破坏性命令的PreToolUse安全钩子模板",
+          "scenario": "团队允许AI coding agent执行命令，但必须防止误删、强制回滚、密钥破坏或生产误操作",
+          "author": "Claude Code Hooks · Weekly Curated",
+          "likes": 83,
+          "views": "3.2K",
+          "comments": 12,
+          "titleEn": "PreToolUse Destructive Command Guard Hook",
+          "tagsEn": [
+                "PreToolUse",
+                "Safety Hook",
+                "rm -rf",
+                "Permission Control",
+                "Claude Code"
+          ],
+          "descriptionEn": "A PreToolUse hook template that blocks destructive shell commands before an agent executes them",
+          "scenarioEn": "Teams allow AI coding agents to run commands but must prevent deletes, forced resets, secret damage, or production mistakes",
+          "problemFocus": "AI agent一旦拥有命令执行权，破坏性命令的损失可能发生在人工看到diff之前",
+          "problemFocusEn": "Once an AI agent can execute commands, destructive actions may happen before humans see the diff",
+          "createdAt": "2026-06-02 09:40:00",
+          "category": "hook"
+    },
+    {
+          "id": 1307401,
+          "title": "PostToolUse编辑后证据包Hook",
+          "role": "developer",
+          "tags": [
+                "PostToolUse",
+                "证据包",
+                "自动格式化",
+                "测试门禁",
+                "质量治理"
+          ],
+          "content": "## Hook目标\n在agent完成Write/Edit后自动触发格式化、轻量检查和证据收集，防止“改完但未验证”的状态被报告为完成。\n\n## 触发事件\n- Event: PostToolUse\n- Matcher: Write|Edit\n\n## 推荐动作\n1. 根据文件类型运行格式化或静态检查。\n2. 记录被修改文件列表。\n3. 如果命中关键路径，提示必须运行对应测试。\n4. 对失败结果返回blocking反馈，让agent修复而不是继续输出完成。\n5. 把验证命令、结果和剩余风险写入证据包。\n\n## 输出契约\n- 修改文件：\n- 自动检查：通过/失败\n- 必跑测试：\n- 阻断原因：\n- 下一步：修复/人工确认/继续\n\n## 适用边界\n- 适合格式化、lint、doc check、schema check。\n- 不适合每次编辑后跑完整E2E；完整E2E应放在Stop或部署后smoke。\n\n## 来源\n- Claude Code hooks guide: https://code.claude.com/docs/en/hooks-guide\n- Claude Code Hooks reference: https://code.claude.com/docs/en/hooks",
+          "description": "在文件编辑后自动运行轻量检查并生成证据包的PostToolUse钩子模板",
+          "scenario": "AI修改代码或文档后，需要自动提醒或阻断未验证状态，减少“口头完成但证据不足”",
+          "author": "Claude Code Hooks · Weekly Curated",
+          "likes": 74,
+          "views": "2.7K",
+          "comments": 11,
+          "titleEn": "PostToolUse Evidence Pack Hook",
+          "tagsEn": [
+                "PostToolUse",
+                "Proof Packet",
+                "Auto Format",
+                "Test Gate",
+                "Quality Governance"
+          ],
+          "descriptionEn": "A PostToolUse hook template that runs lightweight checks after edits and forces evidence collection",
+          "scenarioEn": "After AI edits code or docs, teams need automatic validation prompts instead of unsupported completion claims",
+          "problemFocus": "AI经常在未运行检查时声称完成，人工需要可重复的证据门禁来降低交付风险",
+          "problemFocusEn": "AI often claims completion without running checks; teams need repeatable evidence gates to reduce delivery risk",
+          "createdAt": "2026-06-02 09:40:00",
+          "category": "hook"
+    },
+    {
+          "id": 1307402,
+          "title": "Activepieces MCP自动化工具评估模板",
+          "role": "operations",
+          "tags": [
+                "Activepieces",
+                "MCP",
+                "自动化",
+                "No-code",
+                "审批流"
+          ],
+          "content": "## 工具定位\nActivepieces是开源自动化平台，pieces可作为MCP工具被LLM在Claude Desktop、Cursor、Windsurf等环境中调用，适合把业务动作接入agent工作流。\n\n## 评估清单\n1. 业务动作是否适合自动化：是否有明确输入、输出、失败重试和审批边界。\n2. Piece成熟度：是否已有对应piece，是否维护活跃，是否支持本地开发和热更新。\n3. MCP暴露范围：agent能看到哪些工具，是否需要按环境禁用高风险动作。\n4. 人在回路：涉及付款、删除、发信、客户数据更新时必须加入approval。\n5. 版本治理：flow是否有版本记录，回滚是否可执行。\n\n## 最小落地路径\n- 先用只读查询piece验证MCP连接。\n- 再加入低风险写动作。\n- 最后才开放需要审批的业务动作。\n\n## 来源\n- Activepieces repository: https://github.com/activepieces/activepieces\n- 近一周信号：GitHub API pushed_at 2026-06-02",
+          "description": "评估Activepieces pieces作为MCP工具接入AI agent工作流的清单",
+          "scenario": "运营或产品团队希望把业务自动化、审批、数据处理或通知流程接入MCP agent",
+          "author": "MCP Active Repos · Weekly Curated",
+          "likes": 71,
+          "views": "2.5K",
+          "comments": 9,
+          "titleEn": "Activepieces MCP Automation Evaluation Template",
+          "tagsEn": [
+                "Activepieces",
+                "MCP",
+                "Automation",
+                "No-code",
+                "Approval Flow"
+          ],
+          "descriptionEn": "A practical checklist for evaluating Activepieces pieces as MCP tools in agent workflows",
+          "scenarioEn": "Operations and product teams want to expose business automations, approvals, or data actions to MCP agents",
+          "problemFocus": "把自动化工具直接暴露给agent容易造成权限过宽、无审批和不可回滚的业务动作",
+          "problemFocusEn": "Exposing automation tools directly to agents can create overbroad permissions, missing approvals, and irreversible actions",
+          "createdAt": "2026-06-02 09:40:00",
+          "category": "mcp"
+    },
+    {
+          "id": 1307403,
+          "title": "Airbyte Agent SDK连接器权限评估MCP",
+          "role": "developer",
+          "tags": [
+                "Airbyte",
+                "MCP",
+                "Connector",
+                "权限感知",
+                "数据集成"
+          ],
+          "content": "## 工具定位\nAirbyte Agent SDK提供给AI agents访问外部系统的连接器工具，并强调可靠、permission-aware的访问路径。适合把CRM、数据仓库、SaaS系统接入agent。\n\n## 接入评估\n1. 数据源分类：客户数据、财务数据、产品事件、公共数据。\n2. 权限边界：只读、写入、管理级动作必须分离。\n3. 工具错误：连接器失败时必须返回可解释的MCP错误，而不是让agent猜测。\n4. 安装方式：确认目标agent支持skills.sh、Claude Code plugin或Codex symlink路径。\n5. 审计要求：每次外部系统访问都要保留tool call、参数摘要和结果状态。\n\n## PM验收问题\n- 这个连接器解决的是哪个真实业务流程？\n- 如果agent拿到错误数据，谁会受影响？\n- 是否有人工复核点和回滚动作？\n\n## 来源\n- Airbyte Agent SDK repository: https://github.com/airbytehq/airbyte-agent-sdk\n- 近一周信号：GitHub API pushed_at 2026-06-02",
+          "description": "面向外部系统连接器的MCP权限与审计评估模板",
+          "scenario": "需要让AI agent访问CRM、工单、数据仓库或SaaS系统，但必须保留权限边界和审计链路",
+          "author": "MCP Active Repos · Weekly Curated",
+          "likes": 67,
+          "views": "2.2K",
+          "comments": 8,
+          "titleEn": "Airbyte Agent SDK Connector Permission Review MCP",
+          "tagsEn": [
+                "Airbyte",
+                "MCP",
+                "Connector",
+                "Permission-aware",
+                "Data Integration"
+          ],
+          "descriptionEn": "A permission and audit checklist for exposing Airbyte connector tools to AI agents",
+          "scenarioEn": "Teams need AI agents to access CRM, ticketing, warehouse, or SaaS systems while preserving permission boundaries",
+          "problemFocus": "外部系统连接器一旦权限过宽，agent错误操作会直接影响客户数据或业务记录",
+          "problemFocusEn": "Overbroad connector permissions let agent mistakes directly affect customer data or business records",
+          "createdAt": "2026-06-02 09:40:00",
+          "category": "mcp"
+    },
+    {
+          "id": 1307404,
+          "title": "Claude Opus 4.8动态工作流迁移Agent",
+          "role": "developer",
+          "tags": [
+                "Claude Opus 4.8",
+                "Dynamic Workflows",
+                "Subagents",
+                "代码迁移",
+                "验证"
+          ],
+          "content": "## Agent定位\n面向大型代码库迁移、重构和跨模块修复的Claude Code动态工作流设计模板。核心是先计划，再并行分派subagents，最后用现有测试套件验证输出。\n\n## 运行前提\n- 任务能被拆成多个相对独立模块。\n- 仓库已有测试、lint或构建门禁。\n- 迁移目标明确，例如框架升级、API替换、schema重构。\n\n## 工作流\n1. Discovery Agent：扫描代码库，输出影响面和不可碰边界。\n2. Planner Agent：拆分迁移批次，给出依赖顺序。\n3. Worker Agents：按模块执行变更，禁止跨模块随意修改。\n4. Verifier Agent：运行测试、检查diff范围、标记不确定项。\n5. Reporter Agent：输出证据包和回滚计划。\n\n## 风险控制\n- 大规模迁移不得在没有测试基线时启动。\n- 每个subagent必须有明确文件边界。\n- 如果验证失败，先收缩范围，不扩大并行度。\n\n## 来源\n- Anthropic, Introducing Claude Opus 4.8, 2026-05-28: https://www.anthropic.com/news/claude-opus-4-8",
+          "description": "将Claude Opus 4.8动态工作流能力转化为大型代码迁移agent模板",
+          "scenario": "工程团队要做跨模块迁移或大规模重构，需要把并行agent能力纳入可验证的执行框架",
+          "author": "Anthropic News · Weekly Curated",
+          "likes": 92,
+          "views": "4.4K",
+          "comments": 15,
+          "titleEn": "Claude Opus 4.8 Dynamic Workflow Migration Agent",
+          "tagsEn": [
+                "Claude Opus 4.8",
+                "Dynamic Workflows",
+                "Subagents",
+                "Migration",
+                "Verification"
+          ],
+          "descriptionEn": "A large-codebase migration agent template based on Claude Opus 4.8 dynamic workflows",
+          "scenarioEn": "Engineering teams need to use parallel agents for migration while keeping scope and verification under control",
+          "problemFocus": "大规模迁移如果只靠单agent连续执行，容易遗漏影响面、扩大范围并在失败时难以回滚",
+          "problemFocusEn": "Large migrations handled by one continuous agent often miss impact surfaces, expand scope, and become hard to roll back",
+          "createdAt": "2026-06-02 09:40:00",
+          "category": "agent"
+    },
+    {
+          "id": 1307405,
+          "title": "Copilot用量与模型选择治理Agent",
+          "role": "productManager",
+          "tags": [
+                "GitHub Copilot",
+                "模型选择",
+                "AI Credits",
+                "预算控制",
+                "Agent治理"
+          ],
+          "content": "## Agent定位\n帮助团队在Copilot usage-based billing生效后，为不同任务选择合适模型、模式和预算上限，避免高倍率模型被默认用于低价值任务。\n\n## 输入\n- 任务类型：补全、问答、编辑、agent、code review。\n- 任务风险：生产、客户数据、安全、架构变更。\n- 预算约束：个人、团队或组织AI Credits。\n- 期望结果：速度优先、质量优先、成本优先。\n\n## 决策规则\n1. 简单解释和局部编辑优先低成本模式。\n2. 跨文件推理、复杂debug和迁移任务才使用高能力模型。\n3. Code review同时计入AI Credits和Actions minutes，必须单独标记。\n4. 超预算前自动收缩任务范围或请求人工确认。\n5. 每次长任务结束后记录实际消耗、产出和下次建议。\n\n## 输出\n- 推荐模型/模式：\n- 预算上限：\n- 停止条件：\n- 人工接管点：\n- 复盘指标：\n\n## 来源\n- GitHub Changelog, 2026-06-01: https://github.blog/changelog/2026-06-01-updates-to-github-copilot-billing-and-plans\n- GitHub Changelog, 2026-06-01: https://github.blog/changelog/2026-06-01-evaluation-models-in-auto-for-individual-plans",
+          "description": "面向Copilot usage-based billing和auto模型选择的团队治理agent",
+          "scenario": "团队希望把AI coding成本、模型选择和任务价值绑定，而不是默认使用最高成本模型",
+          "author": "GitHub Changelog · Weekly Curated",
+          "likes": 81,
+          "views": "3.6K",
+          "comments": 13,
+          "titleEn": "Copilot Usage and Model Selection Governance Agent",
+          "tagsEn": [
+                "GitHub Copilot",
+                "Model Selection",
+                "AI Credits",
+                "Budget Control",
+                "Agent Governance"
+          ],
+          "descriptionEn": "A governance agent for choosing Copilot models, modes, and spending limits under usage-based billing",
+          "scenarioEn": "Teams want AI coding spend and model choice to reflect task value instead of defaulting to costly models",
+          "problemFocus": "AI工具进入按量计费后，缺少任务级模型选择策略会把低价值任务变成高成本消耗",
+          "problemFocusEn": "With usage-based billing, missing task-level model policy turns low-value work into high-cost consumption",
+          "createdAt": "2026-06-02 09:40:00",
+          "category": "agent"
+    },
+    {
+          "id": 1307406,
+          "title": "TanStack AI: 类型安全的多框架AI SDK",
+          "role": "developer",
+          "tags": [
+                "TanStack AI",
+                "TypeScript",
+                "AI SDK",
+                "工具调用",
+                "多模态"
+          ],
+          "content": "## 项目定位\nTanStack AI是provider-agnostic TypeScript SDK，用于构建streaming chat、tool-calling agents、structured outputs、realtime voice、多模态应用和框架原生AI体验。\n\n## 适合评估的场景\n- 前端团队希望把AI SDK能力与React/Vue/Svelte/Solid等框架结合。\n- 产品需要类型安全的toolDefinition，而不是散落的函数调用。\n- 需要在OpenAI、Anthropic、Gemini等provider之间切换。\n- 希望把observability和devtools纳入AI应用开发流程。\n\n## 评估清单\n1. 当前项目是否以TypeScript为主。\n2. 是否需要framework-native hooks或组件集成。\n3. 工具调用是否需要共享server/client类型契约。\n4. 是否需要Code Mode或sandbox执行。\n5. 与现有Vercel AI SDK或OpenAI Agents SDK的边界是否清楚。\n\n## 来源\n- TanStack AI repository: https://github.com/TanStack/ai\n- 近一周信号：GitHub API pushed_at 2026-06-02",
+          "description": "面向TypeScript团队的provider-agnostic AI SDK项目评估卡",
+          "scenario": "前端或全栈团队需要构建类型安全、可观测、跨provider的AI应用与agent体验",
+          "author": "GitHub Active Repos · Weekly Curated",
+          "likes": 95,
+          "views": "4.9K",
+          "comments": 16,
+          "titleEn": "TanStack AI: Type-safe Multi-framework AI SDK",
+          "tagsEn": [
+                "TanStack AI",
+                "TypeScript",
+                "AI SDK",
+                "Tool Calling",
+                "Multimodal"
+          ],
+          "descriptionEn": "A provider-agnostic TypeScript AI SDK evaluation card for multi-framework AI applications",
+          "scenarioEn": "Frontend and full-stack teams need type-safe, observable, cross-provider AI app and agent development",
+          "problemFocus": "AI应用工具调用、结构化输出和多provider切换如果没有类型契约，长期维护成本会快速上升",
+          "problemFocusEn": "AI app tool calls, structured outputs, and multi-provider switching become costly without type contracts",
+          "createdAt": "2026-06-02 09:40:00",
+          "category": "github"
+    },
+    {
+          "id": 1307407,
+          "title": "RAGFlow: 面向Agent的开源RAG上下文引擎",
+          "role": "researcher",
+          "tags": [
+                "RAGFlow",
+                "RAG",
+                "Agent",
+                "上下文工程",
+                "知识库"
+          ],
+          "content": "## 项目定位\nRAGFlow是开源RAG引擎，将RAG与Agent能力结合，目标是为LLM应用提供高质量上下文层。适合评估企业知识库、文档问答和agent检索基础设施。\n\n## PM评估问题\n1. 当前问题是“搜索不到资料”，还是“检索到但上下文质量差”。\n2. 是否需要复杂文档解析、跨语言查询、数据同步或agentic workflow。\n3. 是否存在企业数据权限、审计和部署隔离要求。\n4. 与现有向量库、搜索系统、知识库产品是否重复。\n5. 是否能用小数据集先验证召回质量和引用准确性。\n\n## 技术评估\n- 检查部署复杂度和依赖。\n- 用真实文档跑10个高价值问题。\n- 评估引用准确率、幻觉率、响应延迟和维护成本。\n\n## 来源\n- RAGFlow repository: https://github.com/infiniflow/ragflow\n- 近一周信号：GitHub API pushed_at 2026-06-02",
+          "description": "面向企业知识库和agent检索基础设施的RAGFlow项目评估卡",
+          "scenario": "团队需要为AI agent提供高质量上下文层，正在评估开源RAG引擎或企业知识库方案",
+          "author": "GitHub Active Repos · Weekly Curated",
+          "likes": 101,
+          "views": "5.3K",
+          "comments": 18,
+          "titleEn": "RAGFlow: Open-source RAG Context Engine for Agents",
+          "tagsEn": [
+                "RAGFlow",
+                "RAG",
+                "Agent",
+                "Context Engineering",
+                "Knowledge Base"
+          ],
+          "descriptionEn": "An evaluation card for RAGFlow as an agent-ready RAG and context engine",
+          "scenarioEn": "Teams evaluating open-source RAG engines for enterprise knowledge bases and agent retrieval infrastructure",
+          "problemFocus": "Agent效果差往往不是模型问题，而是上下文层解析、检索、引用和权限治理不足",
+          "problemFocusEn": "Poor agent performance often comes from weak context parsing, retrieval, citation, and permission governance rather than the model itself",
+          "createdAt": "2026-06-02 09:40:00",
+          "category": "github"
+    }
   ],
   "prompts_full": [
     {
@@ -42694,6 +43025,73 @@ const staticData = {
       "problemFocusEn": "Cross-border sellers lack systematic methodology for 出海品牌本土化营销：文化适配与本地化策略",
       "createdAt": "2026-05-25 14:42:28",
       "category": "prompt"
+    }
+  ,
+    {
+          "id": 1307396,
+          "title": "Copilot用量预算门禁：AI结对前的成本与范围提示词",
+          "role": "productManager",
+          "tags": [
+                "GitHub Copilot",
+                "用量预算",
+                "AI Credits",
+                "成本治理",
+                "代码评审"
+          ],
+          "content": "你是一位AI工程管理顾问。请在启动GitHub Copilot coding agent、Copilot code review或长任务结对前，帮我完成一次用量预算门禁。\n\n## 背景\n- 任务目标：[要完成的开发/审查任务]\n- 代码库规模：[小/中/大，或关键模块数量]\n- 计划使用模式：[chat / edit / agent / code review / CLI]\n- 可接受预算：[AI Credits或团队预算上限]\n- 是否涉及私有仓库：[是/否]\n\n## 请输出\n1. 任务是否适合交给agent，还是应拆成人类主导的小步骤。\n2. 预计消耗风险：模型倍率、长上下文、代码评审、Actions minutes、重复尝试。\n3. 范围收缩方案：必须做、可延后、禁止做。\n4. 预算门禁：何时停止、何时人工接管、何时升级计划。\n5. 验收证据：任务完成后必须提供的diff、测试、日志和回滚方式。\n\n## 约束\n- 不允许以“先跑跑看”为理由跳过预算门禁。\n- 如果任务目标不清楚，先提出澄清问题，不要直接启动agent。\n- 私有仓库中的Copilot code review还要单独评估Actions minutes成本。\n\n## 来源\n- GitHub Changelog, 2026-06-01: https://github.blog/changelog/2026-06-01-updates-to-github-copilot-billing-and-plans",
+          "description": "把GitHub Copilot usage-based billing和Actions minutes影响转化为AI开发前的成本门禁提示词",
+          "scenario": "产品经理或技术负责人准备让AI coding agent执行长任务、代码评审或复杂修改前，需要先控制预算和范围",
+          "author": "GitHub Changelog · Weekly Curated",
+          "likes": 64,
+          "views": "2.1K",
+          "comments": 8,
+          "titleEn": "Copilot Usage Budget Gate Prompt",
+          "tagsEn": [
+                "GitHub Copilot",
+                "Usage Budget",
+                "AI Credits",
+                "Cost Governance",
+                "Code Review"
+          ],
+          "descriptionEn": "A pre-flight prompt for controlling Copilot usage-based billing and Actions minutes before agentic coding work",
+          "scenarioEn": "Before assigning long-running coding agent tasks or Copilot code reviews, teams need a cost and scope gate",
+          "problemFocus": "AI coding agent长任务容易因为目标不清、模型倍率、代码评审和重复尝试造成不可控成本",
+          "problemFocusEn": "Long-running AI coding tasks can create uncontrolled cost through vague scope, model multipliers, code review minutes, and retries",
+          "createdAt": "2026-06-02 09:40:00",
+          "category": "prompt"
+    },
+    {
+          "id": 1307397,
+          "title": "Copilot Memory范围审查：用户偏好与仓库事实分层提示词",
+          "role": "developer",
+          "tags": [
+                "Copilot Memory",
+                "记忆治理",
+                "仓库事实",
+                "用户偏好",
+                "隐私"
+          ],
+          "content": "你是一位AI记忆治理审查员。请审查下面这批可能写入Copilot Memory或团队AI记忆库的信息，判断哪些应该保存、保存到哪里、哪些必须删除或拒绝。\n\n## 输入\n- 候选记忆列表：[逐条列出]\n- 代码库/团队上下文：[仓库名、团队、项目]\n- 用户个人偏好：[如有]\n- 敏感信息边界：[密钥、客户数据、合同、内部策略等]\n\n## 分类规则\n1. 用户级偏好：只影响个人交互风格，例如输出语言、代码风格偏好。\n2. 仓库级事实：对所有贡献者都有帮助，例如架构约定、测试命令、部署入口。\n3. 不应保存：临时状态、一次性结论、未经验证的猜测、敏感数据、可快速从文件读取的信息。\n4. 需要删除：过期、错误、暴露隐私或会误导未来agent的记忆。\n\n## 输出\n- 保存清单：每条说明保存层级、理由、证据来源。\n- 拒绝清单：每条说明风险和替代做法。\n- 删除清单：每条说明删除路径和影响范围。\n- 复核周期：哪些记忆需要在版本发布后重新确认。\n\n## 来源\n- GitHub Changelog, 2026-05-26: https://github.blog/changelog/2026-05-26-copilot-memory-has-more-controls-for-deletion-scope-and-the-copilot-cli",
+          "description": "基于Copilot Memory新范围控制的记忆治理提示词，区分用户偏好、仓库事实和禁止保存的信息",
+          "scenario": "团队启用AI记忆、repository memory或长期协作代理时，需要防止错误记忆和敏感信息污染后续会话",
+          "author": "GitHub Changelog · Weekly Curated",
+          "likes": 58,
+          "views": "1.9K",
+          "comments": 7,
+          "titleEn": "Copilot Memory Scope Review Prompt",
+          "tagsEn": [
+                "Copilot Memory",
+                "Memory Governance",
+                "Repository Facts",
+                "User Preferences",
+                "Privacy"
+          ],
+          "descriptionEn": "A memory governance prompt that separates user preferences, repository facts, and information that should not be stored",
+          "scenarioEn": "Teams using AI memory need to prevent stale, sensitive, or misleading memories from contaminating future sessions",
+          "problemFocus": "AI长期记忆如果不分层，会把临时状态、个人偏好、仓库事实和敏感信息混在一起",
+          "problemFocusEn": "AI memory becomes risky when temporary state, preferences, repository facts, and sensitive information are mixed together",
+          "createdAt": "2026-06-02 09:40:00",
+          "category": "prompt"
     }
   ],
   "workflows_full": [

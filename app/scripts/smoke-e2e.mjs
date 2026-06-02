@@ -23,22 +23,22 @@ const screenshotDir = resolve(
 )
 
 const categoryRoutes = [
-  { hash: '/', label: '灵词', count: 803, cards: 0 },
-  { hash: '/prompts', label: '提示词', count: 193, cards: 48 },
-  { hash: '/skills', label: '技能', count: 306, cards: 48 },
-  { hash: '/hooks', label: '钩子', count: 72, cards: 48 },
-  { hash: '/mcp', label: 'MCP', count: 72, cards: 48 },
-  { hash: '/agents', label: '智能体', count: 73, cards: 48 },
-  { hash: '/github', label: '开源', count: 87, cards: 48 },
+  { hash: '/', label: '灵词', count: 815, cards: 0 },
+  { hash: '/prompts', label: '提示词', count: 195, cards: 48 },
+  { hash: '/skills', label: '技能', count: 308, cards: 48 },
+  { hash: '/hooks', label: '钩子', count: 74, cards: 48 },
+  { hash: '/mcp', label: 'MCP', count: 74, cards: 48 },
+  { hash: '/agents', label: '智能体', count: 75, cards: 48 },
+  { hash: '/github', label: '开源', count: 89, cards: 48 },
 ]
 
 const catalogCounts = {
-  prompt: 193,
-  skill: 306,
-  hook: 72,
-  mcp: 72,
-  agent: 73,
-  github: 87,
+  prompt: 195,
+  skill: 308,
+  hook: 74,
+  mcp: 74,
+  agent: 75,
+  github: 89,
 }
 
 const report = {
@@ -265,7 +265,7 @@ async function runDesktopChecks(browser) {
       if (route.cards > 0) {
         await waitForCards(page, route.cards)
       } else {
-        await page.waitForFunction(() => document.body.textContent?.includes('803'), null, { timeout: 10000 })
+        await page.waitForFunction(() => document.body.textContent?.includes('815'), null, { timeout: 10000 })
       }
       routeResults.push({ route: route.hash, label: route.label, overflow })
     }
@@ -279,7 +279,7 @@ async function runDesktopChecks(browser) {
     const button = page.getByRole('button', { name: /加载更多/ })
     await button.click()
     await waitForCards(page, 96)
-    await page.getByText('96/306').waitFor({ timeout: 5000 })
+    await page.getByText('96/308').waitFor({ timeout: 5000 })
     await takeScreenshot(page, 'desktop-skills-load-more')
     return { visibleCards: 96 }
   })
