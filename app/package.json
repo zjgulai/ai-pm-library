@@ -10,6 +10,8 @@
     "preview": "vite preview",
     "start": "NODE_ENV=production node dist/boot.js",
     "check": "tsc -b",
+    "catalog:generate": "node scripts/generate-catalog.mjs",
+    "catalog:check": "node scripts/generate-catalog.mjs --check",
     "format": "prettier --write .",
     "test": "vitest run",
     "db:generate": "drizzle-kit generate",
@@ -97,9 +99,18 @@
     "typescript-eslint": "^8.46.4",
     "vite": "^7.2.4",
     "@hono/vite-dev-server": "^0.19.0",
-    "esbuild": "^0.27.2",
+    "esbuild": "^0.28.1",
+    "ajv": "^8.17.1",
     "prettier": "^3.7.4",
     "vitest": "^4.0.16",
     "drizzle-kit": "^0.31.8"
+  },
+  "overrides": {
+    "tsx": {
+      "esbuild": "^0.28.1"
+    },
+    "vite": {
+      "esbuild": "^0.28.1"
+    }
   }
 }
