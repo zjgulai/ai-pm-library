@@ -22,7 +22,7 @@ services:
       - promptforge_net
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost",
-             "-u", "promptforge", "--password=${MYSQL_PASSWORD}"]
+             "-u", "promptforge", "--password=$$MYSQL_PASSWORD"]
       interval: 10s
       timeout: 5s
       retries: 12

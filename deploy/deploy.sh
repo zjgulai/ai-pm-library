@@ -10,7 +10,7 @@ PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 REMOTE_USER=ubuntu
 REMOTE_HOST=101.34.52.232
 REMOTE_DIR=/opt/promptforge
-SSH_KEY="$PROJECT_ROOT/ai_video.pem"
+SSH_KEY="${SSH_KEY_PATH:-$HOME/.ssh/promptforge_ai_video.pem}"
 SSH_OPTS="-i $SSH_KEY -o StrictHostKeyChecking=no"
 
 SEED=false

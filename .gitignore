@@ -1,6 +1,13 @@
 # ── 部署密钥（绝不提交）──────────────────────────────────────────
 deploy/secrets.env
 deploy/.env.prod
+*.pem
+*.key
+
+# ── 本地 Agent / 规划 / 索引状态（不进入项目资产）──────────────
+.kiro/
+.sisyphus/
+.codegraph/
 
 
 node_modules/
