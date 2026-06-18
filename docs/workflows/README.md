@@ -19,10 +19,11 @@ source: human+ai
 ## 相关入口
 
 - [项目总览 README](../../README.md)
+- [架构历史快照](../architecture/project-architecture-analysis-20260604/README.md)
 
-## 待收口入口
+## 历史边界
 
-- 架构图谱快照仍在 `docs/architecture/project-architecture-analysis-20260604/` 待当前事实刷新；刷新完成前不作为本文档索引入口。
+- 架构图谱目录保留为 2026-06-04 历史快照，图内旧计数和旧链路不代表当前 catalog 事实。
 
 ## 使用规则
 

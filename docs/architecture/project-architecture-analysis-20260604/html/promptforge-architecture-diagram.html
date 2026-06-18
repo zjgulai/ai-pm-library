@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PromptForge Architecture Diagram</title>
+  <style>
+    :root {
+      --bg: #020617;
+      --panel: #0f172a;
+      --text: #e5e7eb;
+      --muted: #94a3b8;
+      --grid: #1e293b;
+      --frontend: #22d3ee;
+      --data: #34d399;
+      --deploy: #fbbf24;
+      --security: #fb7185;
+      --future: #a78bfa;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 32px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+    }
+    .wrap { max-width: 1320px; margin: 0 auto; }
+    .head { margin-bottom: 18px; }
+    .title { font-size: 24px; font-weight: 700; letter-spacing: .02em; }
+    .subtitle { margin-top: 8px; color: var(--muted); font-size: 13px; }
+    .canvas {
+      border: 1px solid #334155;
+      border-radius: 14px;
+      background:
+        linear-gradient(var(--grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid) 1px, transparent 1px),
+        var(--panel);
+      background-size: 40px 40px;
+      overflow: hidden;
+    }
+    svg { width: 100%; height: auto; display: block; }
+    .box { fill: #0f172a; stroke-width: 2; rx: 8; }
+    .front { stroke: var(--frontend); }
+    .data { stroke: var(--data); }
+    .deploy { stroke: var(--deploy); }
+    .sec { stroke: var(--security); stroke-dasharray: 7 5; }
+    .future { stroke: var(--future); stroke-dasharray: 8 5; }
+    .label { fill: var(--text); font-size: 15px; font-weight: 700; }
+    .small { fill: var(--muted); font-size: 11px; }
+    .arrow { fill: none; stroke: #cbd5e1; stroke-width: 1.8; marker-end: url(#arrow); }
+    .arrow-future { fill: none; stroke: var(--future); stroke-width: 1.8; stroke-dasharray: 7 5; marker-end: url(#arrowFuture); }
+    .summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 18px; }
+    .card { border: 1px solid #334155; border-radius: 12px; padding: 14px; background: #0f172a; }
+    .card h3 { margin: 0 0 8px; font-size: 14px; }
+    .card p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.55; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="head">
+      <div class="title">PromptForge Architecture Diagram</div>
+      <div class="subtitle">Current static-first production chain plus future admin publishing boundary, generated 2026-06-04.</div>
+    </div>
+    <div class="canvas">
+      <svg viewBox="0 0 1280 760" role="img" aria-label="PromptForge architecture diagram">
+        <defs>
+          <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L9,3 z" fill="#cbd5e1" />
+          </marker>
+          <marker id="arrowFuture" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L9,3 z" fill="#a78bfa" />
+          </marker>
+        </defs>
+        <text x="36" y="42" class="label">CURRENT PRODUCTION BOUNDARY</text>
+        <rect x="34" y="62" width="1190" height="430" rx="14" fill="none" stroke="#475569" stroke-width="1.5" />
+
+        <rect x="70" y="120" width="180" height="90" class="box front" />
+        <text x="92" y="154" class="label">Users</text>
+        <text x="92" y="178" class="small">AI PM / creator / developer</text>
+        <text x="92" y="194" class="small">search, filter, copy, reuse</text>
+
+        <rect x="310" y="105" width="220" height="120" class="box front" />
+        <text x="335" y="140" class="label">React + Vite App</text>
+        <text x="335" y="166" class="small">hash routes: home + six categories</text>
+        <text x="335" y="184" class="small">CategoryPage / CardGrid / SearchBar</text>
+
+        <rect x="600" y="105" width="220" height="120" class="box data" />
+        <text x="626" y="140" class="label">Static Catalog</text>
+        <text x="626" y="166" class="small">public/catalog/*.json</text>
+        <text x="626" y="184" class="small">851 items across six categories</text>
+
+        <rect x="890" y="105" width="250" height="120" class="box deploy" />
+        <text x="916" y="140" class="label">Docker + nginx</text>
+        <text x="916" y="166" class="small">promptforge_app:3000</text>
+        <text x="916" y="184" class="small">kg.lute-tlz-dddd.top</text>
+
+        <path d="M250 165 H310" class="arrow" />
+        <path d="M530 165 H600" class="arrow" />
+        <path d="M820 165 H890" class="arrow" />
+
+        <rect x="310" y="305" width="220" height="105" class="box data" />
+        <text x="335" y="338" class="label">Source Data</text>
+        <text x="335" y="363" class="small">staticData.ts</text>
+        <text x="335" y="381" class="small">catalog:export before dev/build/test</text>
+
+        <rect x="600" y="305" width="220" height="105" class="box sec" />
+        <text x="626" y="338" class="label">Quality Gates</text>
+        <text x="626" y="363" class="small">verify, docs check, vitest, build</text>
+        <text x="626" y="381" class="small">Playwright smoke</text>
+
+        <rect x="890" y="305" width="250" height="105" class="box sec" />
+        <text x="916" y="338" class="label">Read-only API Boundary</text>
+        <text x="916" y="363" class="small">public tRPC: ping only</text>
+        <text x="916" y="381" class="small">legacy routers not mounted</text>
+
+        <path d="M420 305 V225" class="arrow" />
+        <path d="M530 358 H600" class="arrow" />
+        <path d="M820 358 H890" class="arrow" />
+
+        <text x="36" y="540" class="label">FUTURE ADMIN PUBLISHING BOUNDARY - DESIGNED, NOT IMPLEMENTED</text>
+        <rect x="34" y="560" width="1190" height="150" rx="14" fill="none" stroke="#a78bfa" stroke-width="1.5" stroke-dasharray="10 6" />
+        <rect x="80" y="600" width="175" height="70" class="box future" />
+        <text x="106" y="628" class="label">Admin UI</text>
+        <text x="106" y="650" class="small">single admin</text>
+        <rect x="310" y="600" width="175" height="70" class="box future" />
+        <text x="336" y="628" class="label">Admin API</text>
+        <text x="336" y="650" class="small">session / CSRF / audit</text>
+        <rect x="540" y="600" width="175" height="70" class="box future" />
+        <text x="566" y="628" class="label">PostgreSQL</text>
+        <text x="566" y="650" class="small">content_items / events</text>
+        <rect x="770" y="600" width="175" height="70" class="box future" />
+        <text x="796" y="628" class="label">deploy-worker</text>
+        <text x="796" y="650" class="small">catalog release</text>
+        <rect x="1000" y="600" width="175" height="70" class="box future" />
+        <text x="1026" y="628" class="label">current pointer</text>
+        <text x="1026" y="650" class="small">atomic switch / rollback</text>
+        <path d="M255 635 H310" class="arrow-future" />
+        <path d="M485 635 H540" class="arrow-future" />
+        <path d="M715 635 H770" class="arrow-future" />
+        <path d="M945 635 H1000" class="arrow-future" />
+      </svg>
+    </div>
+    <div class="summary">
+      <div class="card"><h3>Current</h3><p>Production is static-first and read-only. Catalog JSON is bundled and fetched by the browser.</p></div>
+      <div class="card"><h3>Guardrail</h3><p>tRPC public surface is ping-only; legacy DB-backed routers are not public production read APIs.</p></div>
+      <div class="card"><h3>Future</h3><p>Admin publishing requires PostgreSQL, session/CSRF/audit, deploy-worker, catalog versioning and rollback.</p></div>
+    </div>
+  </div>
+</body>
+</html>
