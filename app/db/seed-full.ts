@@ -1,12 +1,23 @@
+import { readFileSync } from "node:fs";
 import { drizzle } from "drizzle-orm/mysql2";
 import mysql from "mysql2/promise";
 import * as dotenv from "dotenv";
 dotenv.config();
 
-import staticData from "../src/data/staticData";
 import { prompts, skills } from "./schema";
 
 const BATCH_SIZE = 50;
+
+type CatalogSource = {
+  prompts_full?: Record<string, unknown>[];
+  skills_full?: Record<string, unknown>[];
+};
+
+function loadCatalogSource(): CatalogSource {
+  return JSON.parse(
+    readFileSync(new URL("../src/data/catalogSource.json", import.meta.url), "utf8")
+  ) as CatalogSource;
+}
 
 async function seedFull() {
   const url = process.env.DATABASE_URL;
@@ -15,12 +26,9 @@ async function seedFull() {
   const connection = await mysql.createConnection(url);
   const db = drizzle(connection);
 
-  console.log("Seeding from staticData (full 803 records)...");
+  console.log("Seeding from catalogSource (full 803 records)...");
 
-  const data = staticData as {
-    prompts_full?: Record<string, unknown>[];
-    skills_full?: Record<string, unknown>[];
-  };
+  const data = loadCatalogSource();
 
   const promptItems = data.prompts_full || [];
   const skillItems = data.skills_full || [];
