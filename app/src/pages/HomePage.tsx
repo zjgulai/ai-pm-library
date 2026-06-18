@@ -4,7 +4,8 @@ import {
   MessageSquare, Terminal, GitBranch, Puzzle, Bot, Github,
   ArrowRight, Sparkles, BookOpen, Compass, Flame
 } from 'lucide-react'
-import { getAllCounts, CATEGORY_META } from '@/data/dataUtils'
+import { useCatalogCounts } from '@/data/catalogHooks'
+import { CATEGORY_META } from '@/data/dataUtils'
 import type { Category } from '@/data/dataUtils'
 
 const CATS: { key: Category; icon: typeof MessageSquare; stat: string; statLabel: string }[] = [
@@ -31,9 +32,11 @@ function AnimatedCounter({ value, suffix = '' }: { value: number; suffix?: strin
   useEffect(() => {
     const el = ref.current
     if (!el) return
+    done.current = false
     const obs = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting && !done.current) {
         done.current = true
+        setDisplay(0)
         const start = performance.now()
         const tick = (now: number) => {
           const p = Math.min((now - start) / 1200, 1)
@@ -52,7 +55,7 @@ function AnimatedCounter({ value, suffix = '' }: { value: number; suffix?: strin
 }
 
 export default function HomePage() {
-  const counts = getAllCounts()
+  const { counts } = useCatalogCounts()
   const total = Object.values(counts).reduce((a, b) => a + b, 0)
 
   return (

@@ -2,11 +2,13 @@ import { MessageSquare } from 'lucide-react'
 import PageHero from '@/components/PageHero'
 import CardGrid from '@/components/CardGrid'
 import PromptAnalytics from '@/components/PromptAnalytics'
-import { getItemsByCategory, CATEGORY_META } from '@/data/dataUtils'
+import CatalogLoadState from '@/components/CatalogLoadState'
+import { useCatalogItems } from '@/data/catalogHooks'
+import { CATEGORY_META } from '@/data/dataUtils'
 
 export default function PromptsPage() {
   const meta = CATEGORY_META.prompt
-  const items = getItemsByCategory('prompt')
+  const { items, loading, error } = useCatalogItems('prompt')
 
   return (
     <div>
@@ -19,7 +21,9 @@ export default function PromptsPage() {
 
       {/* Prompt Cards */}
       <div className="pt-8 pb-12">
-        <CardGrid items={items} color={meta.color} categoryLabel="提示词" />
+        {loading || error
+          ? <CatalogLoadState color={meta.color} error={error} />
+          : <CardGrid items={items} color={meta.color} categoryLabel="提示词" />}
       </div>
     </div>
   )

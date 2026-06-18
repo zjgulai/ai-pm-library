@@ -1,0 +1,29 @@
+{
+  "generatedFrom": "src/data/catalogSource.json",
+  "categories": {
+    "prompt": {
+      "count": 193,
+      "path": "/catalog/prompt.json"
+    },
+    "skill": {
+      "count": 306,
+      "path": "/catalog/skill.json"
+    },
+    "hook": {
+      "count": 72,
+      "path": "/catalog/hook.json"
+    },
+    "mcp": {
+      "count": 72,
+      "path": "/catalog/mcp.json"
+    },
+    "agent": {
+      "count": 73,
+      "path": "/catalog/agent.json"
+    },
+    "github": {
+      "count": 87,
+      "path": "/catalog/github.json"
+    }
+  }
+}

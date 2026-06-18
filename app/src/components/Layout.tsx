@@ -4,12 +4,7 @@ import {
   MessageSquare, Terminal, GitBranch, Puzzle, Bot, Github,
   Menu, X, ChevronRight
 } from 'lucide-react'
-import { getAllCounts } from '@/data/dataUtils'
-
-function useNavCounts() {
-  const counts = useMemo(() => getAllCounts(), [])
-  return counts
-}
+import { useCatalogCounts } from '@/data/catalogHooks'
 
 const NAV_BASE = [
   { path: '/', label: '首页', icon: ChevronRight, exact: true },
@@ -25,7 +20,7 @@ export default function Layout() {
   const location = useLocation()
   const [mobileOpen, setMobileOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
-  const counts = useNavCounts()
+  const { counts } = useCatalogCounts()
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20)
