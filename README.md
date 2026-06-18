@@ -131,6 +131,7 @@ nexscope/
 ## docs/
 
 - [Prompt 标签方法论深度分析报告](./docs/analysis/prompt_methodology_report.md) — 173个提示词的标签分布、角色矩阵与方法论洞察
+- [Catalog 合同 Schema 迁移工作流](./docs/workflows/README.md)
 
 ---
 
