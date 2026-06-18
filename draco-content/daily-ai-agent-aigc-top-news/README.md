@@ -155,7 +155,6 @@ ai-news-bitable-archive
 | 文件 | 作用 |
 |---|---|
 | [`SKILL.md`](./SKILL.md) | Hermes skill 主体 |
-| [`templates/cron-prompt.zh.md`](./templates/cron-prompt.zh.md) | 可直接改造的定时任务 prompt |
 | [`assets/daily-ai-agent-aigc-top-news-flow.svg`](./assets/daily-ai-agent-aigc-top-news-flow.svg) | 工作流示意图 |
 
 ## 一句话
