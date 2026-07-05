@@ -1,8 +1,5 @@
-import staticData from './staticData'
-import type { Category } from './catalogMeta'
-
-export type { Category } from './catalogMeta'
-export { CATEGORY_META, ROLE_LABELS, getAllCounts } from './catalogMeta'
+export type Category = 'prompt' | 'skill' | 'hook' | 'mcp' | 'agent' | 'github'
+export const CATEGORIES: Category[] = ['prompt', 'skill', 'hook', 'mcp', 'agent', 'github']
 
 export interface Item {
   id: number
@@ -24,6 +21,36 @@ export interface Item {
   comments: number
   category?: string
   createdAt?: string
+}
+
+interface CatalogManifestEntry {
+  count: number
+  path: string
+}
+
+interface CatalogManifest {
+  generatedFrom: string
+  categories: Record<Category, CatalogManifestEntry>
+}
+
+const CATALOG_PATHS: Record<Category, string> = {
+  prompt: '/catalog/prompt.json',
+  skill: '/catalog/skill.json',
+  hook: '/catalog/hook.json',
+  mcp: '/catalog/mcp.json',
+  agent: '/catalog/agent.json',
+  github: '/catalog/github.json',
+}
+
+let manifestPromise: Promise<CatalogManifest> | null = null
+const itemPromises = new Map<Category, Promise<Item[]>>()
+
+async function loadJson<T>(path: string): Promise<T> {
+  const response = await fetch(path, { cache: 'force-cache' })
+  if (!response.ok) {
+    throw new Error(`Failed to load catalog asset: ${path} (${response.status})`)
+  }
+  return response.json() as Promise<T>
 }
 
 function normalizeTags(tags: unknown): string[] {
@@ -50,13 +77,35 @@ function camelizeKeys(obj: Record<string, unknown>): Item {
   return out as unknown as Item
 }
 
-export function getItemsByCategory(category: Category): Item[] {
-  if (category === 'prompt') {
-    return (staticData.prompts_full || []).map(camelizeKeys)
+export function getEmptyCounts(): Record<Category, number> {
+  return CATEGORIES.reduce((counts, category) => {
+    counts[category] = 0
+    return counts
+  }, {} as Record<Category, number>)
+}
+
+export async function loadCatalogManifest(): Promise<CatalogManifest> {
+  manifestPromise ??= loadJson<CatalogManifest>('/catalog/manifest.json')
+  return manifestPromise
+}
+
+export async function loadItemsByCategory(category: Category): Promise<Item[]> {
+  const existing = itemPromises.get(category)
+  if (existing) return existing
+
+  const promise = loadJson<Array<Record<string, unknown>>>(CATALOG_PATHS[category])
+    .then(items => items.map(camelizeKeys))
+  itemPromises.set(category, promise)
+  return promise
+}
+
+export async function loadAllCounts(): Promise<Record<Category, number>> {
+  const manifest = await loadCatalogManifest()
+  const counts = getEmptyCounts()
+  for (const category of CATEGORIES) {
+    counts[category] = manifest.categories[category]?.count ?? 0
   }
-  return (staticData.skills_full || [])
-    .filter((s: Record<string, unknown>) => s.category === category)
-    .map(camelizeKeys)
+  return counts
 }
 
 export function getRoleCounts(items: Item[]): Record<string, number> {
@@ -91,4 +140,21 @@ export function getUniqueTags(items: Item[]): string[] {
     for (const tag of item.tags) tagSet.add(tag)
   }
   return Array.from(tagSet).sort()
+}
+
+export const CATEGORY_META: Record<Category, { label: string; subtitle: string; color: string; colorLight: string; desc: string }> = {
+  prompt: { label: '提示词', subtitle: 'Prompts', color: 'var(--cat-prompt)', colorLight: '#C84B3115', desc: '经过验证的提示词模板，覆盖创作、产品、开发等14个职业角色' },
+  skill: { label: '技能', subtitle: 'Skills', color: 'var(--cat-skill)', colorLight: '#4A6FA515', desc: '职业场景技能库，从Claude Code到跨境电商的全域覆盖' },
+  hook: { label: '钩子', subtitle: 'Hooks', color: 'var(--cat-hook)', colorLight: '#7C529515', desc: '事件驱动的自动化工作流，让AI自己管理自己' },
+  mcp: { label: 'MCP', subtitle: 'Model Context Protocol', color: 'var(--cat-mcp)', colorLight: '#2E8B8B15', desc: '模型上下文协议工具，连接AI与外部世界' },
+  agent: { label: '智能体', subtitle: 'AI Agents', color: 'var(--cat-agent)', colorLight: '#5B8C5A15', desc: 'AI Agent框架与编排，从单智能体到多智能体协作' },
+  github: { label: '开源', subtitle: 'Open Source', color: 'var(--cat-github)', colorLight: '#8A6E4B15', desc: '精选开源项目与工具，站在巨人的肩膀上' },
+}
+
+export const ROLE_LABELS: Record<string, string> = {
+  all: '全部', creator: '创作者', productManager: '产品经理', developer: '开发者',
+  growth: '增长', founder: '创始人', strategist: '策略', operations: '运营',
+  dataScientist: '数据', writer: '写作者', researcher: '研究', sales: '销售',
+  ecommerce: '跨境电商', claude: 'Claude Code', claudeCode: 'Claude Code',
+  prompt: '提示词', skill: '技能', hook: '钩子', mcp: 'MCP', agent: '智能体', github: '开源',
 }

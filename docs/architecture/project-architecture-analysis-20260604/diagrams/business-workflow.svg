@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2080" height="1025" viewBox="0 0 2080 1025"><defs><marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="4" orient="auto"><path d="M0,0 L0,8 L11,4 z" fill="#1e3a5f"/></marker></defs><rect width="100%" height="100%" fill="#fff"/><rect x="70" y="165" width="1940" height="410" rx="12" style="stroke:#64748b;stroke-width:2;stroke-dasharray:none;fill:none;opacity:1"/>
+<rect x="110" y="280" width="170" height="100" rx="12" style="stroke:#c2410c;stroke-width:2;stroke-dasharray:none;fill:#fed7aa;opacity:1"/>
+<polyline points="280,330 325,330" style="fill:none;stroke:#1e3a5f;stroke-width:2;stroke-dasharray:none" marker-end="url(#arrow)"/>
+<rect x="325" y="280" width="170" height="100" rx="12" style="stroke:#1e3a5f;stroke-width:2;stroke-dasharray:none;fill:#bfdbfe;opacity:1"/>
+<polyline points="495,330 540,330" style="fill:none;stroke:#1e3a5f;stroke-width:2;stroke-dasharray:none" marker-end="url(#arrow)"/>
+<rect x="540" y="280" width="170" height="100" rx="12" style="stroke:#1e3a5f;stroke-width:2;stroke-dasharray:none;fill:#bfdbfe;opacity:1"/>
+<polyline points="710,330 755,330" style="fill:none;stroke:#1e3a5f;stroke-width:2;stroke-dasharray:none" marker-end="url(#arrow)"/>
+<rect x="755" y="280" width="170" height="100" rx="12" style="stroke:#b45309;stroke-width:2;stroke-dasharray:none;fill:#fef3c7;opacity:1"/>
+<polyline points="925,330 970,330" style="fill:none;stroke:#1e3a5f;stroke-width:2;stroke-dasharray:none" marker-end="url(#arrow)"/>
+<rect x="970" y="280" width="170" height="100" rx="12" style="stroke:#166534;stroke-width:2;stroke-dasharray:none;fill:#dcfce7;opacity:1"/>
+<rect x="980" y="440" width="170" height="100" rx="12" style="stroke:#047857;stroke-width:2;stroke-dasharray:none;fill:#a7f3d0;opacity:1"/>
+<polyline points="1150,490 1195,490" style="fill:none;stroke:#1e3a5f;stroke-width:2;stroke-dasharray:none" marker-end="url(#arrow)"/>
+<rect x="1195" y="440" width="170" height="100" rx="12" style="stroke:#047857;stroke-width:2;stroke-dasharray:none;fill:#a7f3d0;opacity:1"/>
+<polyline points="1365,490 1410,490" style="fill:none;stroke:#1e3a5f;stroke-width:2;stroke-dasharray:none" marker-end="url(#arrow)"/>
+<rect x="1410" y="440" width="170" height="100" rx="12" style="stroke:#9a3412;stroke-width:2;stroke-dasharray:none;fill:#ffedd5;opacity:1"/>
+<polyline points="1580,490 1625,490" style="fill:none;stroke:#1e3a5f;stroke-width:2;stroke-dasharray:none" marker-end="url(#arrow)"/>
+<rect x="1625" y="440" width="170" height="100" rx="12" style="stroke:#047857;stroke-width:2;stroke-dasharray:none;fill:#a7f3d0;opacity:1"/>
+<polyline points="980,330 1065,440" style="fill:none;stroke:#1e3a5f;stroke-width:2;stroke-dasharray:none" marker-end="url(#arrow)"/>
+<rect x="110" y="655" width="820" height="300" rx="12" style="stroke:#1e40af;stroke-width:2;stroke-dasharray:none;fill:none;opacity:1"/>
+<ellipse cx="222.5" cy="800" rx="67.5" ry="35" style="stroke:#c2410c;stroke-width:2;stroke-dasharray:none;fill:#fed7aa;opacity:1"/>
+<rect x="340" y="755" width="170" height="90" rx="12" style="stroke:#1e40af;stroke-width:2;stroke-dasharray:none;fill:#dbeafe;opacity:1"/>
+<rect x="560" y="755" width="190" height="90" rx="12" style="stroke:#166534;stroke-width:2;stroke-dasharray:none;fill:#dcfce7;opacity:1"/>
+<rect x="800" y="755" width="190" height="90" rx="12" style="stroke:#047857;stroke-width:2;stroke-dasharray:none;fill:#a7f3d0;opacity:1"/>
+<polyline points="290,800 340,800" style="fill:none;stroke:#1e3a5f;stroke-width:2;stroke-dasharray:none" marker-end="url(#arrow)"/>
+<polyline points="510,800 560,800" style="fill:none;stroke:#1e3a5f;stroke-width:2;stroke-dasharray:none" marker-end="url(#arrow)"/>
+<polyline points="750,800 800,800" style="fill:none;stroke:#1e3a5f;stroke-width:2;stroke-dasharray:none" marker-end="url(#arrow)"/>
+<rect x="1020" y="655" width="860" height="300" rx="12" style="stroke:#0369a1;stroke-width:2;stroke-dasharray:10 8;fill:none;opacity:1"/>
+<rect x="1070" y="770" width="140" height="70" rx="12" style="stroke:#0369a1;stroke-width:2;stroke-dasharray:10 8;fill:#e0f2fe;opacity:1"/>
+<polyline points="1210,805 1240,805" style="fill:none;stroke:#0369a1;stroke-width:2;stroke-dasharray:8 6" marker-end="url(#arrow)"/>
+<rect x="1240" y="770" width="140" height="70" rx="12" style="stroke:#0369a1;stroke-width:2;stroke-dasharray:10 8;fill:#e0f2fe;opacity:1"/>
+<polyline points="1380,805 1410,805" style="fill:none;stroke:#0369a1;stroke-width:2;stroke-dasharray:8 6" marker-end="url(#arrow)"/>
+<rect x="1410" y="770" width="140" height="70" rx="12" style="stroke:#0369a1;stroke-width:2;stroke-dasharray:10 8;fill:#e0f2fe;opacity:1"/>
+<polyline points="1550,805 1580,805" style="fill:none;stroke:#0369a1;stroke-width:2;stroke-dasharray:8 6" marker-end="url(#arrow)"/>
+<rect x="1580" y="770" width="140" height="70" rx="12" style="stroke:#0369a1;stroke-width:2;stroke-dasharray:10 8;fill:#e0f2fe;opacity:1"/>
+<polyline points="1720,805 1750,805" style="fill:none;stroke:#0369a1;stroke-width:2;stroke-dasharray:8 6" marker-end="url(#arrow)"/>
+<rect x="1750" y="770" width="140" height="70" rx="12" style="stroke:#0369a1;stroke-width:2;stroke-dasharray:10 8;fill:#e0f2fe;opacity:1"/>
+<text x="70" y="102" text-anchor="start" font-family="Menlo, Monaco, Consolas, monospace" font-size="32" fill="#1e40af"><tspan x="70" dy="0">PromptForge 业务流程图</tspan></text>
+<text x="72" y="135" text-anchor="start" font-family="Menlo, Monaco, Consolas, monospace" font-size="16" fill="#64748b"><tspan x="72" dy="0">内容周更、公开消费、未来管理员发布三条流程，区分当前事实与设计边界</tspan></text>
+<text x="88" y="195" text-anchor="start" font-family="Menlo, Monaco, Consolas, monospace" font-size="18" fill="#1e40af"><tspan x="88" dy="0">A. 当前已运行：每周内容更新与生产发布闭环</tspan></text>
+<text x="195" y="303" text-anchor="middle" font-family="Menlo, Monaco, Consolas, monospace" font-size="13" fill="#374151"><tspan x="195" dy="0">E0 状态恢复</tspan><tspan x="195" dy="16.25">生产入口</tspan><tspan x="195" dy="16.25">Git / secrets</tspan></text>
+<text x="410" y="303" text-anchor="middle" font-family="Menlo, Monaco, Consolas, monospace" font-size="13" fill="#374151"><tspan x="410" dy="0">E1 检索设计</tspan><tspan x="410" dy="16.25">六类关键词</tspan><tspan x="410" dy="16.25">来源矩阵</tspan></text>
+<text x="625" y="303" text-anchor="middle" font-family="Menlo, Monaco, Consolas, monospace" font-size="13" fill="#374151"><tspan x="625" dy="0">E2 候选采集</tspan><tspan x="625" dy="16.25">来源 / 时间</tspan><tspan x="625" dy="16.25">证据记录</tspan></text>
+<text x="840" y="303" text-anchor="middle" font-family="Menlo, Monaco, Consolas, monospace" font-size="13" fill="#374151"><tspan x="840" dy="0">E3 质量评分</tspan><tspan x="840" dy="16.25">100分制</tspan><tspan x="840" dy="16.25">低分淘汰</tspan></text>
+<text x="1055" y="303" text-anchor="middle" font-family="Menlo, Monaco, Consolas, monospace" font-size="13" fill="#374151"><tspan x="1055" dy="0">E4 增量入库</tspan><tspan x="1055" dy="16.25">staticData</tspan><tspan x="1055" dy="16.25">catalogMeta</tspan></text>
+<text x="1065" y="463" text-anchor="middle" font-family="Menlo, Monaco, Consolas, monospace" font-size="13" fill="#374151"><tspan x="1065" dy="0">E5 本地门禁</tspan><tspan x="1065" dy="16.25">verify</tspan><tspan x="1065" dy="16.25">local smoke</tspan></text>
+<text x="1280" y="463" text-anchor="middle" font-family="Menlo, Monaco, Consolas, monospace" font-size="13" fill="#374151"><tspan x="1280" dy="0">E6 Git 同步</tspan><tspan x="1280" dy="16.25">原子提交</tspan><tspan x="1280" dy="16.25">push</tspan></text>
+<text x="1495" y="463" text-anchor="middle" font-family="Menlo, Monaco, Consolas, monospace" font-size="13" fill="#374151"><tspan x="1495" dy="0">E7 腾讯云部署</tspan><tspan x="1495" dy="16.25">app-only</tspan><tspan x="1495" dy="16.25">不碰MySQL</tspan></text>
+<text x="1710" y="463" text-anchor="middle" font-family="Menlo, Monaco, Consolas, monospace" font-size="13" fill="#374151"><tspan x="1710" dy="0">E8 线上验收</tspan><tspan x="1710" dy="16.25">prod smoke</tspan><tspan x="1710" dy="16.25">风险归档</tspan></text>
+<text x="128" y="685" text-anchor="start" font-family="Menlo, Monaco, Consolas, monospace" font-size="18" fill="#1e40af"><tspan x="128" dy="0">B. 当前已运行：公开用户消费流程</tspan></text>
+<text x="222.5" y="788" text-anchor="middle" font-family="Menlo, Monaco, Consolas, monospace" font-size="13" fill="#374151"><tspan x="222.5" dy="0">访问 kg</tspan><tspan x="222.5" dy="16.25">站点</tspan></text>
+<text x="425" y="778" text-anchor="middle" font-family="Menlo, Monaco, Consolas, monospace" font-size="13" fill="#374151"><tspan x="425" dy="0">Hash route</tspan><tspan x="425" dy="16.25">分类页</tspan></text>
+<text x="655" y="778" text-anchor="middle" font-family="Menlo, Monaco, Consolas, monospace" font-size="13" fill="#374151"><tspan x="655" dy="0">加载 catalog</tspan><tspan x="655" dy="16.25">CategoryPage</tspan></text>
+<text x="895" y="778" text-anchor="middle" font-family="Menlo, Monaco, Consolas, monospace" font-size="13" fill="#374151"><tspan x="895" dy="0">搜索/筛选/展开</tspan><tspan x="895" dy="16.25">CardGrid</tspan></text>
+<text x="1038" y="685" text-anchor="start" font-family="Menlo, Monaco, Consolas, monospace" font-size="18" fill="#0369a1"><tspan x="1038" dy="0">C. 未来设计：管理员写入与版本化发布，尚未上线</tspan></text>
+<text x="1140" y="792" text-anchor="middle" font-family="Menlo, Monaco, Consolas, monospace" font-size="12" fill="#374151"><tspan x="1140" dy="0">登录</tspan><tspan x="1140" dy="15">session</tspan></text>
+<text x="1310" y="792" text-anchor="middle" font-family="Menlo, Monaco, Consolas, monospace" font-size="12" fill="#374151"><tspan x="1310" dy="0">新增/预览</tspan><tspan x="1310" dy="15">slug校验</tspan></text>
+<text x="1480" y="792" text-anchor="middle" font-family="Menlo, Monaco, Consolas, monospace" font-size="12" fill="#374151"><tspan x="1480" dy="0">发布任务</tspan><tspan x="1480" dy="15">publish_jobs</tspan></text>
+<text x="1650" y="792" text-anchor="middle" font-family="Menlo, Monaco, Consolas, monospace" font-size="12" fill="#374151"><tspan x="1650" dy="0">worker</tspan><tspan x="1650" dy="15">catalog release</tspan></text>
+<text x="1820" y="792" text-anchor="middle" font-family="Menlo, Monaco, Consolas, monospace" font-size="12" fill="#374151"><tspan x="1820" dy="0">切换/回滚</tspan><tspan x="1820" dy="15">current</tspan></text></svg>

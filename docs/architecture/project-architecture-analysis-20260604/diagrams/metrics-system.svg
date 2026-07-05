@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2090" height="1275" viewBox="0 0 2090 1275"><defs><marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="4" orient="auto"><path d="M0,0 L0,8 L11,4 z" fill="#1e3a5f"/></marker></defs><rect width="100%" height="100%" fill="#ffffff"/><rect x="70" y="165" width="1950" height="1040" rx="12" style="stroke:#64748b;stroke-width:2;stroke-dasharray:none;fill:none;opacity:1"/>
+<ellipse cx="1030" cy="275" rx="180" ry="50" style="stroke:#c2410c;stroke-width:2;stroke-dasharray:none;fill:#fed7aa;opacity:1"/>
+<rect x="170" y="425" width="360" height="150" rx="12" style="stroke:#1e40af;stroke-width:2;stroke-dasharray:none;fill:#dbeafe;opacity:1"/>
+<polyline points="1030,325 350,425" style="fill:none;stroke:#1e3a5f;stroke-width:2;stroke-dasharray:none" marker-end="url(#arrow)"/>
+<rect x="625" y="425" width="360" height="150" rx="12" style="stroke:#1e40af;stroke-width:2;stroke-dasharray:none;fill:#dbeafe;opacity:1"/>
+<polyline points="1030,325 805,425" style="fill:none;stroke:#1e3a5f;stroke-width:2;stroke-dasharray:none" marker-end="url(#arrow)"/>
+<rect x="1080" y="425" width="360" height="150" rx="12" style="stroke:#1e40af;stroke-width:2;stroke-dasharray:none;fill:#dbeafe;opacity:1"/>
+<polyline points="1030,325 1260,425" style="fill:none;stroke:#1e3a5f;stroke-width:2;stroke-dasharray:none" marker-end="url(#arrow)"/>
+<rect x="1535" y="425" width="360" height="150" rx="12" style="stroke:#1e40af;stroke-width:2;stroke-dasharray:none;fill:#dbeafe;opacity:1"/>
+<polyline points="1030,325 1715,425" style="fill:none;stroke:#1e3a5f;stroke-width:2;stroke-dasharray:none" marker-end="url(#arrow)"/>
+<rect x="130" y="725" width="270" height="130" rx="12" style="stroke:#166534;stroke-width:2;stroke-dasharray:none;fill:#dcfce7;opacity:1"/>
+<rect x="440" y="725" width="270" height="130" rx="12" style="stroke:#166534;stroke-width:2;stroke-dasharray:none;fill:#dcfce7;opacity:1"/>
+<rect x="750" y="725" width="270" height="130" rx="12" style="stroke:#047857;stroke-width:2;stroke-dasharray:none;fill:#a7f3d0;opacity:1"/>
+<rect x="1060" y="725" width="270" height="130" rx="12" style="stroke:#047857;stroke-width:2;stroke-dasharray:none;fill:#a7f3d0;opacity:1"/>
+<rect x="1370" y="725" width="270" height="130" rx="12" style="stroke:#9a3412;stroke-width:2;stroke-dasharray:none;fill:#ffedd5;opacity:1"/>
+<rect x="1680" y="725" width="270" height="130" rx="12" style="stroke:#0369a1;stroke-width:2;stroke-dasharray:10 8;fill:#e0f2fe;opacity:1"/>
+<polyline points="1030,325 265,725" style="fill:none;stroke:#1e3a5f;stroke-width:2;stroke-dasharray:none" marker-end="url(#arrow)"/>
+<polyline points="1030,325 575,725" style="fill:none;stroke:#1e3a5f;stroke-width:2;stroke-dasharray:none" marker-end="url(#arrow)"/>
+<polyline points="1030,325 885,725" style="fill:none;stroke:#1e3a5f;stroke-width:2;stroke-dasharray:8 6" marker-end="url(#arrow)"/>
+<polyline points="1030,325 1195,725" style="fill:none;stroke:#1e3a5f;stroke-width:2;stroke-dasharray:8 6" marker-end="url(#arrow)"/>
+<polyline points="1030,325 1505,725" style="fill:none;stroke:#1e3a5f;stroke-width:2;stroke-dasharray:8 6" marker-end="url(#arrow)"/>
+<polyline points="1030,325 1815,725" style="fill:none;stroke:#1e3a5f;stroke-width:2;stroke-dasharray:8 6" marker-end="url(#arrow)"/>
+<rect x="170" y="935" width="1660" height="180" rx="12" style="stroke:#dc2626;stroke-width:2;stroke-dasharray:none;fill:none;opacity:1"/>
+<rect x="250" y="1000" width="330" height="70" rx="12" style="stroke:#dc2626;stroke-width:2;stroke-dasharray:none;fill:#fee2e2;opacity:1"/>
+<rect x="690" y="1000" width="330" height="70" rx="12" style="stroke:#0369a1;stroke-width:2;stroke-dasharray:10 8;fill:#e0f2fe;opacity:1"/>
+<rect x="1130" y="1000" width="330" height="70" rx="12" style="stroke:#0369a1;stroke-width:2;stroke-dasharray:10 8;fill:#e0f2fe;opacity:1"/>
+<rect x="1570" y="1000" width="210" height="70" rx="12" style="stroke:#047857;stroke-width:2;stroke-dasharray:none;fill:#a7f3d0;opacity:1"/>
+<polyline points="580,1035 690,1035" style="fill:none;stroke:#1e3a5f;stroke-width:2;stroke-dasharray:none" marker-end="url(#arrow)"/>
+<polyline points="1020,1035 1130,1035" style="fill:none;stroke:#1e3a5f;stroke-width:2;stroke-dasharray:none" marker-end="url(#arrow)"/>
+<polyline points="1460,1035 1570,1035" style="fill:none;stroke:#1e3a5f;stroke-width:2;stroke-dasharray:none" marker-end="url(#arrow)"/>
+<text x="70" y="102" text-anchor="start" font-family="Menlo, Monaco, Consolas, monospace" font-size="32" fill="#1e40af"><tspan x="70" dy="0">PromptForge 指标体系图</tspan></text>
+<text x="72" y="135" text-anchor="start" font-family="Menlo, Monaco, Consolas, monospace" font-size="16" fill="#64748b"><tspan x="72" dy="0">从北极星指标到内容、体验、质量、部署隔离的可验证指标树</tspan></text>
+<text x="88" y="195" text-anchor="start" font-family="Menlo, Monaco, Consolas, monospace" font-size="18" fill="#1e40af"><tspan x="88" dy="0">指标层级：业务价值 -&gt; 内容结构 -&gt; 体验质量 -&gt; 工程可靠性</tspan></text>
+<text x="1030" y="255" text-anchor="middle" font-family="Menlo, Monaco, Consolas, monospace" font-size="18" fill="#374151"><tspan x="1030" dy="0">北极星指标</tspan><tspan x="1030" dy="22.5">可复用 AI 工作资产数：851</tspan></text>
+<text x="350" y="452" text-anchor="middle" font-family="Menlo, Monaco, Consolas, monospace" font-size="15" fill="#374151"><tspan x="350" dy="0">内容覆盖</tspan><tspan x="350" dy="18.75">六大类数量</tspan><tspan x="350" dy="18.75">prompt 201 / skill 314</tspan><tspan x="350" dy="18.75">hook 80 / mcp 80</tspan><tspan x="350" dy="18.75">agent 81 / github 95</tspan></text>
+<text x="805" y="452" text-anchor="middle" font-family="Menlo, Monaco, Consolas, monospace" font-size="15" fill="#374151"><tspan x="805" dy="0">角色覆盖</tspan><tspan x="805" dy="18.75">14 个角色标签</tspan><tspan x="805" dy="18.75">AI PM / developer</tspan><tspan x="805" dy="18.75">ecommerce / creator 等</tspan></text>
+<text x="1260" y="452" text-anchor="middle" font-family="Menlo, Monaco, Consolas, monospace" font-size="15" fill="#374151"><tspan x="1260" dy="0">可消费性</tspan><tspan x="1260" dy="18.75">搜索 / role筛选</tspan><tspan x="1260" dy="18.75">展开 / 复制</tspan><tspan x="1260" dy="18.75">加载更多 / 移动端无溢出</tspan></text>
+<text x="1715" y="452" text-anchor="middle" font-family="Menlo, Monaco, Consolas, monospace" font-size="15" fill="#374151"><tspan x="1715" dy="0">可信发布</tspan><tspan x="1715" dy="18.75">verify / smoke</tspan><tspan x="1715" dy="18.75">生产域名 / co-host</tspan><tspan x="1715" dy="18.75">secrets 不入库</tspan></text>
+<text x="265" y="751" text-anchor="middle" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" fill="#374151"><tspan x="265" dy="0">内容质量</tspan><tspan x="265" dy="17.5">T1/T2 来源</tspan><tspan x="265" dy="17.5">100分评分</tspan><tspan x="265" dy="17.5">低于75淘汰</tspan></text>
+<text x="575" y="751" text-anchor="middle" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" fill="#374151"><tspan x="575" dy="0">数据一致</tspan><tspan x="575" dy="17.5">staticData</tspan><tspan x="575" dy="17.5">catalog JSON</tspan><tspan x="575" dy="17.5">catalogMeta</tspan><tspan x="575" dy="17.5">README/smoke</tspan></text>
+<text x="885" y="751" text-anchor="middle" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" fill="#374151"><tspan x="885" dy="0">交互质量</tspan><tspan x="885" dy="17.5">结果数</tspan><tspan x="885" dy="17.5">empty state</tspan><tspan x="885" dy="17.5">copy fallback</tspan><tspan x="885" dy="17.5">console error</tspan></text>
+<text x="1195" y="751" text-anchor="middle" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" fill="#374151"><tspan x="1195" dy="0">工程门禁</tspan><tspan x="1195" dy="17.5">tsc / eslint</tspan><tspan x="1195" dy="17.5">docs check</tspan><tspan x="1195" dy="17.5">vitest/build/audit</tspan></text>
+<text x="1505" y="751" text-anchor="middle" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" fill="#374151"><tspan x="1505" dy="0">部署隔离</tspan><tspan x="1505" dy="17.5">app-only compose</tspan><tspan x="1505" dy="17.5">旧 MySQL 不触碰</tspan><tspan x="1505" dy="17.5">nginx 网络检查</tspan></text>
+<text x="1815" y="751" text-anchor="middle" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" fill="#374151"><tspan x="1815" dy="0">未来治理</tspan><tspan x="1815" dy="17.5">admin session</tspan><tspan x="1815" dy="17.5">CSRF/audit</tspan><tspan x="1815" dy="17.5">catalog version</tspan><tspan x="1815" dy="17.5">rollback</tspan></text>
+<text x="188" y="965" text-anchor="start" font-family="Menlo, Monaco, Consolas, monospace" font-size="18" fill="#dc2626"><tspan x="188" dy="0">当前补充点：把硬编码计数转为自动生成 baseline，减少 README / catalogMeta / smoke 漂移</tspan></text>
+<text x="415" y="1028" text-anchor="middle" font-family="Menlo, Monaco, Consolas, monospace" font-size="16" fill="#374151"><tspan x="415" dy="0">自动 count sync</tspan><tspan x="415" dy="20">从 catalog JSON 派生</tspan></text>
+<text x="855" y="1028" text-anchor="middle" font-family="Menlo, Monaco, Consolas, monospace" font-size="16" fill="#374151"><tspan x="855" dy="0">manifest.json</tspan><tspan x="855" dy="20">记录 hash/count/version</tspan></text>
+<text x="1295" y="1028" text-anchor="middle" font-family="Menlo, Monaco, Consolas, monospace" font-size="16" fill="#374151"><tspan x="1295" dy="0">smoke baseline</tspan><tspan x="1295" dy="20">读取 manifest 而非硬编码</tspan></text>
+<text x="1675" y="1028" text-anchor="middle" font-family="Menlo, Monaco, Consolas, monospace" font-size="16" fill="#374151"><tspan x="1675" dy="0">部署验收</tspan><tspan x="1675" dy="20">count一致</tspan></text></svg>

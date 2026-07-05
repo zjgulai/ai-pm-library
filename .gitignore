@@ -7,6 +7,7 @@ ai_video.pem
 # ── 本地代理/规划状态 ────────────────────────────────────────────
 .sisyphus/
 .kiro/
+.codegraph/
 
 node_modules/
 npm-debug.log*

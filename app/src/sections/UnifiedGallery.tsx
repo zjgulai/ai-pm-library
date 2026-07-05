@@ -7,10 +7,8 @@ import {
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useI18n } from "@/hooks/useI18n";
-import staticData from "@/data/staticData";
-
-type Category = "prompt" | "skill" | "hook" | "mcp" | "agent" | "github";
-type Item = Record<string, unknown>;
+import { useCatalogItems } from "@/data/catalogHooks";
+import type { Category, Item } from "@/data/dataUtils";
 
 const CAT_ICONS: Record<string, typeof Terminal> = {
   prompt: MessageSquare, skill: Terminal, hook: GitBranch,
@@ -66,11 +64,6 @@ const ROLE_DEFS: Record<string, { id: string; name: string; icon: typeof Termina
   ],
 };
 
-function getItemsForCategory(cat: Category): Item[] {
-  if (cat === "prompt") return staticData.prompts_full || [];
-  return (staticData.skills_full || []).filter((s: Item) => s.category === cat);
-}
-
 // Tag governance: standardize and deduplicate tags
 function normalizeTags(tags: unknown): string[] {
   if (!tags) return [];
@@ -81,14 +74,13 @@ function normalizeTags(tags: unknown): string[] {
 
 export default function UnifiedGallery({ category }: { category: Category }) {
   const { lang } = useI18n();
+  const { items: allItems, loading, error } = useCatalogItems(category);
   const [search, setSearch] = useState("");
   const [activeRole, setActiveRole] = useState("all");
   const [copiedId, setCopiedId] = useState<number | null>(null);
   const [likedIds, setLikedIds] = useState<Set<number>>(new Set());
   const [deleteConfirm, setDeleteConfirm] = useState<number | null>(null);
   const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
-
-  const allItems = useMemo(() => getItemsForCategory(category), [category]);
 
   const roleDefs = ROLE_DEFS[category] || ROLE_DEFS.skill;
 
@@ -160,6 +152,17 @@ export default function UnifiedGallery({ category }: { category: Category }) {
 
   const catColor = CAT_COLORS[category] || "var(--text-muted)";
   const CatIcon = CAT_ICONS[category] || Terminal;
+
+  if (loading || error) {
+    return (
+      <div className="py-12 text-center">
+        <AlertTriangle className="mx-auto mb-3 h-8 w-8" style={{ color: catColor }} />
+        <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
+          {error ?? (lang === "zh" ? "正在加载内容" : "Loading content")}
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div>

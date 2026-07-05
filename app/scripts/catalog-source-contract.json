@@ -1,0 +1,70 @@
+{
+  "schemaVersion": "1.0.0",
+  "generatedFrom": "src/data/catalogSource.json",
+  "collections": {
+    "prompts_full": {
+      "name": "prompts",
+      "requiredCategory": "prompt",
+      "publiclyVisible": true
+    },
+    "skills_full": {
+      "name": "skills",
+      "requiredCategory": null,
+      "publiclyVisible": false
+    }
+  },
+  "validations": {
+    "nonNegativeIntegerFields": [
+      "id",
+      "likes",
+      "comments"
+    ],
+    "requiredStringFields": [
+      "title",
+      "role",
+      "content",
+      "description",
+      "scenario",
+      "author",
+      "views",
+      "titleEn",
+      "descriptionEn",
+      "scenarioEn",
+      "problemFocus",
+      "problemFocusEn",
+      "createdAt",
+      "category"
+    ],
+    "requiredStringArrayFields": [
+      "tags",
+      "tagsEn"
+    ],
+    "requiredTopLevelCollections": [
+      "prompts_full",
+      "skills_full"
+    ],
+    "sourceSkillCategories": [
+      "prompt",
+      "skill",
+      "hook",
+      "mcp",
+      "agent",
+      "github"
+    ],
+    "publicSkillCategories": [
+      "skill",
+      "hook",
+      "mcp",
+      "agent",
+      "github"
+    ],
+    "publicCatalogCategories": [
+      "prompt",
+      "skill",
+      "hook",
+      "mcp",
+      "agent",
+      "github"
+    ]
+  }
+}
