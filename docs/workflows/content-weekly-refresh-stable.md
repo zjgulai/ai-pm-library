@@ -5,7 +5,7 @@ module: content
 topic: weekly-refresh
 status: stable
 created: 2026-06-02
-updated: 2026-06-02
+updated: 2026-07-08
 owner: self
 source: human+ai
 ---
@@ -37,7 +37,7 @@ source: human+ai
 | E1 | 检索设计 | 六大类关键词、来源矩阵、loop 配额 | 每类至少覆盖 T1/T2 来源和 GitHub 活跃源 |
 | E2 | 采集执行 | 候选池 JSON 或审计记录 | 候选包含来源、时间、类别、评分依据 |
 | E3 | 质量评估 | 入库候选清单 | 低于 75 分淘汰，硬性拒绝项不得入库 |
-| E4 | 增量入库 | `staticData.ts`、catalog JSON、计数元数据 | 六大类计数一致，来源可追溯 |
+| E4 | 增量入库 | `catalogSource.json`、catalog JSON、计数元数据 | 六大类计数一致，来源可追溯 |
 | E5 | 本地深度检查 | 测试、构建、Docker、local smoke 证据 | `npm run verify` 和本地 smoke 通过 |
 | E6 | Git 同步 | 原子提交和远端分支 | 无密钥、无临时产物、远端分支可追溯 |
 | E7 | 腾讯云轻量部署 | 远端备份、app-only 部署、生产 smoke | 只触碰 `promptforge_app`，不污染同机服务 |
@@ -88,7 +88,7 @@ git remote -v
 - 官方源检索：按 OpenAI、Anthropic、GitHub、Model Context Protocol、Vercel、Airbyte、Activepieces 等源站检索。
 - GitHub 活跃度检索：按 `pushed:>=YYYY-MM-DD`、`stars`、`topics` 和关键词筛选。
 - 交叉验证：同一候选至少读取一个主来源页面；开源项目同时检查 stars、最近 push、README 描述和 topic。
-- 去重检查：入库前搜索 `staticData.ts` 中的 title、source URL 和核心关键词，避免近似重复。
+- 去重检查：入库前搜索 `app/src/data/catalogSource.json` 中的 title、source URL 和核心关键词，避免近似重复。
 
 ## 50 个 loop 执行法
 
@@ -171,9 +171,9 @@ git remote -v
 1. 检索并筛选候选内容。
 2. 对候选按评分表打分，保留每类前 2 条。
 3. 备份将修改的正式文件。
-4. 更新 `app/src/data/staticData.ts` 的 `prompts_full` 和 `skills_full`。
+4. 更新 `app/src/data/catalogSource.json` 的 `prompts_full` 和 `skills_full`。
 5. 更新 `app/src/data/catalogMeta.ts` 和 `app/src/data/dataUtils.test.ts` 的计数。
-6. 运行 `npm run catalog:export` 重新生成 `app/public/catalog/*.json`。
+6. 运行 `npm run catalog:generate` 重新生成 `app/public/catalog/*.json`。
 7. 更新 `README.md` 的当前内容规模。
 8. 更新本工作流的本轮执行记录。
 9. 执行本地深度检查和部署前门禁。
@@ -224,7 +224,7 @@ docker build --target production -t promptforge-app:predeploy .
 
 ```bash
 git diff --check
-git add README.md app/src/data/staticData.ts app/src/data/catalogMeta.ts app/src/data/dataUtils.test.ts app/public/catalog docs/workflows/content-weekly-refresh-stable.md
+git add README.md app/src/data/catalogSource.json app/src/data/catalogMeta.ts app/src/data/dataUtils.test.ts app/public/catalog docs/workflows/content-weekly-refresh-stable.md
 git commit -m "增量更新最新一周内容并固化验证证据"
 git push origin HEAD
 ```
@@ -399,7 +399,7 @@ npm run smoke:e2e:prod
 - `agent`: Learn Claude Code Nano Agent Harness 拆解模板。
 - `github`: Vercel Workflow SDK TypeScript 持久化 AI 工作流。
 
-本轮增量后内容规模为 851 条：
+本节为 2026-06-02 历史执行记录，当时本轮增量后内容规模为 851 条：
 
 - `prompt`: 201
 - `skill`: 314

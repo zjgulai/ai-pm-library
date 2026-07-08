@@ -23,23 +23,17 @@ const screenshotDir = resolve(
 )
 
 const categoryRoutes = [
-  { hash: '/', label: '灵词', count: 851, cards: 0 },
-  { hash: '/prompts', label: '提示词', count: 201, cards: 48 },
-  { hash: '/skills', label: '技能', count: 314, cards: 48 },
-  { hash: '/hooks', label: '钩子', count: 80, cards: 48 },
-  { hash: '/mcp', label: 'MCP', count: 80, cards: 48 },
-  { hash: '/agents', label: '智能体', count: 81, cards: 48 },
-  { hash: '/github', label: '开源', count: 95, cards: 48 },
+  { hash: '/', label: '灵词', category: null, cards: 0 },
+  { hash: '/prompts', label: '提示词', category: 'prompt', cards: 48 },
+  { hash: '/skills', label: '技能', category: 'skill', cards: 48 },
+  { hash: '/hooks', label: '钩子', category: 'hook', cards: 48 },
+  { hash: '/mcp', label: 'MCP', category: 'mcp', cards: 48 },
+  { hash: '/agents', label: '智能体', category: 'agent', cards: 48 },
+  { hash: '/github', label: '开源', category: 'github', cards: 48 },
 ]
 
-const catalogCounts = {
-  prompt: 201,
-  skill: 314,
-  hook: 80,
-  mcp: 80,
-  agent: 81,
-  github: 95,
-}
+const categoryOrder = ['prompt', 'skill', 'hook', 'mcp', 'agent', 'github']
+let catalogCountsCache = null
 
 const report = {
   baseUrl,
@@ -90,6 +84,33 @@ async function fetchJson(path, options) {
   const response = await fetch(new URL(path, baseUrl), options)
   const text = await response.text()
   return { response, json: JSON.parse(text), text }
+}
+
+function totalCatalogCount(counts) {
+  return Object.values(counts).reduce((sum, count) => sum + count, 0)
+}
+
+async function loadCatalogCountsFromAssets() {
+  if (catalogCountsCache) return catalogCountsCache
+
+  const { response: manifestResponse, json: manifest } = await fetchJson('/catalog/manifest.json')
+  assert(manifestResponse.status === 200, `manifest status ${manifestResponse.status}`)
+  assert(manifest && typeof manifest === 'object', 'manifest is not an object')
+
+  const counts = {}
+  for (const category of categoryOrder) {
+    const entry = manifest.categories?.[category]
+    assert(entry && Number.isInteger(entry.count), `manifest missing integer count for ${category}`)
+    const path = entry.path ?? `/catalog/${category}.json`
+    const { response, json } = await fetchJson(path)
+    assert(response.status === 200, `${path} status ${response.status}`)
+    assert(Array.isArray(json), `${path} is not an array`)
+    assert(json.length === entry.count, `${path} manifest count ${entry.count}, got ${json.length}`)
+    counts[category] = json.length
+  }
+
+  catalogCountsCache = counts
+  return counts
 }
 
 async function launchBrowser() {
@@ -200,15 +221,8 @@ async function runStaticAndApiChecks() {
   })
 
   await step('catalog JSON counts match baseline', async () => {
-    const counts = {}
-    for (const [category, expected] of Object.entries(catalogCounts)) {
-      const { response, json } = await fetchJson(`/catalog/${category}.json`)
-      assert(response.status === 200, `${category}.json status ${response.status}`)
-      assert(Array.isArray(json), `${category}.json is not an array`)
-      assert(json.length === expected, `${category}.json expected ${expected}, got ${json.length}`)
-      counts[category] = json.length
-    }
-    return { counts }
+    const counts = await loadCatalogCountsFromAssets()
+    return { counts, total: totalCatalogCount(counts) }
   })
 
   await step('public tRPC surface remains read-only static-first', async () => {
@@ -247,6 +261,8 @@ async function runStaticAndApiChecks() {
 }
 
 async function runDesktopChecks(browser) {
+  const catalogCounts = await loadCatalogCountsFromAssets()
+  const totalCount = totalCatalogCount(catalogCounts)
   const context = await browser.newContext({
     viewport: { width: 1365, height: 900 },
     permissions: ['clipboard-read', 'clipboard-write'],
@@ -265,9 +281,10 @@ async function runDesktopChecks(browser) {
       if (route.cards > 0) {
         await waitForCards(page, route.cards)
       } else {
+        const expectedCount = route.category ? catalogCounts[route.category] : totalCount
         await page.waitForFunction(
           expected => document.body.textContent?.includes(String(expected)),
-          route.count,
+          expectedCount,
           { timeout: 10000 },
         )
       }

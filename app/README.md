@@ -4,7 +4,7 @@
 
 ## 功能
 
-- 六维分类浏览：提示词（193）/ 技能（306）/ 钩子（72）/ MCP（72）/ 智能体（73）/ 开源（87）
+- 六维分类浏览：提示词（202）/ 技能（314）/ 钩子（80）/ MCP（80）/ 智能体（81）/ 开源（95）
 - 全文搜索 + 角色筛选 + 搜索历史 + 热门建议
 - 卡片展开查看完整内容，一键复制
 - 提示词方法论洞察：TOP188 调教语句 + TOP10 架构模式
@@ -15,7 +15,7 @@
 ```bash
 npm install
 cp .env.example .env   # 填写 DATABASE_URL
-npm run dev            # http://localhost:5173
+npm run dev            # http://localhost:3000
 ```
 
 ## 脚本
@@ -57,7 +57,7 @@ app/
 ├── src/
 │   ├── components/   # 页面组件（CardGrid, SearchBar, PageHero, PromptAnalytics…）
 │   ├── components/ui/ # shadcn/ui 组件库（40+）
-│   ├── data/         # 静态数据（staticData.ts, promptAnalytics.ts…）
+│   ├── data/         # catalogSource.json、catalog 加载器、promptAnalytics…
 │   ├── pages/        # 路由页面
 │   ├── hooks/        # 自定义 hooks
 │   ├── providers/    # tRPC provider

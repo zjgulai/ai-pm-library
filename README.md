@@ -12,7 +12,7 @@
 
 - 当前线上 PromptForge 入口为 `https://kg.lute-tlz-dddd.top/`，由宿主 nginx 反代到 `promptforge_app:3000`。
 - 当前公开站点是 static-first read-only：六大类内容由 `public/catalog/*.json` 提供，公开 tRPC 仅保留 `ping` 健康检查。
-- 当前仓库内容规模为 851 条：提示词 201、技能 314、钩子 80、MCP 80、智能体 81、开源 95；部署前线上仍以当前发布版本为准。
+- 当前仓库内容规模为 852 条：提示词 202、技能 314、钩子 80、MCP 80、智能体 81、开源 95；部署前线上仍以当前发布版本为准。
 - 线上 E2E smoke 已固化为正式流程：`npm run smoke:e2e`、`npm run smoke:e2e:prod` 和 `deploy/deploy.sh --smoke`。
 - 管理员内容新增与发布系统仍处于已批准设计阶段，尚未进入实现；设计文档见 `docs/superpowers/specs/2026-05-31-admin-content-publishing-design.md`。
 - 宿主页新增 PromptForge 卡片仍处于已批准设计阶段，尚未修改远程 landing page；设计文档见 `docs/superpowers/specs/2026-05-31-lute-landing-promptforge-card-design.md`。
@@ -24,13 +24,13 @@
 
 | 分类 | 数量 | 说明 |
 |---|---|---|
-| 提示词 | 201 | 覆盖创作、产品、开发等 14 个职业角色 |
+| 提示词 | 202 | 覆盖创作、产品、开发等 14 个职业角色 |
 | 技能 | 314 | 从 Claude Code 到跨境电商的全域技能库 |
 | 钩子 | 80 | 事件驱动的自动化工作流 |
 | MCP | 80 | 模型上下文协议工具 |
 | 智能体 | 81 | AI Agent 框架与编排方案 |
 | 开源 | 95 | 精选开源项目 |
-| **合计** | **851** | **14 个职业角色** |
+| **合计** | **852** | **14 个职业角色** |
 
 ---
 
@@ -68,7 +68,7 @@ ai_pm_library/
 | 路径 | 内容 |
 |---|---|
 | `/` | 首页，六维分类入口 + 数据总览 |
-| `/prompts` | 提示词库（201条），含方法论洞察模块 |
+| `/prompts` | 提示词库（202条），含方法论洞察模块 |
 | `/skills` | 技能库（314条） |
 | `/hooks` | 钩子（80条） |
 | `/mcp` | MCP 工具（80条） |
@@ -93,7 +93,7 @@ npm run lint         # ESLint
 npm run test         # Vitest
 npm run verify       # check + lint + test + build + high audit
 npm run start        # 运行生产构建（需先 build）
-npm run catalog:export  # 从 staticData 生成 public/catalog/*.json
+npm run catalog:export  # 从 catalogSource.json 生成 public/catalog/*.json
 npm run docs:check   # Markdown frontmatter 与本地链接治理检查
 npm run audit:prod   # 仅生产依赖安全审计
 npm run smoke:e2e    # Playwright 生产形态 smoke（默认本地 3000）
@@ -123,7 +123,7 @@ DATABASE_URL=    # 可选；仅运行 DB 脚本、迁移或种子导入时需要
 # 1. 推送 schema
 npm run db:push
 
-# 2. 导入全量数据（从 staticData 读取）
+# 2. 导入全量数据（从 catalogSource.json 读取）
 npx tsx --tsconfig tsconfig.json db/seed-full.ts
 ```
 

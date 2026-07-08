@@ -1,7 +1,7 @@
 export type Category = 'prompt' | 'skill' | 'hook' | 'mcp' | 'agent' | 'github'
 
 export const CATEGORY_COUNTS: Record<Category, number> = {
-  prompt: 201,
+  prompt: 202,
   skill: 314,
   hook: 80,
   mcp: 80,

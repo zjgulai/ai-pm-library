@@ -5,7 +5,7 @@ module: deploy
 topic: production-deployment
 status: stable
 created: 2026-05-31
-updated: 2026-06-02
+updated: 2026-07-08
 owner: self
 source: human+ai
 ---
@@ -54,7 +54,7 @@ cd deploy
 ./deploy.sh
 ```
 
-更新代码并重启 app。catalog 数据在 `npm run build` 阶段由 `staticData.ts` 生成到 `public/catalog/*.json`。
+更新代码并重启 app。catalog 数据在 `npm run build` 阶段由 `app/src/data/catalogSource.json` 生成到 `public/catalog/*.json`。
 
 部署后执行线上 E2E smoke：
 

@@ -26,12 +26,13 @@ async function seedFull() {
   const connection = await mysql.createConnection(url);
   const db = drizzle(connection);
 
-  console.log("Seeding from catalogSource (full 803 records)...");
-
   const data = loadCatalogSource();
 
   const promptItems = data.prompts_full || [];
   const skillItems = data.skills_full || [];
+  const totalItems = promptItems.length + skillItems.length;
+
+  console.log(`Seeding from catalogSource (${totalItems} source records)...`);
 
   if (promptItems.length > 0) {
     console.log(`Inserting ${promptItems.length} prompts...`);

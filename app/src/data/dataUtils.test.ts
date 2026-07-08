@@ -9,6 +9,7 @@ import {
   type Category,
   type Item,
 } from "./dataUtils";
+import { CATEGORY_COUNTS } from "./catalogMeta";
 
 const expectedCounts: Record<Category, number> = {
   prompt: 202,
@@ -57,6 +58,7 @@ describe("dataUtils", () => {
       const items = JSON.parse(readFileSync(filePath, "utf8")) as unknown[];
 
       expect(items).toHaveLength(expectedCounts[category]);
+      expect(CATEGORY_COUNTS[category]).toBe(expectedCounts[category]);
     }
   });
 
