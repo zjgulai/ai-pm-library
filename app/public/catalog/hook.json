@@ -2640,5 +2640,38 @@
     "problemFocusEn": "AI agents can jump straight to code and claim completion without process evidence, risk notes, or rollback judgement",
     "createdAt": "2026-06-02 15:45:00",
     "category": "hook"
+  },
+  {
+    "id": 1307447,
+    "title": "Codex Plugin CC 跨代理代码审查门禁 Hook",
+    "role": "developer",
+    "tags": [
+      "代码审查",
+      "跨代理协作",
+      "Hook",
+      "Codex",
+      "GitHub周榜"
+    ],
+    "content": "## Hook 触发时机\n- 修改认证、授权、部署、数据库、支付、安全策略。\n- 单次 diff 超过约定阈值。\n- 用户要求“深度审计”“对抗性检查”“部署验收”。\n\n## 执行流程\n1. 收集 diff、测试结果和风险说明。\n2. 调用第二代理或代码审查工具进行只读审查。\n3. 要求审查输出按 P0/P1/P2 排序。\n4. 对每个发现项标记：修复、接受风险、误报。\n5. 修复后重新运行最小相关测试。\n\n## 禁止事项\n- 不让审查代理直接执行生产写操作。\n- 不把“没有意见”当成测试通过。\n- 不跳过用户未授权的 deploy、merge、push。\n\n## 来源\n- openai/codex-plugin-cc: https://github.com/openai/codex-plugin-cc\n- 近一周信号：GitHub API pushed_at 2026-07-08T00:17:31Z\n- Stars: 26822\n- License: Apache-2.0",
+    "description": "基于 openai/codex-plugin-cc 提炼的跨代理代码审查门禁，用于在复杂修改后强制引入第二视角。",
+    "scenario": "复杂改动、合并前或高风险文件修改后需要第二代理审查。",
+    "author": "GitHub Weekly High-Star · 2026-07-08",
+    "likes": 26822,
+    "views": "26.8K",
+    "comments": 0,
+    "titleEn": "Codex Plugin CC Cross-Agent Code Review Gate Hook",
+    "tagsEn": [
+      "Code Review",
+      "Cross-Agent Collaboration",
+      "Hook",
+      "Codex",
+      "GitHub Weekly"
+    ],
+    "descriptionEn": "A cross-agent code-review gate distilled from openai/codex-plugin-cc for forcing a second perspective after complex changes.",
+    "scenarioEn": "Complex changes, pre-merge checks, or high-risk file edits need a second-agent review.",
+    "problemFocus": "单一代理容易确认偏误，尤其在安全、部署、迁移和大范围重构场景中。",
+    "problemFocusEn": "A single agent is prone to confirmation bias, especially in security, deployment, migration, and large refactors.",
+    "createdAt": "2026-07-08 16:20:00",
+    "category": "hook"
   }
 ]

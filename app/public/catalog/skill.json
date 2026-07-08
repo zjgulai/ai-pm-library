@@ -10008,5 +10008,71 @@
     "problemFocusEn": "AI workflows trapped in chat history lose context, resist migration, and lack quality verification",
     "createdAt": "2026-06-02 15:45:00",
     "category": "skill"
+  },
+  {
+    "id": 1307445,
+    "title": "Astryx Agent-Ready Design System 复用技能",
+    "role": "developer",
+    "tags": [
+      "设计系统",
+      "前端工程",
+      "Agent Ready",
+      "组件复用",
+      "GitHub周榜"
+    ],
+    "content": "## 技能定位\n当需求涉及复杂 UI、设计系统或跨页面组件一致性时，先把成熟开源设计系统作为候选，而不是从零写控件。\n\n## 工作流程\n1. 读取当前项目设计约束、组件库、主题 token 和路由结构。\n2. 搜索并比较 2-3 个成熟设计系统或组件实现。\n3. 选择能复用的 token、布局、状态和可访问性模式。\n4. 只写适配当前项目的 glue code。\n5. 用截图、E2E、移动端 overflow 和 console 检查验收。\n\n## 输出\n- 复用候选对比表。\n- 采用/不采用理由。\n- 影响文件清单。\n- 验收命令和视觉检查结果。\n\n## 门禁\n- 不引入与现有技术栈冲突的大型依赖。\n- 不用 UI 重写替代小范围组件适配。\n- 不把“好看”作为唯一验收标准，必须有可访问性和响应式证据。\n\n## 来源\n- facebook/astryx: https://github.com/facebook/astryx\n- 近一周信号：GitHub API pushed_at 2026-07-08T15:30:17Z\n- Stars: 7081\n- License: MIT",
+    "description": "基于 facebook/astryx 提炼的设计系统复用技能，要求先评估成熟组件和设计令牌，再写最小 glue code。",
+    "scenario": "前端团队需要让 AI coding agent 在复杂 UI 上复用现有设计系统。",
+    "author": "GitHub Weekly High-Star · 2026-07-08",
+    "likes": 7081,
+    "views": "7.1K",
+    "comments": 0,
+    "titleEn": "Astryx Agent-Ready Design System Reuse Skill",
+    "tagsEn": [
+      "Design System",
+      "Frontend",
+      "Agent Ready",
+      "Component Reuse",
+      "GitHub Weekly"
+    ],
+    "descriptionEn": "A design-system reuse skill distilled from facebook/astryx, forcing teams to evaluate mature components and tokens before writing minimal glue code.",
+    "scenarioEn": "Frontend teams need AI coding agents to reuse an existing design system for complex UI work.",
+    "problemFocus": "AI容易从零造复杂 UI，导致风格漂移、组件重复和维护成本上升。",
+    "problemFocusEn": "AI often rebuilds complex UI from scratch, causing visual drift, duplicated components, and higher maintenance costs.",
+    "createdAt": "2026-07-08 16:20:00",
+    "category": "skill"
+  },
+  {
+    "id": 1307446,
+    "title": ".NET Agent Skills 团队技能资产化流程",
+    "role": "developer",
+    "tags": [
+      "Agent Skills",
+      ".NET",
+      "团队规范",
+      "技能资产化",
+      "GitHub周榜"
+    ],
+    "content": "## 核心定位\n把框架最佳实践、项目约束和常见修复流程沉淀成 agent skill，而不是散落在聊天记录中。\n\n## 资产化步骤\n1. 选择一个高频任务：测试、迁移、性能、API、UI 或发布。\n2. 收集现有证据：README、代码模式、失败案例、验收命令。\n3. 写成固定 skill：触发条件、输入、步骤、禁止事项、验收。\n4. 加入最小示例：一个成功路径和一个拒绝路径。\n5. 用真实 issue 或 PR 做试运行，记录改进点。\n\n## 验收清单\n- skill 能独立解释任务边界。\n- 不要求暴露密钥或生产凭据。\n- 能明确引用项目内命令和文件。\n- 输出格式稳定，可被 code review。\n\n## 来源\n- dotnet/skills: https://github.com/dotnet/skills\n- 近一周信号：GitHub API pushed_at 2026-07-08T15:25:41Z\n- Stars: 4411\n- License: MIT",
+    "description": "基于 dotnet/skills 提炼的团队技能资产化流程，用于把框架经验沉淀成可审查、可安装、可迁移的 AI coding skill。",
+    "scenario": ".NET 或多语言团队希望把工程规范固化为 agent 可执行技能。",
+    "author": "GitHub Weekly High-Star · 2026-07-08",
+    "likes": 4411,
+    "views": "4.4K",
+    "comments": 0,
+    "titleEn": ".NET Agent Skills Team Assetization Workflow",
+    "tagsEn": [
+      "Agent Skills",
+      ".NET",
+      "Team Standards",
+      "Skill Assetization",
+      "GitHub Weekly"
+    ],
+    "descriptionEn": "A team skill assetization workflow distilled from dotnet/skills for turning framework knowledge into reviewable, installable, portable AI coding skills.",
+    "scenarioEn": "A .NET or multi-language team wants to turn engineering standards into agent-executable skills.",
+    "problemFocus": "团队经验停留在口头约定，AI coding agent 每次都要重新理解上下文。",
+    "problemFocusEn": "Team experience remains tribal knowledge, forcing AI coding agents to relearn context every time.",
+    "createdAt": "2026-07-08 16:20:00",
+    "category": "skill"
   }
 ]

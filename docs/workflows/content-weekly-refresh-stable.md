@@ -407,3 +407,40 @@ npm run smoke:e2e:prod
 - `mcp`: 80
 - `agent`: 81
 - `github`: 95
+
+## 本轮 2026-07-08 高赞 GitHub 仓库增量记录
+
+本轮采用“近 7 天高赞 GitHub 仓库作为主信源”的小批量高置信策略。
+
+检索与候选：
+
+- 检索窗口：`2026-07-01` 到 `2026-07-08`。
+- 主信源：GitHub weekly trending、GitHub Search API `created:>=2026-07-01`、`pushed:>=2026-07-01`、`topic:ai`、`topic:mcp`。
+- 候选报告：`tmp/outputs/github-weekly-candidates-20260708160500.json`。
+- README 证据片段：`tmp/outputs/github-readmes-20260708/`。
+- 入库策略：只收录有明确 GitHub 仓库主页、README、license、近 7 天 pushed 或 created 信号，且能转成 PromptForge 可执行模板/评估卡的候选。
+
+新增内容：
+
+- `prompt`: 1 条，聚焦 Strix 风格的 AI 安全评估与修复闭环。
+- `skill`: 2 条，聚焦 Astryx agent-ready design system 复用与 .NET agent skills 资产化。
+- `hook`: 1 条，聚焦 Codex Plugin CC 跨代理代码审查门禁。
+- `mcp`: 1 条，聚焦 Chrome DevTools MCP 浏览器调试接入评估。
+- `agent`: 3 条，聚焦 Page Agent GUI 操作验收、Orca 多 agent fleet 编排、Speech-to-Speech 本地语音 agent 试点。
+- `github`: 4 条，聚焦 OpenScience、video-use、Claude Skills & Plugins、AI Job Search。
+
+本轮拒绝或暂缓内容：
+
+- `system_prompts_leaks`: 涉及泄露/提取系统提示词主题，不作为本站正式知识资产。
+- `TencentCloud/CubeSandbox`、`herdr`: 主题相关但 GitHub API license 为 `NOASSERTION`，本轮暂缓。
+- `OmniRoute`: provider routing 和成本权限边界较重，证据不足时不入库。
+- 健身数据集、投资研究框架、成熟图片管理工具等与本轮 AI PM / agent / MCP 主线弱相关，未入库。
+
+本轮增量后内容规模为 864 条：
+
+- `prompt`: 203
+- `skill`: 316
+- `hook`: 81
+- `mcp`: 81
+- `agent`: 84
+- `github`: 99

@@ -2638,5 +2638,38 @@
     "problemFocusEn": "MCP adoption can jump from connectivity to production writes without read-only pilots, permission boundaries, and misuse tests",
     "createdAt": "2026-06-02 15:45:00",
     "category": "mcp"
+  },
+  {
+    "id": 1307448,
+    "title": "Chrome DevTools MCP 调试接入评估",
+    "role": "developer",
+    "tags": [
+      "MCP",
+      "Chrome DevTools",
+      "浏览器调试",
+      "E2E",
+      "GitHub周榜"
+    ],
+    "content": "## 评估目标\n判断 Chrome DevTools MCP 是否适合接入当前 agent 工作流。\n\n## 检查维度\n1. 能力边界：DOM、console、network、performance、screenshots。\n2. 权限边界：只能读什么、能否点击、是否会提交表单。\n3. 数据边界：是否会读取 cookie、localStorage、用户隐私数据。\n4. 稳定性：是否能在 CI、桌面浏览器、本地开发环境中复现。\n5. 与现有 Playwright/Chrome 插件的关系：替代、补充还是仅用于诊断。\n\n## 试点任务\n- 选择一个公开页面。\n- 验证 console issue、network 404、首屏渲染和移动端 overflow。\n- 输出证据路径，不做外部写操作。\n\n## 来源\n- ChromeDevTools/chrome-devtools-mcp: https://github.com/ChromeDevTools/chrome-devtools-mcp\n- 近一周信号：GitHub API pushed_at 2026-07-08T15:36:33Z\n- Stars: 46350\n- License: Apache-2.0",
+    "description": "基于 ChromeDevTools/chrome-devtools-mcp 的 MCP 接入评估模板，用于判断浏览器调试能力是否应进入 agent 工具链。",
+    "scenario": "前端或全栈项目需要让 agent 读取页面状态、网络、性能和控制台证据。",
+    "author": "GitHub Weekly High-Star · 2026-07-08",
+    "likes": 46350,
+    "views": "46.4K",
+    "comments": 0,
+    "titleEn": "Chrome DevTools MCP Debugging Integration Evaluation",
+    "tagsEn": [
+      "MCP",
+      "Chrome DevTools",
+      "Browser Debugging",
+      "E2E",
+      "GitHub Weekly"
+    ],
+    "descriptionEn": "An MCP integration evaluation template based on ChromeDevTools/chrome-devtools-mcp for deciding whether browser debugging should enter the agent toolchain.",
+    "scenarioEn": "Frontend or full-stack projects need agents to inspect page state, network, performance, and console evidence.",
+    "problemFocus": "浏览器问题常被只读代码推断替代，缺少真实页面证据。",
+    "problemFocusEn": "Browser issues are often inferred from code instead of validated with real page evidence.",
+    "createdAt": "2026-07-08 16:20:00",
+    "category": "mcp"
   }
 ]

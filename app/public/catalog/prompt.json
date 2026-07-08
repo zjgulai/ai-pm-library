@@ -6466,5 +6466,38 @@
     "problemFocusEn": "AI often defaults to implementing complex features from scratch, creating verbose code, more bugs, and higher maintenance cost.",
     "createdAt": "2026-07-08 15:58:00",
     "category": "prompt"
+  },
+  {
+    "id": 1307444,
+    "title": "Strix AI安全评估提示词：从攻击面到修复闭环",
+    "role": "developer",
+    "tags": [
+      "AI安全",
+      "红队评估",
+      "Agent治理",
+      "漏洞修复",
+      "GitHub周榜"
+    ],
+    "content": "你是一位AI产品安全评估顾问。请基于 Strix 这类 AI penetration testing 工具的思路，为我的系统设计一次安全评估与修复闭环。\n\n## 输入\n- 系统类型：[Web应用 / Agent / MCP工具 / 内部自动化]\n- 可访问能力：[浏览器 / 文件 / API / 终端 / 数据库]\n- 敏感边界：[密钥、客户数据、生产写链路、支付、权限]\n- 计划上线时间：[日期]\n- 已有测试：[单测、E2E、人工审查、安全扫描]\n\n## 请输出\n1. 攻击面清单：入口、权限、数据流、外部工具、模型输出。\n2. 红队样例：至少 8 个低风险可复现样例，覆盖 prompt injection、越权工具调用、数据外泄、错误恢复。\n3. 验证方式：每个样例的观察信号、通过/阻断标准、日志证据。\n4. 修复闭环：代码改动、配置改动、测试补充、回滚策略。\n5. 发布门禁：哪些问题阻断发布，哪些进入观察期。\n\n## 约束\n- 不直接连接生产写链路。\n- 不要求暴露真实密钥、客户数据或内部凭据。\n- 不把 Star 数等同于安全成熟度。\n\n## 来源\n- usestrix/strix: https://github.com/usestrix/strix\n- 近一周信号：GitHub API pushed_at 2026-07-07T14:24:50Z\n- Stars: 38918\n- License: Apache-2.0",
+    "description": "基于高赞开源仓库 usestrix/strix 提炼的AI产品安全评估提示词，帮助团队把攻击面、验证样例和修复闭环转成可执行任务。",
+    "scenario": "AI产品、Agent工具链或自动化系统上线前需要做安全评估。",
+    "author": "GitHub Weekly High-Star · 2026-07-08",
+    "likes": 38918,
+    "views": "38.9K",
+    "comments": 0,
+    "titleEn": "Strix AI Security Evaluation Prompt: From Attack Surface to Remediation Loop",
+    "tagsEn": [
+      "AI Security",
+      "Red Teaming",
+      "Agent Governance",
+      "Remediation",
+      "GitHub Weekly"
+    ],
+    "descriptionEn": "A security evaluation prompt distilled from the high-star repository usestrix/strix, turning attack surface, test cases, and remediation loops into executable tasks.",
+    "scenarioEn": "Before launching an AI product, agent toolchain, or automation system that needs security evaluation.",
+    "problemFocus": "团队容易把安全评估停留在口号，缺少可执行的攻击面枚举、验证样例和修复验收。",
+    "problemFocusEn": "Teams often keep security evaluation at the slogan level without executable attack-surface mapping, validation cases, or remediation acceptance.",
+    "createdAt": "2026-07-08 16:20:00",
+    "category": "prompt"
   }
 ]

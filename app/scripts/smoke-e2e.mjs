@@ -300,9 +300,9 @@ async function runDesktopChecks(browser) {
     const button = page.getByRole('button', { name: /加载更多/ })
     await button.click()
     await waitForCards(page, 96)
-    await page.getByText('96/314').waitFor({ timeout: 5000 })
+    await page.getByText(`96/${catalogCounts.skill}`).waitFor({ timeout: 5000 })
     await takeScreenshot(page, 'desktop-skills-load-more')
-    return { visibleCards: 96 }
+    return { visibleCards: 96, totalCards: catalogCounts.skill }
   })
 
   await step('skills card actions are functional and safe-rendered', async () => {

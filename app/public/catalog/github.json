@@ -3121,5 +3121,137 @@
     "problemFocusEn": "AI long-running tasks become unreliable when handled only by requests or scripts without timeout, retry, state tracking, and recovery design",
     "createdAt": "2026-06-02 15:45:00",
     "category": "github"
+  },
+  {
+    "id": 1307452,
+    "title": "OpenScience：AI科研工作台评估卡",
+    "role": "researcher",
+    "tags": [
+      "科研工作台",
+      "AI Research",
+      "知识工作流",
+      "开源评估",
+      "GitHub周榜"
+    ],
+    "content": "## 开源项目定位\nOpenScience 是面向科学研究的 AI workbench。本模板用于判断它是否适合作为研究协作、论文阅读、实验规划或知识库沉淀工具。\n\n## 评估清单\n1. 核心任务：文献整理、实验规划、数据分析、知识库沉淀。\n2. 数据边界：是否处理敏感实验数据或未公开论文。\n3. 可复现性：输出能否回链到来源、版本和参数。\n4. 协作方式：是否支持团队共享、审查和导出。\n5. 替代关系：与 Notebook、Zotero、Obsidian、内部知识库如何分工。\n\n## 采用门禁\n- 不把研究建议直接当实验结论。\n- 先用公开数据做试点。\n- 所有自动生成结论必须保留来源。\n\n## 来源\n- synthetic-sciences/openscience: https://github.com/synthetic-sciences/openscience\n- 近一周信号：GitHub API created_at 2026-07-03T15:06:45Z；pushed_at 2026-07-08T15:17:43Z\n- Stars: 1674\n- License: Apache-2.0",
+    "description": "OpenScience 是面向科学研究的开源 AI workbench，本卡片用于评估其是否适合研究、产品发现和知识沉淀工作流。",
+    "scenario": "研究团队或产品团队需要把 AI research workflow 从聊天迁移到可管理工具。",
+    "author": "GitHub Weekly High-Star · 2026-07-08",
+    "likes": 1674,
+    "views": "1.7K",
+    "comments": 0,
+    "titleEn": "OpenScience: AI Research Workbench Evaluation Card",
+    "tagsEn": [
+      "Research Workbench",
+      "AI Research",
+      "Knowledge Workflow",
+      "Open Source Evaluation",
+      "GitHub Weekly"
+    ],
+    "descriptionEn": "OpenScience is an open-source AI workbench for scientific research; this card evaluates whether it fits research, product discovery, and knowledge workflows.",
+    "scenarioEn": "Research or product teams need to move AI research workflows from chat to managed tools.",
+    "problemFocus": "研究型 AI 工具容易因热度被过早采用，缺少数据、权限和复现实验门禁。",
+    "problemFocusEn": "Research AI tools are often adopted too early based on hype without data, permission, or reproducibility gates.",
+    "createdAt": "2026-07-08 16:20:00",
+    "category": "github"
+  },
+  {
+    "id": 1307453,
+    "title": "video-use：编码 Agent 视频编辑工具评估卡",
+    "role": "creator",
+    "tags": [
+      "视频编辑",
+      "Coding Agent",
+      "多媒体自动化",
+      "内容生产",
+      "GitHub周榜"
+    ],
+    "content": "## 开源项目定位\nvideo-use 是让 coding agent 执行视频编辑任务的工具。适合先做低风险素材处理，不适合直接发布生产内容。\n\n## 试点任务\n1. 输入一段自有或授权视频。\n2. 执行剪切、抽帧、字幕、片段重排或格式转换。\n3. 输出渲染参数、文件清单和人工审片结果。\n4. 对比传统工具耗时和质量。\n\n## 风险边界\n- 不处理未授权素材。\n- 不自动发布到外部平台。\n- 不让 agent 覆盖原始素材。\n- 生成内容必须人工审片。\n\n## 来源\n- browser-use/video-use: https://github.com/browser-use/video-use\n- 近一周信号：GitHub API pushed_at 2026-07-01T00:33:52Z\n- Stars: 16026\n- License: MIT",
+    "description": "video-use 将视频编辑任务交给 coding agent，本卡片用于评估它在内容生产流水线中的适用边界。",
+    "scenario": "内容团队希望用 agent 自动剪辑、转码、抽帧或生成短视频素材。",
+    "author": "GitHub Weekly High-Star · 2026-07-08",
+    "likes": 16026,
+    "views": "16.0K",
+    "comments": 0,
+    "titleEn": "video-use: Coding-Agent Video Editing Tool Evaluation Card",
+    "tagsEn": [
+      "Video Editing",
+      "Coding Agent",
+      "Media Automation",
+      "Content Production",
+      "GitHub Weekly"
+    ],
+    "descriptionEn": "video-use delegates video editing tasks to coding agents; this card evaluates its boundaries in content production pipelines.",
+    "scenarioEn": "Content teams want agents to automate editing, transcoding, frame extraction, or short-video assets.",
+    "problemFocus": "视频自动化容易忽视版权、素材来源、渲染成本和人工审片。",
+    "problemFocusEn": "Video automation can ignore copyright, source provenance, rendering cost, and human review.",
+    "createdAt": "2026-07-08 16:20:00",
+    "category": "github"
+  },
+  {
+    "id": 1307454,
+    "title": "Claude Skills & Plugins：跨工具技能库评估卡",
+    "role": "developer",
+    "tags": [
+      "Claude Skills",
+      "Agent Skills",
+      "技能库",
+      "工具迁移",
+      "GitHub周榜"
+    ],
+    "content": "## 开源项目定位\n该仓库聚合大量 Claude Code skills、agent skills 和插件。适合做候选库，不适合整包无审查安装。\n\n## 评估流程\n1. 先按任务类别筛选 3-5 个相关 skill。\n2. 阅读每个 skill 的触发条件、工具权限和输出格式。\n3. 与本项目 AGENTS.md / Codex skill 规则比对冲突。\n4. 只复制必要思想或最小文件，不导入无关目录。\n5. 用一个真实任务验证是否减少工作量和风险。\n\n## 审计门禁\n- 不安装要求未知外部服务或密钥的 skill。\n- 不引入会自动 deploy、push、删除文件的规则。\n- 不让第三方 skill 覆盖项目级指令。\n\n## 来源\n- alirezarezvani/claude-skills: https://github.com/alirezarezvani/claude-skills\n- 近一周信号：GitHub API pushed_at 2026-07-08T06:41:33Z\n- Stars: 21635\n- License: MIT",
+    "description": "Claude Skills & Plugins 收集大量 agent skills，本卡片用于评估第三方技能库如何筛选、迁移和审计。",
+    "scenario": "团队想复用现成 agent skills，但需要避免盲装和规则冲突。",
+    "author": "GitHub Weekly High-Star · 2026-07-08",
+    "likes": 21635,
+    "views": "21.6K",
+    "comments": 0,
+    "titleEn": "Claude Skills & Plugins: Cross-Tool Skill Library Evaluation Card",
+    "tagsEn": [
+      "Claude Skills",
+      "Agent Skills",
+      "Skill Library",
+      "Tool Migration",
+      "GitHub Weekly"
+    ],
+    "descriptionEn": "Claude Skills & Plugins collects many agent skills; this card evaluates how to select, migrate, and audit third-party skill libraries.",
+    "scenarioEn": "A team wants to reuse existing agent skills while avoiding blind installation and rule conflicts.",
+    "problemFocus": "技能库越大越容易带来重复、权限过宽、规则冲突和维护不明问题。",
+    "problemFocusEn": "Large skill libraries can introduce duplication, broad permissions, rule conflicts, and unclear maintenance.",
+    "createdAt": "2026-07-08 16:20:00",
+    "category": "github"
+  },
+  {
+    "id": 1307455,
+    "title": "AI Job Search：Claude Code 自动化求职框架评估卡",
+    "role": "operations",
+    "tags": [
+      "Claude Code",
+      "个人自动化",
+      "求职流程",
+      "文档生成",
+      "GitHub周榜"
+    ],
+    "content": "## 开源项目定位\nAI Job Search 是一个基于 Claude Code 的求职自动化框架。可借鉴其结构化流程，但必须保留人工确认。\n\n## 可迁移能力\n1. 个人资料结构化。\n2. 岗位匹配评分。\n3. CV / cover letter 差异化生成。\n4. 面试准备材料生成。\n5. 申请记录和证据追踪。\n\n## 风险门禁\n- 不自动提交申请。\n- 不上传未脱敏个人资料到未知服务。\n- 不伪造经历或证书。\n- 发送前必须人工逐项确认。\n\n## 来源\n- MadsLorentzen/ai-job-search: https://github.com/MadsLorentzen/ai-job-search\n- 近一周信号：GitHub API pushed_at 2026-07-08T15:14:41Z\n- Stars: 14269\n- License: MIT",
+    "description": "AI Job Search 展示了用 Claude Code 组织个人自动化流程的方式，本卡片关注隐私、人工确认和可回滚输出。",
+    "scenario": "个人或团队想让 agent 处理资料匹配、文档生成和申请流程。",
+    "author": "GitHub Weekly High-Star · 2026-07-08",
+    "likes": 14269,
+    "views": "14.3K",
+    "comments": 0,
+    "titleEn": "AI Job Search: Claude Code Job Automation Framework Evaluation Card",
+    "tagsEn": [
+      "Claude Code",
+      "Personal Automation",
+      "Job Workflow",
+      "Document Generation",
+      "GitHub Weekly"
+    ],
+    "descriptionEn": "AI Job Search demonstrates organizing personal automation with Claude Code; this card focuses on privacy, human confirmation, and reversible outputs.",
+    "scenarioEn": "Individuals or teams want agents to handle profile matching, document generation, and application workflows.",
+    "problemFocus": "个人自动化很容易触碰隐私、外部提交和不可逆发送。",
+    "problemFocusEn": "Personal automation can easily touch privacy, external submissions, and irreversible sending.",
+    "createdAt": "2026-07-08 16:20:00",
+    "category": "github"
   }
 ]
