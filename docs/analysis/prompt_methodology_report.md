@@ -1,3 +1,14 @@
+---
+title: Prompt 标签方法论深度分析报告
+doc_type: analysis
+module: prompt-library
+topic: prompt-tag-methodology
+status: stable
+created: 2026-05-31
+updated: 2026-05-31
+owner: self
+source: human+ai
+---
 
 # Prompt标签方法论深度分析报告
 

@@ -37,82 +37,18 @@
 
 ---
 
-## 首页预览
+## 关键工作流
 
-<table>
-  <tr>
-    <td width="50%" valign="top">
-      <a href="./wechat-article-camofox/README.md">
-        <img src="./wechat-article-camofox/assets/wechat-article-camofox-flow.svg" alt="wechat-article-camofox 工作流预览" />
-      </a>
-      <p><strong>wechat-article-camofox</strong><br/>把公众号文章抓成更干净的 Markdown / JSON，或者直接发布成飞书文档。</p>
-    </td>
-    <td width="50%" valign="top">
-      <a href="./nano-banana-image/README.md">
-        <img src="./nano-banana-image/assets/example-generated-banner.jpg" alt="nano-banana-image 示例图" />
-      </a>
-      <p><strong>nano-banana-image</strong><br/>直接用 Nano Banana 2 / Gemini Flash Image 出图，适合头图、横幅图、海报和批量视觉实验。</p>
-    </td>
-  </tr>
-  <tr>
-    <td width="50%" valign="top">
-      <a href="./jimeng-image/README.md">
-        <img src="./jimeng-image/assets/example-jimeng-image.jpg" alt="jimeng-image 示例图" />
-      </a>
-      <p><strong>jimeng-image</strong><br/>走火山引擎 Ark 上的即梦 / Doubao Seedream，适合更省钱的文生图、图生图和多参考图任务。</p>
-    </td>
-    <td width="50%" valign="top">
-      <a href="./article-to-wechat-cover/README.md">
-        <img src="./article-to-wechat-cover/assets/example-wechat-cover.jpg" alt="article-to-wechat-cover 示例封面图" />
-      </a>
-      <p><strong>article-to-wechat-cover</strong><br/>先理解文章主题，再自动生成适合公众号的横幅封面。</p>
-    </td>
-  </tr>
-  <tr>
-    <td width="50%" valign="top">
-      <a href="./epub2podcast/README.md">
-        <img src="./epub2podcast/assets/example-slide-cover.png" alt="epub2podcast 示例封面页" />
-      </a>
-      <p><strong>epub2podcast</strong><br/>把电子书转成双人中文播客脚本、音频、Slides 和最终视频。</p>
-    </td>
-    <td width="50%" valign="top">
-      <a href="./vocabulary-video-pipeline/README.md">
-        <img src="./vocabulary-video-pipeline/assets/preview-breakfast.jpg" alt="vocabulary-video-pipeline 示例帧" />
-      </a>
-      <p><strong>vocabulary-video-pipeline</strong><br/>一键生成面向中小学生的英文单词解释视频，含 TTS、节拍同步和自动上传。</p>
-    </td>
-  </tr>
-  <tr>
-    <td width="50%" valign="top">
-      <p><strong>feishu-doc-to-wechat-draft</strong><br/>把飞书文档转成公众号草稿，处理图片、样式和预览，适合真正临门一脚的发布环节。</p>
-      <p>详情见：<a href="./feishu-doc-to-wechat-draft/README.md">feishu-doc-to-wechat-draft/README.md</a></p>
-    </td>
-    <td width="50%" valign="top">
-      <a href="./daily-ai-agent-aigc-top-news/README.md">
-        <img src="./daily-ai-agent-aigc-top-news/assets/daily-ai-agent-aigc-top-news-flow.svg" alt="daily-ai-agent-aigc-top-news 工作流预览" />
-      </a>
-      <p><strong>daily-ai-agent-aigc-top-news</strong><br/>每天自动生成 AI / Agent / AIGC 早报，发布飞书文档并归档到多维表。</p>
-    </td>
-  </tr>
-  <tr>
-    <td width="50%" valign="top">
-      <a href="./feishu-lark-workflows/README.md">
-        <img src="./feishu-lark-workflows/assets/feishu-lark-workflows-flow.svg" alt="feishu-lark-workflows 工作流预览" />
-      </a>
-      <p><strong>feishu-lark-workflows</strong><br/>飞书文档、云盘、多维表自动化路线，适合先把平台动作走稳。</p>
-    </td>
-    <td width="50%" valign="top">
-      <a href="./feishu-seedance-video-pipeline/README.md">
-        <img src="./feishu-seedance-video-pipeline/assets/feishu-seedance-video-pipeline-flow.svg" alt="feishu-seedance-video-pipeline 工作流预览" />
-      </a>
-      <p><strong>feishu-seedance-video-pipeline</strong><br/>用 Director Module 拆解角色、场景、服装和镜头，用 Base Asset Ledger Write Guard 防止资产台账误填，再由 Reviewer Module 做烧钱前门禁，最后生成 Seedance 视频并回填 QA、tokens 和成本。</p>
-    </td>
-  </tr>
-</table>
+当前仓库快照只提交文档型工具资产，没有提交预览图二进制资产。入口页只保留可解析的目录链接，避免 README 渲染时出现破图。
 
-### Seedance 产线预览
-
-![feishu-seedance-video-pipeline 架构预览](./feishu-seedance-video-pipeline/assets/feishu-seedance-video-pipeline-flow.svg)
+- [`wechat-article-camofox`](./wechat-article-camofox/)：把公众号文章抓成 Markdown / JSON，或者发布成飞书文档。
+- [`nano-banana-image`](./nano-banana-image/)：用 Nano Banana 2 / Gemini Flash Image 做头图、横幅图、海报和批量视觉实验。
+- [`jimeng-image`](./jimeng-image/)：走火山引擎 Ark 上的即梦 / Doubao Seedream，适合文生图、图生图和多参考图任务。
+- [`article-to-wechat-cover`](./article-to-wechat-cover/)：先理解文章主题，再自动生成适合公众号的横幅封面。
+- [`epub2podcast`](./epub2podcast/)：把电子书转成双人中文播客脚本、音频、Slides 和最终视频。
+- [`vocabulary-video-pipeline`](./vocabulary-video-pipeline/)：生成面向中小学生的英文单词解释视频，含 TTS、节拍同步和自动上传。
+- [`daily-ai-agent-aigc-top-news`](./daily-ai-agent-aigc-top-news/)：生成 AI / Agent / AIGC 早报，发布飞书文档并归档到多维表。
+- [`feishu-seedance-video-pipeline`](./feishu-seedance-video-pipeline/)：用 Director、Ledger Guard 和 Reviewer 管理 Seedance 视频产线。
 
 ---
 
@@ -139,9 +75,7 @@
    - 想让系统先理解文章，再出封面，用 [`article-to-wechat-cover`](./article-to-wechat-cover/)
 3. 最后用 [`feishu-doc-to-wechat-draft`](./feishu-doc-to-wechat-draft/) 发到公众号草稿箱
 
-### BrowserUse 版抓取器预览
-
-![wechat-article-browseruse workflow preview](./wechat-article-browseruse/assets/workflow-preview-v2.svg)
+### BrowserUse 版抓取器
 
 快速开始：
 
@@ -189,10 +123,10 @@ python3 scripts/run.py publish-feishu \
 2. 如果重点是数学、公式、对象变换、算法过程：看 [`manim-video`](./manim-video/)
 3. 如果需要中文旁白/语音同步：看 [`manim-video-with-tts`](./manim-video-with-tts/)
 4. 如果重点是 TS 场景动画、时间轴编排、讲解型 motion graphics：看 [`motion-canvas`](./motion-canvas/)
-4. 如果重点是 React 页面、组件、卡片、模板化批量视频：看 [`remotion`](./remotion/)
-5. 如果重点是英文单词解释视频（带 TTS 同步）：看 [`vocabulary-video-pipeline`](./vocabulary-video-pipeline/)
-6. 如果重点是“Director Module + Reviewer Module + 飞书多维表格 + Seedance 生成 + 资产/QA/成本回填”的视频产线：看 [`feishu-seedance-video-pipeline`](./feishu-seedance-video-pipeline/)
-7. 如果重点是用 HTML+GSAP+Canvas 做讲解/介绍类视频（音频驱动、组件库编排）：看 [`hyperframes-explainer-video`](./hyperframes-explainer-video/)
+5. 如果重点是 React 页面、组件、卡片、模板化批量视频：看 [`remotion`](./remotion/)
+6. 如果重点是英文单词解释视频（带 TTS 同步）：看 [`vocabulary-video-pipeline`](./vocabulary-video-pipeline/)
+7. 如果重点是“Director Module + Reviewer Module + 飞书多维表格 + Seedance 生成 + 资产/QA/成本回填”的视频产线：看 [`feishu-seedance-video-pipeline`](./feishu-seedance-video-pipeline/)
+8. 如果重点是用 HTML+GSAP+Canvas 做讲解/介绍类视频（音频驱动、组件库编排）：看 [`hyperframes-explainer-video`](./hyperframes-explainer-video/)
 
 一句话判断：
 - **对象怎么变** → `manim-video`
@@ -257,7 +191,7 @@ python3 scripts/run.py --help
 - 想做 TS 场景动画：[`motion-canvas`](./motion-canvas/)
 - 想做 React 页面型视频：[`remotion`](./remotion/)
 - 想用 HyperFrames 做讲解/介绍类视频：[`hyperframes-explainer-video`](./hyperframes-explainer-video/)
-- 想用 Seedance 生成短视频：[`seedance-video-local`](./seedance-video-local/)
+- 想用 Seedance 生成短视频：[`feishu-seedance-video-pipeline`](./feishu-seedance-video-pipeline/)
 
 ---
 

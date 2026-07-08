@@ -1,6 +1,5 @@
-import staticData from './staticData'
-
 export type Category = 'prompt' | 'skill' | 'hook' | 'mcp' | 'agent' | 'github'
+export const CATEGORIES: Category[] = ['prompt', 'skill', 'hook', 'mcp', 'agent', 'github']
 
 export interface Item {
   id: number
@@ -22,6 +21,36 @@ export interface Item {
   comments: number
   category?: string
   createdAt?: string
+}
+
+interface CatalogManifestEntry {
+  count: number
+  path: string
+}
+
+interface CatalogManifest {
+  generatedFrom: string
+  categories: Record<Category, CatalogManifestEntry>
+}
+
+const CATALOG_PATHS: Record<Category, string> = {
+  prompt: '/catalog/prompt.json',
+  skill: '/catalog/skill.json',
+  hook: '/catalog/hook.json',
+  mcp: '/catalog/mcp.json',
+  agent: '/catalog/agent.json',
+  github: '/catalog/github.json',
+}
+
+let manifestPromise: Promise<CatalogManifest> | null = null
+const itemPromises = new Map<Category, Promise<Item[]>>()
+
+async function loadJson<T>(path: string): Promise<T> {
+  const response = await fetch(path, { cache: 'force-cache' })
+  if (!response.ok) {
+    throw new Error(`Failed to load catalog asset: ${path} (${response.status})`)
+  }
+  return response.json() as Promise<T>
 }
 
 function normalizeTags(tags: unknown): string[] {
@@ -48,24 +77,35 @@ function camelizeKeys(obj: Record<string, unknown>): Item {
   return out as unknown as Item
 }
 
-export function getItemsByCategory(category: Category): Item[] {
-  if (category === 'prompt') {
-    return (staticData.prompts_full || []).map(camelizeKeys)
-  }
-  return (staticData.skills_full || [])
-    .filter((s: Record<string, unknown>) => s.category === category)
-    .map(camelizeKeys)
+export function getEmptyCounts(): Record<Category, number> {
+  return CATEGORIES.reduce((counts, category) => {
+    counts[category] = 0
+    return counts
+  }, {} as Record<Category, number>)
 }
 
-export function getAllCounts(): Record<Category, number> {
-  return {
-    prompt: (staticData.prompts_full || []).length,
-    skill: (staticData.skills_full || []).filter((s: Record<string, unknown>) => s.category === 'skill').length,
-    hook: (staticData.skills_full || []).filter((s: Record<string, unknown>) => s.category === 'hook').length,
-    mcp: (staticData.skills_full || []).filter((s: Record<string, unknown>) => s.category === 'mcp').length,
-    agent: (staticData.skills_full || []).filter((s: Record<string, unknown>) => s.category === 'agent').length,
-    github: (staticData.skills_full || []).filter((s: Record<string, unknown>) => s.category === 'github').length,
+export async function loadCatalogManifest(): Promise<CatalogManifest> {
+  manifestPromise ??= loadJson<CatalogManifest>('/catalog/manifest.json')
+  return manifestPromise
+}
+
+export async function loadItemsByCategory(category: Category): Promise<Item[]> {
+  const existing = itemPromises.get(category)
+  if (existing) return existing
+
+  const promise = loadJson<Array<Record<string, unknown>>>(CATALOG_PATHS[category])
+    .then(items => items.map(camelizeKeys))
+  itemPromises.set(category, promise)
+  return promise
+}
+
+export async function loadAllCounts(): Promise<Record<Category, number>> {
+  const manifest = await loadCatalogManifest()
+  const counts = getEmptyCounts()
+  for (const category of CATEGORIES) {
+    counts[category] = manifest.categories[category]?.count ?? 0
   }
+  return counts
 }
 
 export function getRoleCounts(items: Item[]): Record<string, number> {

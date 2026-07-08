@@ -4,16 +4,16 @@ import {
   MessageSquare, Terminal, GitBranch, Puzzle, Bot, Github,
   ArrowRight, Sparkles, BookOpen, Compass, Flame
 } from 'lucide-react'
-import { getAllCounts, CATEGORY_META } from '@/data/dataUtils'
-import type { Category } from '@/data/dataUtils'
+import { getAllCounts, CATEGORY_META } from '@/data/catalogMeta'
+import type { Category } from '@/data/catalogMeta'
 
-const CATS: { key: Category; icon: typeof MessageSquare; stat: string; statLabel: string }[] = [
-  { key: 'prompt', icon: MessageSquare, stat: '193', statLabel: '覆盖14个职业角色' },
-  { key: 'skill', icon: Terminal, stat: '306', statLabel: '从Claude Code到跨境电商' },
-  { key: 'hook', icon: GitBranch, stat: '72', statLabel: '事件驱动自动化' },
-  { key: 'mcp', icon: Puzzle, stat: '72', statLabel: '模型上下文协议' },
-  { key: 'agent', icon: Bot, stat: '73', statLabel: 'AI智能体框架' },
-  { key: 'github', icon: Github, stat: '87', statLabel: '精选开源项目' },
+const CATS: { key: Category; path: string; icon: typeof MessageSquare; statLabel: string }[] = [
+  { key: 'prompt', path: '/prompts', icon: MessageSquare, statLabel: '覆盖14个职业角色' },
+  { key: 'skill', path: '/skills', icon: Terminal, statLabel: '从Claude Code到跨境电商' },
+  { key: 'hook', path: '/hooks', icon: GitBranch, statLabel: '事件驱动自动化' },
+  { key: 'mcp', path: '/mcp', icon: Puzzle, statLabel: '模型上下文协议' },
+  { key: 'agent', path: '/agents', icon: Bot, statLabel: 'AI智能体框架' },
+  { key: 'github', path: '/github', icon: Github, statLabel: '精选开源项目' },
 ]
 
 const FEATURES = [
@@ -31,21 +31,31 @@ function AnimatedCounter({ value, suffix = '' }: { value: number; suffix?: strin
   useEffect(() => {
     const el = ref.current
     if (!el) return
-    const obs = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting && !done.current) {
-        done.current = true
-        const start = performance.now()
-        const tick = (now: number) => {
-          const p = Math.min((now - start) / 1200, 1)
-          const e = 1 - Math.pow(1 - p, 3)
-          setDisplay(Math.round(e * value))
-          if (p < 1) requestAnimationFrame(tick)
-        }
-        requestAnimationFrame(tick)
+    let frameId = 0
+    const settleId = window.setTimeout(() => setDisplay(value), 1600)
+    const startCounter = () => {
+      if (done.current) return
+      done.current = true
+      const start = performance.now()
+      const tick = (now: number) => {
+        const p = Math.min((now - start) / 1200, 1)
+        const e = 1 - Math.pow(1 - p, 3)
+        setDisplay(Math.round(e * value))
+        if (p < 1) frameId = requestAnimationFrame(tick)
       }
-    }, { threshold: 0.5 })
+      frameId = requestAnimationFrame(tick)
+    }
+    const obs = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) startCounter()
+    }, { threshold: 0.1 })
     obs.observe(el)
-    return () => obs.disconnect()
+    const rect = el.getBoundingClientRect()
+    if (rect.top < window.innerHeight && rect.bottom > 0) startCounter()
+    return () => {
+      obs.disconnect()
+      window.clearTimeout(settleId)
+      if (frameId) cancelAnimationFrame(frameId)
+    }
   }, [value])
 
   return <span ref={ref} className="tabular-nums">{display}{suffix}</span>
@@ -116,12 +126,12 @@ export default function HomePage() {
 
           {/* Six-dimension matrix */}
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {CATS.map(({ key, icon: Icon, statLabel }) => {
+            {CATS.map(({ key, path, icon: Icon, statLabel }) => {
               const meta = CATEGORY_META[key]
               return (
                 <Link
                   key={key}
-                  to={`/${key === 'prompt' ? 'prompts' : key}`}
+                  to={path}
                   className="group relative rounded-2xl p-5 transition-all duration-300"
                   style={{
                     background: 'var(--bg-card)',
@@ -198,12 +208,12 @@ export default function HomePage() {
             选择一个分类，发现经过精心筛选和整理的AI提示词与技能
           </p>
           <div className="flex flex-wrap justify-center gap-3">
-            {CATS.map(({ key }) => {
+            {CATS.map(({ key, path }) => {
               const meta = CATEGORY_META[key]
               return (
                 <Link
                   key={key}
-                  to={`/${key === 'prompt' ? 'prompts' : key}`}
+                  to={path}
                   className="btn-zh px-5 py-2.5 text-sm"
                   style={{ background: meta.color + '10', color: meta.color, border: `1px solid ${meta.color}25` }}
                   onMouseEnter={e => {

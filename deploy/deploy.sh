@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # PromptForge 部署脚本
 # 用法：
-#   首次部署（含 seed）: ./deploy.sh --seed
-#   日常更新:            ./deploy.sh
+#   部署 / 更新: ./deploy.sh
+#   部署后执行线上 E2E smoke: ./deploy.sh --smoke
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
@@ -10,17 +10,38 @@ PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 REMOTE_USER=ubuntu
 REMOTE_HOST=101.34.52.232
 REMOTE_DIR=/opt/promptforge
-SSH_KEY="$PROJECT_ROOT/ai_video.pem"
-SSH_OPTS="-i $SSH_KEY -o StrictHostKeyChecking=no"
+SSH_KEY="${PROMPTFORGE_SSH_KEY:-$HOME/.ssh/promptforge_ai_video.pem}"
+SSH_OPTS="-i $SSH_KEY -o StrictHostKeyChecking=accept-new"
+RUN_SMOKE=0
 
-SEED=false
-if [[ "${1:-}" == "--seed" ]]; then
-  SEED=true
-fi
+for arg in "$@"; do
+  case "$arg" in
+    --smoke)
+      RUN_SMOKE=1
+      ;;
+    --seed)
+      echo "ERROR: --seed is not supported in the static-first production deploy path." >&2
+      echo "Catalog data is generated into public/catalog/*.json during npm run build." >&2
+      echo "If DB-backed content is needed, design a separate migration and seed workflow first." >&2
+      exit 1
+      ;;
+    *)
+      echo "ERROR: unknown argument: $arg" >&2
+      echo "Usage: ./deploy.sh [--smoke]" >&2
+      exit 1
+      ;;
+  esac
+done
 
 log() { echo "[$(date '+%H:%M:%S')] $*"; }
 
 log "=== PromptForge Deploy ==="
+
+if [[ ! -f "$SSH_KEY" ]]; then
+  echo "ERROR: SSH key not found: $SSH_KEY" >&2
+  echo "Set PROMPTFORGE_SSH_KEY or place the key at ~/.ssh/promptforge_ai_video.pem" >&2
+  exit 1
+fi
 
 # ── 1. 同步文件到服务器 ──────────────────────────────────────────
 log "Syncing app/ to $REMOTE_HOST:$REMOTE_DIR/app ..."
@@ -46,6 +67,7 @@ rsync -az \
   -e "ssh $SSH_OPTS" \
   "$SCRIPT_DIR/.env.prod" \
   "$REMOTE_USER@$REMOTE_HOST:$REMOTE_DIR/.env.prod"
+ssh $SSH_OPTS $REMOTE_USER@$REMOTE_HOST "chmod 600 $REMOTE_DIR/.env.prod"
 
 # ── 2. 服务器上 build + 启动 ────────────────────────────────────
 log "Building images on server ..."
@@ -53,27 +75,8 @@ ssh $SSH_OPTS $REMOTE_USER@$REMOTE_HOST "
   set -e
   cd $REMOTE_DIR
 
-  # build deps & app 镜像
   docker compose build --no-cache app
-  docker compose build migrate
-
-  # 确保 MySQL 运行并 healthy
-  docker compose up -d mysql
-  echo 'Waiting for MySQL ...'
-  docker compose run --rm migrate echo 'MySQL ready'  2>/dev/null || true
-
-  # 运行 schema 迁移
-  echo 'Running drizzle push ...'
-  docker compose run --rm migrate
 "
-
-if [[ "$SEED" == "true" ]]; then
-  log "Running seed (803 records) ..."
-  ssh $SSH_OPTS $REMOTE_USER@$REMOTE_HOST "
-    cd $REMOTE_DIR
-    docker compose run --rm seed
-  "
-fi
 
 log "Starting / restarting app ..."
 ssh $SSH_OPTS $REMOTE_USER@$REMOTE_HOST "
@@ -89,6 +92,16 @@ ssh $SSH_OPTS $REMOTE_USER@$REMOTE_HOST "docker compose -f $REMOTE_DIR/docker-co
 
 log "App health check:"
 ssh $SSH_OPTS $REMOTE_USER@$REMOTE_HOST \
-  "curl -sf http://localhost:3000/ > /dev/null && echo 'OK: app responding on :3000' || echo 'WARN: app not yet ready (may still be starting)'"
+  "docker exec promptforge_app node -e \"fetch('http://127.0.0.1:3000/api/trpc/ping?batch=1&input=%7B%7D').then(async r=>{const t=await r.text(); if(!r.ok||!t.includes('ok')) process.exit(1); console.log('OK: app responding inside promptforge_app')}).catch(()=>process.exit(1))\" || echo 'WARN: app not yet ready (may still be starting)'"
+
+if [[ "$RUN_SMOKE" -eq 1 ]]; then
+  log "Running production E2E smoke ..."
+  (
+    cd "$PROJECT_ROOT/app"
+    PROMPTFORGE_SMOKE_BASE_URL="${PROMPTFORGE_PUBLIC_URL:-https://kg.lute-tlz-dddd.top/}" \
+      PROMPTFORGE_SMOKE_CHECK_COHOSTS="${PROMPTFORGE_SMOKE_CHECK_COHOSTS:-1}" \
+      npm run smoke:e2e
+  )
+fi
 
 log "=== Deploy complete ==="

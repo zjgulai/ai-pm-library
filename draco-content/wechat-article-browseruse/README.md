@@ -7,8 +7,6 @@
 >
 > 发布定位：**可独立运行的 early standalone release**
 
-![workflow preview](./assets/workflow-preview-v2.svg)
-
 ## 它能做什么
 
 - 抓取微信公众号文章正文

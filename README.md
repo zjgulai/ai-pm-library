@@ -4,26 +4,46 @@
 
 面向 AI 产品经理和内容创作者的工具集合，包含可运行的前端知识库应用、内容自动化脚本和数据工具。
 
+**生产地址：[https://kg.lute-tlz-dddd.top](https://kg.lute-tlz-dddd.top)**
+
+---
+
+## 当前产品状态
+
+- 当前线上 PromptForge 入口为 `https://kg.lute-tlz-dddd.top/`，由宿主 nginx 反代到 `promptforge_app:3000`。
+- 当前公开站点是 static-first read-only：六大类内容由 `public/catalog/*.json` 提供，公开 tRPC 仅保留 `ping` 健康检查。
+- 当前仓库内容规模为 851 条：提示词 201、技能 314、钩子 80、MCP 80、智能体 81、开源 95；部署前线上仍以当前发布版本为准。
+- 线上 E2E smoke 已固化为正式流程：`npm run smoke:e2e`、`npm run smoke:e2e:prod` 和 `deploy/deploy.sh --smoke`。
+- 管理员内容新增与发布系统仍处于已批准设计阶段，尚未进入实现；设计文档见 `docs/superpowers/specs/2026-05-31-admin-content-publishing-design.md`。
+- 宿主页新增 PromptForge 卡片仍处于已批准设计阶段，尚未修改远程 landing page；设计文档见 `docs/superpowers/specs/2026-05-31-lute-landing-promptforge-card-design.md`。
+- 旧 `promptforge_mysql`、`promptforge_net` 和相关 volume 是后续归档项，不属于当前 static-first 生产运行链路。
+
+---
+
 ## 内容规模
 
 | 分类 | 数量 | 说明 |
 |---|---|---|
-| 提示词 | 193 | 覆盖创作、产品、开发等 14 个职业角色 |
-| 技能 | 306 | 从 Claude Code 到跨境电商的全域技能库 |
-| 钩子 | 72 | 事件驱动的自动化工作流 |
-| MCP | 72 | 模型上下文协议工具 |
-| 智能体 | 73 | AI Agent 框架与编排方案 |
-| 开源 | 87 | 精选开源项目 |
-| **合计** | **803** | **14 个职业角色** |
+| 提示词 | 201 | 覆盖创作、产品、开发等 14 个职业角色 |
+| 技能 | 314 | 从 Claude Code 到跨境电商的全域技能库 |
+| 钩子 | 80 | 事件驱动的自动化工作流 |
+| MCP | 80 | 模型上下文协议工具 |
+| 智能体 | 81 | AI Agent 框架与编排方案 |
+| 开源 | 95 | 精选开源项目 |
+| **合计** | **851** | **14 个职业角色** |
+
+---
 
 ## 仓库结构
 
 ```
 ai_pm_library/
-├── app/                    # 灵词前端应用（React + Vite + tRPC）
+├── app/                    # 灵词前端应用（React + Vite，static-first catalog）
+├── deploy/                 # 生产部署配置（docker-compose + 运维脚本）
 ├── draco-content/          # 内容自动化工具集（20+ 独立工具）
 ├── nexscope/               # 电商数据 SQL 工具
-└── docs/                   # 文档与分析报告
+├── docs/                   # 文档与分析报告
+└── README.md
 ```
 
 ---
@@ -37,10 +57,10 @@ ai_pm_library/
 | 层 | 技术 |
 |---|---|
 | 前端框架 | React 19 + React Router 7 |
-| 构建工具 | Vite 7 |
+| 构建工具 | Vite 7 + esbuild |
 | 样式 | Tailwind CSS v3 + shadcn/ui（40+ 组件） |
-| API | tRPC v11 + Hono |
-| ORM | Drizzle ORM + MySQL2 |
+| API | Hono + tRPC ping（catalog 生产读取静态 JSON） |
+| ORM | Drizzle ORM + MySQL2（仅 DB 工具/迁移路线使用） |
 | 类型 | TypeScript 5.9 |
 
 ### 页面路由
@@ -48,40 +68,86 @@ ai_pm_library/
 | 路径 | 内容 |
 |---|---|
 | `/` | 首页，六维分类入口 + 数据总览 |
-| `/prompts` | 提示词库（193条），含方法论洞察模块 |
-| `/skills` | 技能库（306条） |
-| `/hooks` | 钩子（72条） |
-| `/mcp` | MCP 工具（72条） |
-| `/agents` | 智能体（73条） |
-| `/github` | 开源项目（87条） |
+| `/prompts` | 提示词库（201条），含方法论洞察模块 |
+| `/skills` | 技能库（314条） |
+| `/hooks` | 钩子（80条） |
+| `/mcp` | MCP 工具（80条） |
+| `/agents` | 智能体（81条） |
+| `/github` | 开源项目（95条） |
 
-### 快速开始
+### 本地开发
 
 ```bash
 cd app
 npm install
-cp .env.example .env   # 填写 DATABASE_URL 等配置
-npm run dev
+npm run dev            # http://localhost:3000
 ```
 
 ### 可用脚本
 
 ```bash
-npm run dev        # 开发模式（热重载）
-npm run build      # 生产构建
-npm run check      # TypeScript 类型检查
-npm run lint       # ESLint 检查
-npm run test       # 运行测试
-npm run db:push    # 推送 schema 到数据库
+npm run dev          # 开发模式（Vite HMR，端口 3000）
+npm run build        # 生产构建（vite build + esbuild API bundle）
+npm run check        # TypeScript 类型检查
+npm run lint         # ESLint
+npm run test         # Vitest
+npm run verify       # check + lint + test + build + high audit
+npm run start        # 运行生产构建（需先 build）
+npm run catalog:export  # 从 staticData 生成 public/catalog/*.json
+npm run docs:check   # Markdown frontmatter 与本地链接治理检查
+npm run audit:prod   # 仅生产依赖安全审计
+npm run smoke:e2e    # Playwright 生产形态 smoke（默认本地 3000）
+npm run smoke:e2e:prod  # 对当前线上 kg 域名执行 smoke
+npm run db:push      # 推送 schema 到数据库（Drizzle）
 npm run db:generate  # 生成迁移文件
+npm run db:migrate   # 执行 Drizzle migration
 ```
 
 ### 环境变量
 
 ```bash
 APP_ID=          # 应用 ID
-APP_SECRET=      # JWT 签名密钥
-DATABASE_URL=    # MySQL 连接串（mysql://user:pass@host:port/db）
+APP_SECRET=      # JWT 签名密钥（生产用随机 64 位 hex）
+DATABASE_URL=    # 可选；仅运行 DB 脚本、迁移或种子导入时需要
+```
+
+### 数据源策略
+
+当前生产应用采用 static-first：前端从 `public/catalog/*.json` 读取分类数据，公开 tRPC API 只保留 `ping` 健康检查。旧的 DB-backed catalog read routers 不再挂载到 public `appRouter`。
+
+只有在确实需要后台管理、在线编辑、内容审核或增量发布时，再切换到 DB-backed 路线，并先补齐可回滚 migration、幂等 seed、分页搜索 API、认证授权和审计路径。
+
+### 数据库工具（可选）
+
+```bash
+# 1. 推送 schema
+npm run db:push
+
+# 2. 导入全量数据（从 staticData 读取）
+npx tsx --tsconfig tsconfig.json db/seed-full.ts
+```
+
+---
+
+## deploy/ — 生产部署
+
+生产环境运行在腾讯云轻量服务器，独立 Docker Compose 环境，不污染其他应用。
+
+**详见 [deploy/README.md](./deploy/README.md)**
+
+| 文件 | 说明 |
+|---|---|
+| `docker-compose.yml` | static-first app 容器编排 |
+| `deploy.sh` | 一键部署/更新脚本 |
+| `.env.prod` | 生产密钥（gitignore，不提交） |
+| `secrets.env` | 密钥备份（gitignore，不提交） |
+| `nginx-kg-block.conf` | 当前 PromptForge `kg.lute-tlz-dddd.top` nginx server block 参考 |
+
+**日常更新：**
+```bash
+cd deploy
+./deploy.sh          # 代码更新（不重置数据）
+./deploy.sh --smoke  # 部署后执行生产 E2E smoke
 ```
 
 ---
@@ -120,10 +186,10 @@ DATABASE_URL=    # MySQL 连接串（mysql://user:pass@host:port/db）
 
 ```
 nexscope/
-├── ecommerce_batch_1.sql   # 跨境电商技能批次1
-├── ecommerce_batch_2.sql   # 跨境电商技能批次2
-├── ecommerce_batch_3.sql   # 跨境电商技能批次3
-└── ecommerce_batch_4.sql   # 跨境电商技能批次4
+├── ecommerce_batch_1.sql
+├── ecommerce_batch_2.sql
+├── ecommerce_batch_3.sql
+└── ecommerce_batch_4.sql
 ```
 
 ---
@@ -131,6 +197,9 @@ nexscope/
 ## docs/
 
 - [Prompt 标签方法论深度分析报告](./docs/analysis/prompt_methodology_report.md) — 173个提示词的标签分布、角色矩阵与方法论洞察
+- [每周高质量内容检索与增量更新流程](./docs/workflows/content-weekly-refresh-stable.md) — 六大类内容的网络检索、评分筛选和增量发布流程
+- [管理员内容新增与发布系统设计](./docs/superpowers/specs/2026-05-31-admin-content-publishing-design.md) — 后台新增、PostgreSQL、deploy-worker、版本化 catalog 与回滚方案
+- [宿主页 PromptForge 卡片链接展示设计](./docs/superpowers/specs/2026-05-31-lute-landing-promptforge-card-design.md) — 在 `lute-tlz-dddd.top` landing page 增加 PromptForge 卡片入口的实施方案
 
 ---
 
@@ -138,5 +207,6 @@ nexscope/
 
 - Node.js 20+
 - Python 3.10+（draco-content 工具使用）
-- MySQL 8.0+（app 数据库）
+- MySQL 8.0+（仅旧 DB 工具/归档或未来 DB-backed 路线需要）
+- Docker + Docker Compose v2（生产部署）
 - Git

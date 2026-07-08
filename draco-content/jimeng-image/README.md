@@ -21,12 +21,6 @@
 - **支持一组连续图片生成**（`sequential_image_generation=auto`）
 - **零第三方 Python 依赖**，脚本主体只用标准库
 
-## 效果示例
-
-下面这张图是用这个项目真实生成后保存下来的示例图：
-
-<img src="./assets/example-jimeng-image.jpg" alt="即梦生成示例图" />
-
 ## 目录结构
 
 ```text
@@ -35,8 +29,6 @@ jimeng-image/
 ├── SKILL.md
 ├── .env.example
 ├── .gitignore
-├── assets/
-│   └── example-jimeng-image.jpg
 ├── examples/
 │   └── prompts.txt
 └── scripts/

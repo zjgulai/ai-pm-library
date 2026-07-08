@@ -4,7 +4,7 @@ import {
   MessageSquare, Terminal, GitBranch, Puzzle, Bot, Github,
   Menu, X, ChevronRight
 } from 'lucide-react'
-import { getAllCounts } from '@/data/dataUtils'
+import { getAllCounts } from '@/data/catalogMeta'
 
 function useNavCounts() {
   const counts = useMemo(() => getAllCounts(), [])
@@ -120,6 +120,10 @@ export default function Layout() {
 
             {/* Mobile Toggle */}
             <button
+              type="button"
+              aria-label={mobileOpen ? '关闭菜单' : '打开菜单'}
+              aria-expanded={mobileOpen}
+              aria-controls="mobile-navigation"
               className="lg:hidden p-2 rounded-lg"
               onClick={() => setMobileOpen(!mobileOpen)}
               style={{ color: 'var(--text-secondary)' }}
@@ -132,6 +136,7 @@ export default function Layout() {
         {/* Mobile Nav */}
         {mobileOpen && (
           <div
+            id="mobile-navigation"
             className="lg:hidden border-t"
             style={{ background: 'var(--bg-card)', borderColor: 'var(--border-subtle)' }}
           >

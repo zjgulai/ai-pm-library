@@ -4,8 +4,6 @@
 
 这不是“调一下视频 API”。正确姿势是先把角色、场景、服装、参考图和镜头语言准备好，再让 Seedance 执行。烧钱前有 Reviewer，省得废片写进账本。
 
-![Feishu + Seedance pipeline](./assets/feishu-seedance-video-pipeline-flow.svg)
-
 ## 适合做什么
 
 | 场景 | 结果 |

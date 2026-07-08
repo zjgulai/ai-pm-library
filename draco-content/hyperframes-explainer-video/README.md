@@ -69,8 +69,10 @@ HyperFrames Registry（原子组件库）
 
 详细流程、代码示例、坑点解决方案请参阅 `SKILL.md`。
 
-## 相关 Skill
+## 相关能力
 
-- [hyperframes-workflow](../hyperframes-workflow/) — HyperFrames 统一入口
-- [volcengine-tts-local](../volcengine-tts-local/) — 火山引擎 TTS 本地合成
-- [gsap](../gsap/) — GSAP 动画参考
+- HyperFrames 统一入口
+- 火山引擎 TTS 本地合成
+- GSAP 动画参考
+
+当前仓库快照未提交以上能力的独立相邻目录；需要使用时先确认依赖来源和安装路径。

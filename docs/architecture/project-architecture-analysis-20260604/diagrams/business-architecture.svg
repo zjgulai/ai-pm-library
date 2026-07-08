@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2190" height="1355" viewBox="0 0 2190 1355"><defs><marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="4" orient="auto"><path d="M0,0 L0,8 L11,4 z" fill="#1e3a5f"/></marker></defs><rect width="100%" height="100%" fill="#ffffff"/><rect x="70" y="165" width="2050" height="1120" rx="12" style="stroke:#64748b;stroke-width:2;stroke-dasharray:none;fill:none;opacity:1"/>
+<rect x="90" y="225" width="360" height="860" rx="12" style="stroke:#c2410c;stroke-width:2;stroke-dasharray:none;fill:none;opacity:1"/>
+<ellipse cx="260" cy="330" rx="110" ry="45" style="stroke:#c2410c;stroke-width:2;stroke-dasharray:none;fill:#fed7aa;opacity:1"/>
+<rect x="130" y="425" width="260" height="80" rx="12" style="stroke:#1e3a5f;stroke-width:2;stroke-dasharray:none;fill:#bfdbfe;opacity:1"/>
+<rect x="130" y="555" width="260" height="100" rx="12" style="stroke:#6d28d9;stroke-width:2;stroke-dasharray:none;fill:#ddd6fe;opacity:1"/>
+<rect x="130" y="715" width="260" height="110" rx="12" style="stroke:#047857;stroke-width:2;stroke-dasharray:none;fill:#a7f3d0;opacity:1"/>
+<rect x="500" y="225" width="450" height="860" rx="12" style="stroke:#1e40af;stroke-width:2;stroke-dasharray:none;fill:none;opacity:1"/>
+<rect x="565" y="280" width="320" height="80" rx="12" style="stroke:#1e40af;stroke-width:2;stroke-dasharray:none;fill:#dbeafe;opacity:1"/>
+<rect x="565" y="400" width="320" height="100" rx="12" style="stroke:#1e3a5f;stroke-width:2;stroke-dasharray:none;fill:#bfdbfe;opacity:1"/>
+<rect x="565" y="560" width="320" height="100" rx="12" style="stroke:#6d28d9;stroke-width:2;stroke-dasharray:none;fill:#ddd6fe;opacity:1"/>
+<rect x="565" y="720" width="320" height="110" rx="12" style="stroke:#047857;stroke-width:2;stroke-dasharray:none;fill:#a7f3d0;opacity:1"/>
+<rect x="1000" y="225" width="430" height="860" rx="12" style="stroke:#166534;stroke-width:2;stroke-dasharray:none;fill:none;opacity:1"/>
+<rect x="1055" y="280" width="320" height="90" rx="12" style="stroke:#166534;stroke-width:2;stroke-dasharray:none;fill:#dcfce7;opacity:1"/>
+<rect x="1055" y="430" width="320" height="90" rx="12" style="stroke:#b45309;stroke-width:2;stroke-dasharray:none;fill:#fef3c7;opacity:1"/>
+<rect x="1055" y="580" width="320" height="110" rx="12" style="stroke:#166534;stroke-width:2;stroke-dasharray:none;fill:#dcfce7;opacity:1"/>
+<rect x="1055" y="755" width="320" height="110" rx="12" style="stroke:#1e3a5f;stroke-width:2;stroke-dasharray:none;fill:#bfdbfe;opacity:1"/>
+<rect x="1480" y="225" width="590" height="860" rx="12" style="stroke:#9a3412;stroke-width:2;stroke-dasharray:none;fill:none;opacity:1"/>
+<rect x="1535" y="280" width="230" height="85" rx="12" style="stroke:#9a3412;stroke-width:2;stroke-dasharray:none;fill:#ffedd5;opacity:1"/>
+<rect x="1800" y="280" width="230" height="85" rx="12" style="stroke:#dc2626;stroke-width:2;stroke-dasharray:10 8;fill:#fee2e2;opacity:1"/>
+<rect x="1535" y="430" width="495" height="95" rx="12" style="stroke:#047857;stroke-width:2;stroke-dasharray:none;fill:#a7f3d0;opacity:1"/>
+<rect x="1535" y="580" width="495" height="95" rx="12" style="stroke:#047857;stroke-width:2;stroke-dasharray:none;fill:#a7f3d0;opacity:1"/>
+<rect x="1535" y="735" width="230" height="90" rx="12" style="stroke:#9a3412;stroke-width:2;stroke-dasharray:none;fill:#ffedd5;opacity:1"/>
+<rect x="1800" y="735" width="230" height="90" rx="12" style="stroke:#9a3412;stroke-width:2;stroke-dasharray:none;fill:#ffedd5;opacity:1"/>
+<rect x="500" y="1115" width="1570" height="170" rx="12" style="stroke:#0369a1;stroke-width:2;stroke-dasharray:10 8;fill:none;opacity:1"/>
+<rect x="540" y="1165" width="250" height="70" rx="12" style="stroke:#0369a1;stroke-width:2;stroke-dasharray:10 8;fill:#e0f2fe;opacity:1"/>
+<rect x="840" y="1165" width="250" height="70" rx="12" style="stroke:#0369a1;stroke-width:2;stroke-dasharray:10 8;fill:#e0f2fe;opacity:1"/>
+<rect x="1140" y="1165" width="250" height="70" rx="12" style="stroke:#0369a1;stroke-width:2;stroke-dasharray:10 8;fill:#e0f2fe;opacity:1"/>
+<rect x="1440" y="1165" width="250" height="70" rx="12" style="stroke:#0369a1;stroke-width:2;stroke-dasharray:10 8;fill:#e0f2fe;opacity:1"/>
+<rect x="1740" y="1165" width="250" height="70" rx="12" style="stroke:#0369a1;stroke-width:2;stroke-dasharray:10 8;fill:#e0f2fe;opacity:1"/>
+<polyline points="370,330 565,320" style="fill:none;stroke:#1e3a5f;stroke-width:2;stroke-dasharray:none" marker-end="url(#arrow)"/>
+<polyline points="370,465 565,450" style="fill:none;stroke:#1e3a5f;stroke-width:2;stroke-dasharray:none" marker-end="url(#arrow)"/>
+<polyline points="370,760 565,775" style="fill:none;stroke:#1e3a5f;stroke-width:2;stroke-dasharray:none" marker-end="url(#arrow)"/>
+<polyline points="885,610 1055,625" style="fill:none;stroke:#1e3a5f;stroke-width:2;stroke-dasharray:none" marker-end="url(#arrow)"/>
+<polyline points="1215,370 1215,430" style="fill:none;stroke:#1e3a5f;stroke-width:2;stroke-dasharray:none" marker-end="url(#arrow)"/>
+<polyline points="1215,520 1215,580" style="fill:none;stroke:#1e3a5f;stroke-width:2;stroke-dasharray:none" marker-end="url(#arrow)"/>
+<polyline points="1215,690 1215,755" style="fill:none;stroke:#1e3a5f;stroke-width:2;stroke-dasharray:none" marker-end="url(#arrow)"/>
+<polyline points="1375,630 1535,625" style="fill:none;stroke:#1e3a5f;stroke-width:2;stroke-dasharray:none" marker-end="url(#arrow)"/>
+<polyline points="885,775 1535,625" style="fill:none;stroke:#1e3a5f;stroke-width:2;stroke-dasharray:none" marker-end="url(#arrow)"/>
+<polyline points="1765,780 1800,780" style="fill:none;stroke:#1e3a5f;stroke-width:2;stroke-dasharray:none" marker-end="url(#arrow)"/>
+<polyline points="540,1200 790,1200" style="fill:none;stroke:#1e3a5f;stroke-width:2;stroke-dasharray:none" marker-end="url(#arrow)"/>
+<polyline points="1090,1200 1140,1200" style="fill:none;stroke:#1e3a5f;stroke-width:2;stroke-dasharray:none" marker-end="url(#arrow)"/>
+<polyline points="1390,1200 1440,1200" style="fill:none;stroke:#1e3a5f;stroke-width:2;stroke-dasharray:none" marker-end="url(#arrow)"/>
+<polyline points="1690,1200 1740,1200" style="fill:none;stroke:#1e3a5f;stroke-width:2;stroke-dasharray:none" marker-end="url(#arrow)"/>
+<polyline points="790,1200 840,1200" style="fill:none;stroke:#0369a1;stroke-width:2;stroke-dasharray:8 6" marker-end="url(#arrow)"/>
+<text x="80" y="102" text-anchor="start" font-family="Menlo, Monaco, Consolas, monospace" font-size="32" fill="#1e40af"><tspan x="80" dy="0">PromptForge 业务架构图</tspan></text>
+<text x="82" y="135" text-anchor="start" font-family="Menlo, Monaco, Consolas, monospace" font-size="16" fill="#64748b"><tspan x="82" dy="0">Static-first 六维 AI 知识库：已上线展示链路 + 未来管理员发布链路边界</tspan></text>
+<text x="88" y="195" text-anchor="start" font-family="Menlo, Monaco, Consolas, monospace" font-size="18" fill="#1e40af"><tspan x="88" dy="0">当前生产运行边界：只读公开站点</tspan></text>
+<text x="108" y="255" text-anchor="start" font-family="Menlo, Monaco, Consolas, monospace" font-size="18" fill="#c2410c"><tspan x="108" dy="0">用户与问题场景</tspan></text>
+<text x="260" y="313" text-anchor="middle" font-family="Menlo, Monaco, Consolas, monospace" font-size="16" fill="#374151"><tspan x="260" dy="0">AI PM</tspan><tspan x="260" dy="20">内容创作者</tspan><tspan x="260" dy="20">开发者/运营</tspan></text>
+<text x="260" y="453" text-anchor="middle" font-family="Menlo, Monaco, Consolas, monospace" font-size="16" fill="#374151"><tspan x="260" dy="0">六大类问题入口</tspan><tspan x="260" dy="20">prompt / skill / hook</tspan><tspan x="260" dy="20">mcp / agent / github</tspan></text>
+<text x="260" y="583" text-anchor="middle" font-family="Menlo, Monaco, Consolas, monospace" font-size="16" fill="#374151"><tspan x="260" dy="0">核心需求</tspan><tspan x="260" dy="20">可检索、可筛选</tspan><tspan x="260" dy="20">可复制、可复用</tspan><tspan x="260" dy="20">可持续更新</tspan></text>
+<text x="260" y="743" text-anchor="middle" font-family="Menlo, Monaco, Consolas, monospace" font-size="16" fill="#374151"><tspan x="260" dy="0">已上线交互</tspan><tspan x="260" dy="20">搜索 / 角色筛选</tspan><tspan x="260" dy="20">展开 / 复制</tspan><tspan x="260" dy="20">加载更多 / 收藏状态</tspan></text>
+<text x="518" y="255" text-anchor="start" font-family="Menlo, Monaco, Consolas, monospace" font-size="18" fill="#1e40af"><tspan x="518" dy="0">前端产品层</tspan></text>
+<text x="725" y="308" text-anchor="middle" font-family="Menlo, Monaco, Consolas, monospace" font-size="16" fill="#374151"><tspan x="725" dy="0">React 19 + Vite</tspan><tspan x="725" dy="20">Hash Router</tspan></text>
+<text x="725" y="428" text-anchor="middle" font-family="Menlo, Monaco, Consolas, monospace" font-size="16" fill="#374151"><tspan x="725" dy="0">首页 / 六大类页面</tspan><tspan x="725" dy="20">/ #/prompts / #/skills</tspan><tspan x="725" dy="20">#/hooks #/mcp #/agents #/github</tspan></text>
+<text x="725" y="588" text-anchor="middle" font-family="Menlo, Monaco, Consolas, monospace" font-size="16" fill="#374151"><tspan x="725" dy="0">CategoryPage</tspan><tspan x="725" dy="20">加载分类 catalog</tspan><tspan x="725" dy="20">显示 PageHero 与 count</tspan></text>
+<text x="725" y="748" text-anchor="middle" font-family="Menlo, Monaco, Consolas, monospace" font-size="16" fill="#374151"><tspan x="725" dy="0">CardGrid + SearchBar</tspan><tspan x="725" dy="20">全文搜索 / role pills</tspan><tspan x="725" dy="20">卡片展开 / copy fallback</tspan></text>
+<text x="1018" y="255" text-anchor="start" font-family="Menlo, Monaco, Consolas, monospace" font-size="18" fill="#166534"><tspan x="1018" dy="0">内容资产层</tspan></text>
+<text x="1215" y="308" text-anchor="middle" font-family="Menlo, Monaco, Consolas, monospace" font-size="16" fill="#374151"><tspan x="1215" dy="0">staticData.ts</tspan><tspan x="1215" dy="20">人工/AI 整理后的源数据</tspan></text>
+<text x="1215" y="458" text-anchor="middle" font-family="Menlo, Monaco, Consolas, monospace" font-size="16" fill="#374151"><tspan x="1215" dy="0">catalog:export</tspan><tspan x="1215" dy="20">生成 public/catalog/*.json</tspan></text>
+<text x="1215" y="608" text-anchor="middle" font-family="Menlo, Monaco, Consolas, monospace" font-size="16" fill="#374151"><tspan x="1215" dy="0">六大类 catalog JSON</tspan><tspan x="1215" dy="20">201 / 314 / 80 / 80 / 81 / 95</tspan><tspan x="1215" dy="20">合计 851</tspan></text>
+<text x="1215" y="783" text-anchor="middle" font-family="Menlo, Monaco, Consolas, monospace" font-size="16" fill="#374151"><tspan x="1215" dy="0">catalogMeta.ts</tspan><tspan x="1215" dy="20">CATEGORY_COUNTS</tspan><tspan x="1215" dy="20">CATEGORY_META</tspan><tspan x="1215" dy="20">ROLE_LABELS</tspan></text>
+<text x="1498" y="255" text-anchor="start" font-family="Menlo, Monaco, Consolas, monospace" font-size="18" fill="#9a3412"><tspan x="1498" dy="0">服务、验证与部署层</tspan></text>
+<text x="1650" y="308" text-anchor="middle" font-family="Menlo, Monaco, Consolas, monospace" font-size="16" fill="#374151"><tspan x="1650" dy="0">Hono + tRPC</tspan><tspan x="1650" dy="20">公开仅 ping</tspan></text>
+<text x="1915" y="308" text-anchor="middle" font-family="Menlo, Monaco, Consolas, monospace" font-size="16" fill="#374151"><tspan x="1915" dy="0">DB routers/schema</tspan><tspan x="1915" dy="20">可选/未来路线</tspan><tspan x="1915" dy="20">当前未公开挂载</tspan></text>
+<text x="1782.5" y="458" text-anchor="middle" font-family="Menlo, Monaco, Consolas, monospace" font-size="16" fill="#374151"><tspan x="1782.5" dy="0">npm run verify</tspan><tspan x="1782.5" dy="20">check + lint + docs:check + test + build + audit</tspan></text>
+<text x="1782.5" y="608" text-anchor="middle" font-family="Menlo, Monaco, Consolas, monospace" font-size="16" fill="#374151"><tspan x="1782.5" dy="0">Playwright smoke</tspan><tspan x="1782.5" dy="20">HTML/assets/catalog/tRPC/全路由/移动端/console</tspan></text>
+<text x="1650" y="763" text-anchor="middle" font-family="Menlo, Monaco, Consolas, monospace" font-size="16" fill="#374151"><tspan x="1650" dy="0">Docker app-only</tspan><tspan x="1650" dy="20">promptforge_app:3000</tspan></text>
+<text x="1915" y="763" text-anchor="middle" font-family="Menlo, Monaco, Consolas, monospace" font-size="16" fill="#374151"><tspan x="1915" dy="0">nginx co-host</tspan><tspan x="1915" dy="20">kg.lute-tlz-dddd.top</tspan></text>
+<text x="518" y="1145" text-anchor="start" font-family="Menlo, Monaco, Consolas, monospace" font-size="18" fill="#0369a1"><tspan x="518" dy="0">未来设计边界：管理员内容新增与发布，尚未实现</tspan></text>
+<text x="665" y="1193" text-anchor="middle" font-family="Menlo, Monaco, Consolas, monospace" font-size="16" fill="#374151"><tspan x="665" dy="0">Admin UI</tspan><tspan x="665" dy="20">#/admin/content</tspan></text>
+<text x="965" y="1193" text-anchor="middle" font-family="Menlo, Monaco, Consolas, monospace" font-size="16" fill="#374151"><tspan x="965" dy="0">Admin API</tspan><tspan x="965" dy="20">session/CSRF/audit</tspan></text>
+<text x="1265" y="1193" text-anchor="middle" font-family="Menlo, Monaco, Consolas, monospace" font-size="16" fill="#374151"><tspan x="1265" dy="0">PostgreSQL</tspan><tspan x="1265" dy="20">content_items/events</tspan></text>
+<text x="1565" y="1193" text-anchor="middle" font-family="Menlo, Monaco, Consolas, monospace" font-size="16" fill="#374151"><tspan x="1565" dy="0">deploy-worker</tspan><tspan x="1565" dy="20">versioned catalog</tspan></text>
+<text x="1865" y="1193" text-anchor="middle" font-family="Menlo, Monaco, Consolas, monospace" font-size="16" fill="#374151"><tspan x="1865" dy="0">catalog/current</tspan><tspan x="1865" dy="20">atomic switch/rollback</tspan></text></svg>

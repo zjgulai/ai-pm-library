@@ -36,40 +36,16 @@
 
 ---
 
-## 示例效果
+## Slide 风格
 
-<table>
-  <tr>
-    <td width="50%" valign="top">
-      <img src="./assets/example-slide-cover.png" alt="epub2podcast 示例封面页" />
-      <p><strong>封面页风格</strong><br/>适合做视频开场、书籍介绍或主题引入。</p>
-    </td>
-    <td width="50%" valign="top">
-      <img src="./assets/example-slide-infographic.png" alt="epub2podcast 示例信息页" />
-      <p><strong>信息图风格</strong><br/>适合展示结构化信息、核心观点或分层关系。</p>
-    </td>
-  </tr>
-  <tr>
-    <td width="50%" valign="top">
-      <img src="./assets/example-slide-split-layout.png" alt="epub2podcast 左右分栏版式示例" />
-      <p><strong>左右分栏讲述页</strong><br/>适合做“左侧引言 + 右侧要点展开”的内容页，版式更有杂志感。</p>
-    </td>
-    <td width="50%" valign="top">
-      <img src="./assets/example-slide-card-layout.png" alt="epub2podcast 三卡片版式示例" />
-      <p><strong>三卡片信息页</strong><br/>适合把一个主题拆成 3 个并列重点，方便快速浏览与理解。</p>
-    </td>
-  </tr>
-  <tr>
-    <td width="50%" valign="top">
-      <img src="./assets/example-slide-list-layout.png" alt="epub2podcast 条目列表版式示例" />
-      <p><strong>条目列表版式</strong><br/>适合做学术总结、历史回响、观点归纳这类要点式内容页。</p>
-    </td>
-    <td width="50%" valign="top">
-      <img src="./assets/example-slide-center-layout.png" alt="epub2podcast 中心聚焦版式示例" />
-      <p><strong>中心聚焦版式</strong><br/>适合用一个核心概念带出四周支撑观点，展示主题与延展关系。</p>
-    </td>
-  </tr>
-</table>
+当前仓库快照未提交示例图片资产，保留版式说明作为可复现目标：
+
+- 封面页风格：适合做视频开场、书籍介绍或主题引入。
+- 信息图风格：适合展示结构化信息、核心观点或分层关系。
+- 左右分栏讲述页：适合做“左侧引言 + 右侧要点展开”的内容页。
+- 三卡片信息页：适合把一个主题拆成 3 个并列重点。
+- 条目列表版式：适合做学术总结、历史回响、观点归纳这类要点式内容页。
+- 中心聚焦版式：适合用一个核心概念带出四周支撑观点。
 
 ---
 
