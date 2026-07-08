@@ -27,7 +27,8 @@
     "smoke:e2e:prod": "PROMPTFORGE_SMOKE_BASE_URL=https://kg.lute-tlz-dddd.top/ PROMPTFORGE_SMOKE_CHECK_COHOSTS=1 npm run smoke:e2e",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
-    "db:push": "drizzle-kit push"
+    "db:push": "node scripts/guard-db-push.mjs",
+    "db:push:local": "PROMPTFORGE_ALLOW_DB_PUSH=local-only node scripts/guard-db-push.mjs"
   },
   "dependencies": {
     "@hono/node-server": "^1.14.3",

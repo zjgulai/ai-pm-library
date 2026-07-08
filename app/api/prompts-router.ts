@@ -4,6 +4,8 @@ import { createRouter, publicQuery } from "./middleware";
 import { getDb } from "./queries/connection";
 import { prompts } from "@db/schema";
 
+// DB_BACKED_ROUTE_NOT_PUBLIC: retained only for a future authenticated DB-backed path.
+// Do not mount this router in appRouter without auth, rate limiting, and audit logging.
 export const promptsRouter = createRouter({
   list: publicQuery
     .input(

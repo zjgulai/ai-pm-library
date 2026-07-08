@@ -56,6 +56,16 @@ cd deploy
 
 更新代码并重启 app。catalog 数据在 `npm run build` 阶段由 `app/src/data/catalogSource.json` 生成到 `public/catalog/*.json`。
 
+无副作用部署计划预检：
+
+```bash
+cd deploy
+./deploy.sh --dry-run
+./deploy.sh --dry-run --smoke
+```
+
+`--dry-run` 只输出目标主机、待同步路径、远端 Docker 命令、可选生产 smoke 计划和本地前置状态；不执行 SSH、rsync、远端 Docker、生产 smoke 或 provider call。
+
 部署后执行线上 E2E smoke：
 
 ```bash
@@ -82,7 +92,7 @@ npm run smoke:e2e:prod
 
 ## DB-backed 路线
 
-默认生产部署不启动 MySQL，不执行 `drizzle-kit push`，也不运行 seed。`./deploy.sh --seed` 会直接失败，防止误以为静态站部署会写数据库。
+默认生产部署不启动 MySQL，不执行 `drizzle-kit push`，也不运行 seed。`./deploy.sh --seed` 会直接失败，防止误以为静态站部署会写数据库。`npm run db:push` 已加本地 guard，只有 `PROMPTFORGE_ALLOW_DB_PUSH=local-only` 且 `DATABASE_URL` 指向 localhost/127.0.0.1 时才允许执行。
 
 如需切换为 DB-backed 内容平台，先提交单独方案和变更，至少包括：
 

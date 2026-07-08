@@ -98,7 +98,7 @@ npm run docs:check   # Markdown frontmatter 与本地链接治理检查
 npm run audit:prod   # 仅生产依赖安全审计
 npm run smoke:e2e    # Playwright 生产形态 smoke（默认本地 3000）
 npm run smoke:e2e:prod  # 对当前线上 kg 域名执行 smoke
-npm run db:push      # 推送 schema 到数据库（Drizzle）
+npm run db:push      # 受保护的本地 DB push；默认拒绝，生产禁用
 npm run db:generate  # 生成迁移文件
 npm run db:migrate   # 执行 Drizzle migration
 ```
@@ -120,12 +120,14 @@ DATABASE_URL=    # 可选；仅运行 DB 脚本、迁移或种子导入时需要
 ### 数据库工具（可选）
 
 ```bash
-# 1. 推送 schema
-npm run db:push
+# 1. 本地一次性 schema push（仅 disposable localhost DB）
+PROMPTFORGE_ALLOW_DB_PUSH=local-only DATABASE_URL=mysql://root:pass@127.0.0.1:3306/promptforge npm run db:push
 
 # 2. 导入全量数据（从 catalogSource.json 读取）
 npx tsx --tsconfig tsconfig.json db/seed-full.ts
 ```
+
+生产或共享数据库禁止使用 `db:push`。需要 DB-backed 路线时，先用 `npm run db:generate` 生成可审查 migration，再走 `npm run db:migrate`。
 
 ---
 
@@ -148,6 +150,7 @@ npx tsx --tsconfig tsconfig.json db/seed-full.ts
 cd deploy
 ./deploy.sh          # 代码更新（不重置数据）
 ./deploy.sh --smoke  # 部署后执行生产 E2E smoke
+./deploy.sh --dry-run # 无 SSH/rsync/远端 Docker 的部署计划预检
 ```
 
 ---

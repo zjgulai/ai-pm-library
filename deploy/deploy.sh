@@ -3,6 +3,7 @@
 # 用法：
 #   部署 / 更新: ./deploy.sh
 #   部署后执行线上 E2E smoke: ./deploy.sh --smoke
+#   只做无副作用计划预检: ./deploy.sh --dry-run
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
@@ -13,11 +14,20 @@ REMOTE_DIR=/opt/promptforge
 SSH_KEY="${PROMPTFORGE_SSH_KEY:-$HOME/.ssh/promptforge_ai_video.pem}"
 SSH_OPTS="-i $SSH_KEY -o StrictHostKeyChecking=accept-new"
 RUN_SMOKE=0
+DRY_RUN=0
+DOCKER_BIN="${PROMPTFORGE_DOCKER_BIN:-}"
+
+usage() {
+  echo "Usage: ./deploy.sh [--smoke] [--dry-run]" >&2
+}
 
 for arg in "$@"; do
   case "$arg" in
     --smoke)
       RUN_SMOKE=1
+      ;;
+    --dry-run|--preflight)
+      DRY_RUN=1
       ;;
     --seed)
       echo "ERROR: --seed is not supported in the static-first production deploy path." >&2
@@ -27,13 +37,69 @@ for arg in "$@"; do
       ;;
     *)
       echo "ERROR: unknown argument: $arg" >&2
-      echo "Usage: ./deploy.sh [--smoke]" >&2
+      usage
       exit 1
       ;;
   esac
 done
 
 log() { echo "[$(date '+%H:%M:%S')] $*"; }
+
+resolve_docker_bin() {
+  if [[ -n "$DOCKER_BIN" ]]; then
+    return 0
+  fi
+  if command -v docker >/dev/null 2>&1; then
+    DOCKER_BIN="$(command -v docker)"
+    return 0
+  fi
+  if [[ -x /usr/local/bin/docker ]]; then
+    DOCKER_BIN="/usr/local/bin/docker"
+    return 0
+  fi
+  return 1
+}
+
+if [[ "$DRY_RUN" -eq 1 ]]; then
+  log "=== PromptForge Deploy Dry Run ==="
+  log "Target: $REMOTE_USER@$REMOTE_HOST:$REMOTE_DIR"
+  log "App source: $PROJECT_ROOT/app/"
+  log "Compose file: $SCRIPT_DIR/docker-compose.yml"
+  log "SSH key path: $SSH_KEY"
+
+  if [[ -f "$SSH_KEY" ]]; then
+    log "Preflight: SSH key path exists"
+  else
+    log "Preflight warning: SSH key path is missing; real deploy would fail before remote access"
+  fi
+
+  if [[ -f "$SCRIPT_DIR/.env.prod" ]]; then
+    log "Preflight: deploy/.env.prod exists locally"
+  else
+    log "Preflight warning: deploy/.env.prod is missing; real deploy would fail before env sync"
+  fi
+
+  if resolve_docker_bin; then
+    services="$("$DOCKER_BIN" compose -f "$SCRIPT_DIR/docker-compose.yml" config --services 2>/dev/null | tr '\n' ' ')"
+    log "Preflight: docker compose services: ${services:-unavailable}"
+  else
+    log "Preflight warning: docker command not found; compose config was not checked"
+  fi
+
+  log "Would run: ssh $REMOTE_USER@$REMOTE_HOST 'mkdir -p $REMOTE_DIR/app'"
+  log "Would run: rsync app/ to $REMOTE_DIR/app/ with --delete and local excludes"
+  log "Would run: rsync docker-compose.yml to $REMOTE_DIR/"
+  log "Would run: rsync deploy/.env.prod to $REMOTE_DIR/.env.prod and chmod 600"
+  log "Would run remotely: docker compose build --no-cache app"
+  log "Would run remotely: docker compose up -d --force-recreate app"
+  log "Would run remotely: docker compose ps and container-local ping health check"
+  if [[ "$RUN_SMOKE" -eq 1 ]]; then
+    log "Would run local production E2E smoke against ${PROMPTFORGE_PUBLIC_URL:-https://kg.lute-tlz-dddd.top/}"
+  fi
+  log "No SSH, rsync, remote Docker, production smoke, or provider call executed."
+  log "=== Dry run complete ==="
+  exit 0
+fi
 
 log "=== PromptForge Deploy ==="
 

@@ -114,12 +114,24 @@ flowchart LR
 | T2 | P0 | 改造 smoke：从 manifest 动态读取 catalog count | Done | 本地 `npm run smoke:e2e` 通过 |
 | T3 | P0 | 对 count fallback 加测试，防止下次增量漏改 | Done | `npm run test` 通过 |
 | T4 | P1 | 生成本审计计划与执行清单 | Done | 本文档落盘 |
-| T5 | P1 | 给 `deploy.sh` 增加 `--dry-run` 或 preflight-only 模式 | Todo | 无 SSH side effect 下可验证 rsync/remote command plan |
-| T6 | P1 | 给 `db:push` 增加本地 guard 或改名为显式危险命令 | Todo | 误运行不会触达生产 DSN |
-| T7 | P1 | 决策 DB routers：继续归档、加 deprecated 标注，或进入 DB-backed 设计 | Todo | public API boundary test 仍通过 |
+| T5 | P1 | 给 `deploy.sh` 增加 `--dry-run` 或 preflight-only 模式 | Done | 无 SSH side effect 下可验证 rsync/remote command plan |
+| T6 | P1 | 给 `db:push` 增加本地 guard 或改名为显式危险命令 | Done | 误运行不会触达生产 DSN |
+| T7 | P1 | 决策 DB routers：继续归档、加 deprecated 标注，或进入 DB-backed 设计 | Done | public API boundary test 仍通过 |
 | T8 | P2 | 对 `.codegraph/.kiro/.sisyphus` 和旧草稿制定归档/保留清单 | Blocked-by-approval | 删除或移动前需确认 |
 | T9 | P2 | 生产 read-only smoke | Blocked-by-approval | 需授权访问生产域名与 co-host 检查 |
 | T10 | P2 | 远端部署 | Blocked-by-approval | 需明确 push/SSH/production 授权 |
+
+## 5.1 下一批 TODO（2026-07-08 执行）
+
+| ID | 优先级 | TODO | 状态 | 验收 |
+|---|---|---|---|---|
+| N1 | P1 | `deploy.sh --dry-run`：输出远端同步/构建/启动/smoke 计划，但不产生外部副作用 | Done | `bash deploy/deploy.sh --dry-run --smoke` 退出 0，输出 no-side-effect 边界 |
+| N2 | P1 | `db:push` guard：默认阻断，只有 local-only 确认和 localhost DSN 才允许 | Done | `node scripts/guard-db-push.mjs` 无确认时退出 1；Vitest 锁定 |
+| N3 | P1 | 旧 DB-backed routers 加非公开边界标记 | Done | `ops-boundary.test.ts` 检查 `DB_BACKED_ROUTE_NOT_PUBLIC` |
+| N4 | P1 | 文档同步 `--dry-run` 与 guarded `db:push` 用法 | Done | `npm run docs:check` |
+| N5 | P2 | 本地 Docker production image build | Blocked-local-daemon | `docker build --target production -t promptforge-app:local-preflight app` 被本机 Docker daemon 未运行阻塞 |
+| N6 | P2 | 生产 read-only smoke | Blocked-by-approval | 需授权访问生产域名和 co-host 检查 |
+| N7 | P2 | push / 远端部署 / 生产验收 | Blocked-by-approval | 需明确授权 |
 
 ## 6. 本轮执行记录
 
@@ -131,6 +143,9 @@ flowchart LR
 4. `seed-full.ts` 改为动态输出 source record 总数。
 5. 同步依赖后完成本地 smoke。
 6. 完成本地 verify 和部署配置预检。
+7. 新增 `deploy.sh --dry-run`，形成 no-side-effect 部署计划预检。
+8. 新增 `guard-db-push.mjs`，默认阻断 `db:push`，只允许 local-only + localhost。
+9. 给旧 DB-backed routers 加 `DB_BACKED_ROUTE_NOT_PUBLIC` 边界标记，并用 ops 边界测试锁定。
 
 ## 7. 验收证据
 
@@ -141,6 +156,8 @@ flowchart LR
 | `bash -n deploy/deploy.sh` | 通过 | deploy preflight |
 | `/usr/local/bin/docker compose -f deploy/docker-compose.yml config --services` | 通过；服务为 `app` | deploy preflight |
 | `git diff --check` | 通过 | local validation |
+| `bash deploy/deploy.sh --dry-run --smoke` | 通过；无 SSH/rsync/远端 Docker/生产 smoke/provider call | L2-fixture-or-dry-run |
+| `docker build --target production -t promptforge-app:local-preflight app` | 未通过；本机 Docker daemon 未运行，未进入镜像构建 | local deploy preflight blocked |
 
 ## 8. 残余风险
 
@@ -148,4 +165,5 @@ flowchart LR
 - 本轮没有 push，远端 Git 和本地 `main` 不一致。
 - 本轮没有执行生产部署；`deploy.sh` 仍是真实远端 side effect，需要授权。
 - 本轮没有清理未跟踪目录和草稿，避免误删用户资产。
-- `db:push` 和旧 DB routers 仍保留，虽然未挂载到 public API，但仍是架构噪声。
+- 旧 DB routers 仍保留，虽然未挂载到 public API，已加非公开标记；进入 DB-backed 路线前仍需认证、限流、审计和 migration 方案。
+- 本轮 Docker Compose 配置预检通过，但本地 Docker daemon 未运行，因此 production image build 仍未完成。

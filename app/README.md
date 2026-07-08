@@ -26,7 +26,8 @@ npm run build        # 生产构建（Vite + esbuild API）
 npm run check        # TypeScript 类型检查
 npm run lint         # ESLint
 npm run test         # Vitest
-npm run db:push      # 推送 schema（Drizzle）
+npm run db:push      # 受保护的本地 DB push；默认拒绝，生产禁用
+npm run db:push:local # 仅在 DATABASE_URL 指向 localhost 时允许
 npm run db:generate  # 生成迁移文件
 npm run start        # 运行生产构建
 ```
@@ -38,8 +39,8 @@ npm run start        # 运行生产构建
 | 前端 | React 19 + React Router 7 |
 | 构建 | Vite 7 + esbuild |
 | 样式 | Tailwind CSS v3 + shadcn/ui |
-| API | tRPC v11 + Hono（Node.js） |
-| DB | Drizzle ORM + MySQL2 |
+| API | Hono + tRPC ping；catalog 生产读取静态 JSON |
+| DB | Drizzle ORM + MySQL2（仅本地工具/未来 DB-backed 路线） |
 | 类型 | TypeScript 5.9 |
 
 ## 目录结构
