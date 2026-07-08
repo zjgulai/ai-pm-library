@@ -14,18 +14,18 @@ source: human+ai
 
 ## 0. 证据边界
 
-本轮结论只基于当前本地仓库、合并后的 `main`、本地构建、测试、smoke 和部署预检。
+本轮结论基于当前本地仓库、合并后的 `main`、本地构建、测试、smoke、授权远端部署、生产只读检查和公网 Chrome 验收。
 
 - 本地合并：已执行，`main` 合并 `codex/integration-promptforge-merge-20260705`，合并提交 `ae00c4d`。
-- 本地验证：`npm run verify` 通过，`npm run smoke:e2e` 本地生产形态通过。
+- 本地验证：`npm run verify` 通过，`npm run smoke:e2e` 本地生产形态通过；2026-07-08 再次执行 `npm run verify` 通过。
 - 本地 Chrome 验收：已用本机 Google Chrome 访问 `http://127.0.0.1:3000/`，分类路由、技能页搜索/清除/加载更多/展开/收藏均通过，console error/warning 为 0。
 - 部署预检：`bash deploy/deploy.sh --dry-run --smoke` 通过；`docker compose -f deploy/docker-compose.yml config --services` 通过，服务为 `app`。
 - 本地容器验收：`docker build --target production -t promptforge-app:local-preflight app` 通过；临时容器 `127.0.0.1:3001` smoke 通过后已删除。
-- 远端部署：已执行 `bash deploy/deploy.sh`，远端镜像 `sha256:ad2d3515137a7f7592a2bd5517468b2799a0c62d41a0ff56194c4a0321a27c7d`，`promptforge_app` 为 `healthy`。
-- 生产容器验收：经临时 SSH tunnel `127.0.0.1:3010 -> promptforge_app:3000` 完成 smoke 和本机 Chrome 路由验收。
-- 公网入口状态：`https://kg.lute-tlz-dddd.top/` 无会话访问返回 portal login `302`；本机 Chrome 也进入登录页，未提交登录凭据。
+- 远端部署：已执行 `bash deploy/deploy.sh`，最近一次远端镜像 `sha256:9973721921493557b6fcd797e5b036355f0d73c29137e218b1f8db34dcd8e196`，`promptforge_app` 为 `healthy`。
+- 生产容器验收：经临时 SSH tunnel `127.0.0.1:3010 -> promptforge_app:3000` 完成 smoke 和本机 Chrome 路由验收；公网放通后又完成 `https://kg.lute-tlz-dddd.top/` 生产 smoke。
+- 公网入口状态：`https://kg.lute-tlz-dddd.top/` 已返回 `200`，HTML title 为 `灵词 PromptForge`，公网 Chrome 分类页和技能页关键交互验收通过。
 - 未执行：远端 push、GitHub PR、provider call、数据库写入、nginx auth gate 配置修改。
-- 生产状态：应用容器已部署并健康；公网未登录直达仍受 portal auth gate 保护，不能把公网无会话 smoke 说成通过。
+- 生产状态：应用容器已部署并健康；公网 `kg` 入口已可无登录访问；co-host 域名仍按各自策略返回 `200` 或 `302`。
 
 ## 1. 当前架构事实
 
@@ -137,11 +137,15 @@ flowchart LR
 | N5 | P2 | 本地 Docker production image build | Done | 临时补充 Docker.app credential helper PATH 后，`docker build --target production -t promptforge-app:local-preflight app` 通过 |
 | N6 | P2 | 本机 Google Chrome 产品验收 | Done | 六个 hash 分类路由、技能页搜索/清除/加载更多/展开/收藏通过，console error/warning 为 0 |
 | N7 | P2 | 本地临时容器部署验收 | Done | `promptforge-app:local-preflight` 映射到 `127.0.0.1:3001`，ping 与 smoke 通过，容器已删除 |
-| N8 | P2 | 生产无会话 read-only smoke | Blocked-auth-gate | `https://kg.lute-tlz-dddd.top/` 返回 portal login `302`，不是 app 容器不可用 |
+| N8 | P2 | 生产无会话 read-only smoke | Done | `https://kg.lute-tlz-dddd.top/` 返回 `200`，smoke 报告 `tmp/outputs/smoke-e2e-report-20260708094838.json` |
 | N9 | P2 | 远端 app 部署 | Done | `bash deploy/deploy.sh` 完成 rsync、远端 build、容器重建和容器内 ping |
 | N10 | P2 | 已部署容器验收 | Done | 临时 SSH tunnel smoke 通过；本机 Chrome 验证首页和 6 个分类路由 |
-| N11 | P2 | 公网入口 auth gate 决策 | Blocked-config-decision | 若要求无登录公开访问，需单独修改 nginx `kg` server block；本轮未改 nginx |
+| N11 | P2 | 公网入口 auth gate 决策 | Done-external | 用户确认已放通；本轮仅复核 `kg` 入口 `200`，未改 nginx 配置 |
 | N12 | P2 | Git push / PR | Blocked-by-approval | 本地 `main` 仍 ahead `origin/main`，未 push |
+| N13 | P2 | 远端再部署并复核镜像 | Done | 备份 `/opt/promptforge/.deploy-backups/app-compose-predeploy-20260708174531.tgz`；镜像 `sha256:9973721921493557b6fcd797e5b036355f0d73c29137e218b1f8db34dcd8e196` |
+| N14 | P2 | 公网 `kg` smoke | Done | `PROMPTFORGE_SMOKE_BASE_URL=https://kg.lute-tlz-dddd.top/ PROMPTFORGE_SMOKE_CHECK_COHOSTS=0 PROMPTFORGE_SMOKE_SCREENSHOTS=0 npm run smoke:e2e` 通过 |
+| N15 | P2 | 本机 Chrome 公网验收 | Done | `https://kg.lute-tlz-dddd.top/` 分类页、技能页加载更多/搜索/筛选通过，console issue count 为 0 |
+| N16 | P3 | 首页聚合统计口径复核 | Open | Chrome 观察到首页 `总条目` 展示 694，而 manifest 总量为 852；需确认是展示口径还是遗漏 |
 
 ## 6. 本轮执行记录
 
@@ -163,6 +167,11 @@ flowchart LR
 14. 复核远端 `promptforge_app` 为 `healthy`，`ai_video_nginx` 到 `promptforge_app:3000` 的 ping 通过，`nginx -t` 通过。
 15. 发现公网 `kg` 无会话入口仍由 `/etc/nginx/auth_gate.conf` 保护，返回 portal login `302`。
 16. 通过临时 SSH tunnel 和本机 Chrome 完成已部署生产容器的只读验收；隧道已关闭。
+17. 用户确认公网入口已放通后，再次执行 `bash deploy/deploy.sh`，部署前备份 `/opt/promptforge/.deploy-backups/app-compose-predeploy-20260708174531.tgz`，完成远端 build 和 `promptforge_app` 重建。
+18. 复核 `promptforge_app` 为 `healthy`，镜像为 `sha256:9973721921493557b6fcd797e5b036355f0d73c29137e218b1f8db34dcd8e196`；容器内 ping、nginx 到 app ping、`nginx -t` 均通过。
+19. 公网 `https://kg.lute-tlz-dddd.top/` 返回 `200`，页面 title 为 `灵词 PromptForge`，加载资产为 `assets/index-CYjfNfiH.js` 和 `assets/index-B5E8ccmS.css`。
+20. 公网 smoke 通过，报告写入 `tmp/outputs/smoke-e2e-report-20260708094838.json`。
+21. 使用本机 Google Chrome 完成公网可见验收：六个分类页渲染 48 张卡片，无横向溢出；技能页加载更多、搜索 `amazon`、跨境电商筛选通过；console issue count 为 0。
 
 ## 7. 验收证据
 
@@ -185,10 +194,16 @@ flowchart LR
 | `curl https://kg.lute-tlz-dddd.top/` | 返回 portal login `302`；说明公网无会话入口受 auth gate 保护 | production public-entry boundary |
 | `PROMPTFORGE_SMOKE_BASE_URL=http://127.0.0.1:3010/ PROMPTFORGE_SMOKE_SCREENSHOTS=0 npm run smoke:e2e` | 通过；临时 SSH tunnel 指向已部署生产容器，报告 `tmp/outputs/smoke-e2e-report-20260708093332.json` | production container acceptance |
 | 本机 Google Chrome 访问 `http://127.0.0.1:3010/` | 通过；首页和 6 个分类路由渲染，计数一致，console issue count 为 0 | production container browser acceptance |
+| `bash deploy/deploy.sh` | 通过；最近一次远端镜像为 `sha256:9973721921493557b6fcd797e5b036355f0d73c29137e218b1f8db34dcd8e196`，容器内 ping 通过 | authorized live deploy |
+| 远端容器健康复核 | 通过；`promptforge_app` 为 `healthy`，`ai_video_nginx` 到 app ping 返回 `ok=true`，`nginx -t` 通过，`/opt/promptforge/.env.prod` 权限为 `600` | production read-only check |
+| `curl https://kg.lute-tlz-dddd.top/` | 返回 `200`；HTML title 为 `灵词 PromptForge`，JS/CSS 资产可访问 | production public-entry check |
+| `PROMPTFORGE_SMOKE_BASE_URL=https://kg.lute-tlz-dddd.top/ PROMPTFORGE_SMOKE_CHECK_COHOSTS=0 PROMPTFORGE_SMOKE_SCREENSHOTS=0 npm run smoke:e2e` | 通过；报告 `tmp/outputs/smoke-e2e-report-20260708094838.json` | production public smoke |
+| 本机 Google Chrome 访问 `https://kg.lute-tlz-dddd.top/` | 通过；分类页、技能页加载更多、搜索、筛选均通过，console issue count 为 0 | production public browser acceptance |
+| co-host 域名只读状态检查 | `video` 与根域为 `200`，`mkt` 和 `voc` 返回各自登录/应用跳转 `302` | co-host boundary check |
 
 ## 8. 残余风险
 
-- 公网 `https://kg.lute-tlz-dddd.top/` 无会话直达仍受 portal auth gate 保护；如产品目标是公开知识库，需要单独审批 nginx 配置变更。
+- 首页聚合统计口径需复核：公网 Chrome 观察到首页 `总条目` 为 694，而 catalog manifest 总量为 852；分类页计数和 smoke manifest 校验均通过。
 - 本轮没有 push，远端 Git 和本地 `main` 不一致；生产是 rsync 部署的本地 `main` 工作树内容。
 - 本轮没有清理未跟踪目录和草稿，避免误删用户资产。
 - 旧 DB routers 仍保留，虽然未挂载到 public API，已加非公开标记；进入 DB-backed 路线前仍需认证、限流、审计和 migration 方案。
