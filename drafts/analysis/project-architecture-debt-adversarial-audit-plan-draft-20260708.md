@@ -21,8 +21,11 @@ source: human+ai
 - 本地 Chrome 验收：已用本机 Google Chrome 访问 `http://127.0.0.1:3000/`，分类路由、技能页搜索/清除/加载更多/展开/收藏均通过，console error/warning 为 0。
 - 部署预检：`bash deploy/deploy.sh --dry-run --smoke` 通过；`docker compose -f deploy/docker-compose.yml config --services` 通过，服务为 `app`。
 - 本地容器验收：`docker build --target production -t promptforge-app:local-preflight app` 通过；临时容器 `127.0.0.1:3001` smoke 通过后已删除。
-- 未执行：远端 push、GitHub PR、生产 SSH 部署、生产域名 smoke、provider call、数据库写入。
-- 生产状态：未做新鲜 production read-only 复核；不能把本地 smoke 说成生产已验收。
+- 远端部署：已执行 `bash deploy/deploy.sh`，远端镜像 `sha256:ad2d3515137a7f7592a2bd5517468b2799a0c62d41a0ff56194c4a0321a27c7d`，`promptforge_app` 为 `healthy`。
+- 生产容器验收：经临时 SSH tunnel `127.0.0.1:3010 -> promptforge_app:3000` 完成 smoke 和本机 Chrome 路由验收。
+- 公网入口状态：`https://kg.lute-tlz-dddd.top/` 无会话访问返回 portal login `302`；本机 Chrome 也进入登录页，未提交登录凭据。
+- 未执行：远端 push、GitHub PR、provider call、数据库写入、nginx auth gate 配置修改。
+- 生产状态：应用容器已部署并健康；公网未登录直达仍受 portal auth gate 保护，不能把公网无会话 smoke 说成通过。
 
 ## 1. 当前架构事实
 
@@ -134,8 +137,11 @@ flowchart LR
 | N5 | P2 | 本地 Docker production image build | Done | 临时补充 Docker.app credential helper PATH 后，`docker build --target production -t promptforge-app:local-preflight app` 通过 |
 | N6 | P2 | 本机 Google Chrome 产品验收 | Done | 六个 hash 分类路由、技能页搜索/清除/加载更多/展开/收藏通过，console error/warning 为 0 |
 | N7 | P2 | 本地临时容器部署验收 | Done | `promptforge-app:local-preflight` 映射到 `127.0.0.1:3001`，ping 与 smoke 通过，容器已删除 |
-| N8 | P2 | 生产 read-only smoke | Blocked-by-approval | 需授权访问生产域名和 co-host 检查 |
-| N9 | P2 | push / 远端部署 / 生产验收 | Blocked-by-approval | 需明确授权 |
+| N8 | P2 | 生产无会话 read-only smoke | Blocked-auth-gate | `https://kg.lute-tlz-dddd.top/` 返回 portal login `302`，不是 app 容器不可用 |
+| N9 | P2 | 远端 app 部署 | Done | `bash deploy/deploy.sh` 完成 rsync、远端 build、容器重建和容器内 ping |
+| N10 | P2 | 已部署容器验收 | Done | 临时 SSH tunnel smoke 通过；本机 Chrome 验证首页和 6 个分类路由 |
+| N11 | P2 | 公网入口 auth gate 决策 | Blocked-config-decision | 若要求无登录公开访问，需单独修改 nginx `kg` server block；本轮未改 nginx |
+| N12 | P2 | Git push / PR | Blocked-by-approval | 本地 `main` 仍 ahead `origin/main`，未 push |
 
 ## 6. 本轮执行记录
 
@@ -152,6 +158,11 @@ flowchart LR
 9. 给旧 DB-backed routers 加 `DB_BACKED_ROUTE_NOT_PUBLIC` 边界标记，并用 ops 边界测试锁定。
 10. 使用本机 Google Chrome 完成本地产品验收，覆盖首页、六个分类路由和技能页关键交互。
 11. 启动本机 Docker Desktop 后完成 production image build，并用临时容器完成本地部署 smoke。
+12. 生产部署前创建远端 app/compose 备份：`/opt/promptforge/.deploy-backups/app-compose-predeploy-20260708173042.tgz`。
+13. 执行 `bash deploy/deploy.sh`，完成远端 rsync、Docker build、`promptforge_app` 重建和容器内 ping。
+14. 复核远端 `promptforge_app` 为 `healthy`，`ai_video_nginx` 到 `promptforge_app:3000` 的 ping 通过，`nginx -t` 通过。
+15. 发现公网 `kg` 无会话入口仍由 `/etc/nginx/auth_gate.conf` 保护，返回 portal login `302`。
+16. 通过临时 SSH tunnel 和本机 Chrome 完成已部署生产容器的只读验收；隧道已关闭。
 
 ## 7. 验收证据
 
@@ -167,12 +178,18 @@ flowchart LR
 | `PATH="/Applications/Docker.app/Contents/Resources/bin:$PATH" docker pull node:20-alpine` | 通过；修复当前 shell 缺少 Docker credential helper 的本地环境问题 | local deploy preflight |
 | `PATH="/Applications/Docker.app/Contents/Resources/bin:$PATH" docker build --target production -t promptforge-app:local-preflight app` | 通过；完成 production target 镜像构建 | local deploy preflight |
 | `PROMPTFORGE_SMOKE_BASE_URL=http://127.0.0.1:3001/ PROMPTFORGE_SMOKE_SCREENSHOTS=0 npm run smoke:e2e` | 通过；临时本地容器 smoke 11 pass / 1 skip / 0 fail，容器已删除 | local container acceptance |
+| `bash deploy/deploy.sh` | 通过；远端 build 输出 catalog count 202/314/80/80/81/95，`promptforge_app` 重建并容器内 ping 通过 | authorized live deploy |
+| 远端容器健康复核 | 通过；`promptforge_app` 为 `healthy`，镜像为 `sha256:ad2d3515137a7f7592a2bd5517468b2799a0c62d41a0ff56194c4a0321a27c7d` | production read-only check |
+| `docker exec ai_video_nginx curl http://promptforge_app:3000/api/trpc/ping?...` | 通过；nginx 容器到 app 容器链路返回 `ok=true` | production read-only check |
+| `docker exec ai_video_nginx nginx -t` | 通过 | production read-only check |
+| `curl https://kg.lute-tlz-dddd.top/` | 返回 portal login `302`；说明公网无会话入口受 auth gate 保护 | production public-entry boundary |
+| `PROMPTFORGE_SMOKE_BASE_URL=http://127.0.0.1:3010/ PROMPTFORGE_SMOKE_SCREENSHOTS=0 npm run smoke:e2e` | 通过；临时 SSH tunnel 指向已部署生产容器，报告 `tmp/outputs/smoke-e2e-report-20260708093332.json` | production container acceptance |
+| 本机 Google Chrome 访问 `http://127.0.0.1:3010/` | 通过；首页和 6 个分类路由渲染，计数一致，console issue count 为 0 | production container browser acceptance |
 
 ## 8. 残余风险
 
-- 本轮没有生产 read-only smoke，线上域名是否已经包含本地合并结果仍未知。
-- 本轮没有 push，远端 Git 和本地 `main` 不一致。
-- 本轮没有执行生产部署；`deploy.sh` 仍是真实远端 side effect，需要授权。
+- 公网 `https://kg.lute-tlz-dddd.top/` 无会话直达仍受 portal auth gate 保护；如产品目标是公开知识库，需要单独审批 nginx 配置变更。
+- 本轮没有 push，远端 Git 和本地 `main` 不一致；生产是 rsync 部署的本地 `main` 工作树内容。
 - 本轮没有清理未跟踪目录和草稿，避免误删用户资产。
 - 旧 DB routers 仍保留，虽然未挂载到 public API，已加非公开标记；进入 DB-backed 路线前仍需认证、限流、审计和 migration 方案。
 - 本机 Docker build 依赖 Docker Desktop daemon、Docker registry 可用性和 Docker.app credential helper PATH；本轮已临时补 PATH 完成构建，但这仍是本机环境前置条件。
