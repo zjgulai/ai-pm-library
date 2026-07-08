@@ -18,7 +18,9 @@ source: human+ai
 
 - 本地合并：已执行，`main` 合并 `codex/integration-promptforge-merge-20260705`，合并提交 `ae00c4d`。
 - 本地验证：`npm run verify` 通过，`npm run smoke:e2e` 本地生产形态通过。
-- 部署预检：`bash -n deploy/deploy.sh` 通过，`docker compose -f deploy/docker-compose.yml config --services` 通过，服务为 `app`。
+- 本地 Chrome 验收：已用本机 Google Chrome 访问 `http://127.0.0.1:3000/`，分类路由、技能页搜索/清除/加载更多/展开/收藏均通过，console error/warning 为 0。
+- 部署预检：`bash deploy/deploy.sh --dry-run --smoke` 通过；`docker compose -f deploy/docker-compose.yml config --services` 通过，服务为 `app`。
+- 本地容器验收：`docker build --target production -t promptforge-app:local-preflight app` 通过；临时容器 `127.0.0.1:3001` smoke 通过后已删除。
 - 未执行：远端 push、GitHub PR、生产 SSH 部署、生产域名 smoke、provider call、数据库写入。
 - 生产状态：未做新鲜 production read-only 复核；不能把本地 smoke 说成生产已验收。
 
@@ -129,9 +131,11 @@ flowchart LR
 | N2 | P1 | `db:push` guard：默认阻断，只有 local-only 确认和 localhost DSN 才允许 | Done | `node scripts/guard-db-push.mjs` 无确认时退出 1；Vitest 锁定 |
 | N3 | P1 | 旧 DB-backed routers 加非公开边界标记 | Done | `ops-boundary.test.ts` 检查 `DB_BACKED_ROUTE_NOT_PUBLIC` |
 | N4 | P1 | 文档同步 `--dry-run` 与 guarded `db:push` 用法 | Done | `npm run docs:check` |
-| N5 | P2 | 本地 Docker production image build | Blocked-local-daemon | `docker build --target production -t promptforge-app:local-preflight app` 被本机 Docker daemon 未运行阻塞 |
-| N6 | P2 | 生产 read-only smoke | Blocked-by-approval | 需授权访问生产域名和 co-host 检查 |
-| N7 | P2 | push / 远端部署 / 生产验收 | Blocked-by-approval | 需明确授权 |
+| N5 | P2 | 本地 Docker production image build | Done | 临时补充 Docker.app credential helper PATH 后，`docker build --target production -t promptforge-app:local-preflight app` 通过 |
+| N6 | P2 | 本机 Google Chrome 产品验收 | Done | 六个 hash 分类路由、技能页搜索/清除/加载更多/展开/收藏通过，console error/warning 为 0 |
+| N7 | P2 | 本地临时容器部署验收 | Done | `promptforge-app:local-preflight` 映射到 `127.0.0.1:3001`，ping 与 smoke 通过，容器已删除 |
+| N8 | P2 | 生产 read-only smoke | Blocked-by-approval | 需授权访问生产域名和 co-host 检查 |
+| N9 | P2 | push / 远端部署 / 生产验收 | Blocked-by-approval | 需明确授权 |
 
 ## 6. 本轮执行记录
 
@@ -146,6 +150,8 @@ flowchart LR
 7. 新增 `deploy.sh --dry-run`，形成 no-side-effect 部署计划预检。
 8. 新增 `guard-db-push.mjs`，默认阻断 `db:push`，只允许 local-only + localhost。
 9. 给旧 DB-backed routers 加 `DB_BACKED_ROUTE_NOT_PUBLIC` 边界标记，并用 ops 边界测试锁定。
+10. 使用本机 Google Chrome 完成本地产品验收，覆盖首页、六个分类路由和技能页关键交互。
+11. 启动本机 Docker Desktop 后完成 production image build，并用临时容器完成本地部署 smoke。
 
 ## 7. 验收证据
 
@@ -157,7 +163,10 @@ flowchart LR
 | `/usr/local/bin/docker compose -f deploy/docker-compose.yml config --services` | 通过；服务为 `app` | deploy preflight |
 | `git diff --check` | 通过 | local validation |
 | `bash deploy/deploy.sh --dry-run --smoke` | 通过；无 SSH/rsync/远端 Docker/生产 smoke/provider call | L2-fixture-or-dry-run |
-| `docker build --target production -t promptforge-app:local-preflight app` | 未通过；本机 Docker daemon 未运行，未进入镜像构建 | local deploy preflight blocked |
+| 本机 Google Chrome 产品验收 | 通过；`/`、`#/prompts`、`#/skills`、`#/hooks`、`#/mcp`、`#/agents`、`#/github` 路由稳定，技能页交互通过，console error/warning 为 0 | local browser acceptance |
+| `PATH="/Applications/Docker.app/Contents/Resources/bin:$PATH" docker pull node:20-alpine` | 通过；修复当前 shell 缺少 Docker credential helper 的本地环境问题 | local deploy preflight |
+| `PATH="/Applications/Docker.app/Contents/Resources/bin:$PATH" docker build --target production -t promptforge-app:local-preflight app` | 通过；完成 production target 镜像构建 | local deploy preflight |
+| `PROMPTFORGE_SMOKE_BASE_URL=http://127.0.0.1:3001/ PROMPTFORGE_SMOKE_SCREENSHOTS=0 npm run smoke:e2e` | 通过；临时本地容器 smoke 11 pass / 1 skip / 0 fail，容器已删除 | local container acceptance |
 
 ## 8. 残余风险
 
@@ -166,4 +175,4 @@ flowchart LR
 - 本轮没有执行生产部署；`deploy.sh` 仍是真实远端 side effect，需要授权。
 - 本轮没有清理未跟踪目录和草稿，避免误删用户资产。
 - 旧 DB routers 仍保留，虽然未挂载到 public API，已加非公开标记；进入 DB-backed 路线前仍需认证、限流、审计和 migration 方案。
-- 本轮 Docker Compose 配置预检通过，但本地 Docker daemon 未运行，因此 production image build 仍未完成。
+- 本机 Docker build 依赖 Docker Desktop daemon、Docker registry 可用性和 Docker.app credential helper PATH；本轮已临时补 PATH 完成构建，但这仍是本机环境前置条件。
