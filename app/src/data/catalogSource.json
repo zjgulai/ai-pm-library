@@ -6434,6 +6434,39 @@
       "problemFocusEn": "Agent launches often rely on demos without regression evidence for tool use, RAG quality, stochastic behavior, and model migration",
       "createdAt": "2026-06-02 15:45:00",
       "category": "prompt"
+    },
+    {
+      "id": 1307439,
+      "title": "优先复用成熟开源方案",
+      "role": "developer",
+      "tags": [
+        "开源复用",
+        "GitHub",
+        "组件集成",
+        "Glue Code",
+        "避免重复造轮子"
+      ],
+      "content": "## 用法\n在复杂功能需求的 prompt 末尾追加：\n\nGitHub 上有成熟的开源方案，直接复用，不要自己实现。优先搜索流行库/组件并集成，只写必要的 glue code。\n\n## 适用场景\n- 认证、权限、状态管理、复杂 UI 交互、表格、拖拽、上传、富文本、图表等成熟问题。\n- 项目已有技术栈时，优先找生态内稳定库或组件。\n- 需要降低实现量、回归风险和维护成本时。\n\n## 执行约束\n1. 先搜索并比较 2-3 个成熟实现。\n2. 优先选择维护活跃、文档完整、社区使用广的方案。\n3. 只写适配当前项目的 glue code。\n4. 说明引入依赖、替代方案和未采用原因。\n5. 如果没有合适库，再给出自实现理由和最小实现边界。",
+      "description": "提醒 AI 在复杂功能上优先搜索并复用成熟开源库或组件，只写必要胶水代码，减少冗长实现和缺陷。",
+      "scenario": "让 AI 实现认证、状态管理、复杂 UI 逻辑等成熟问题时，避免从零造轮子。",
+      "author": "用户技巧 · PromptForge 增量",
+      "likes": 88,
+      "views": "1.8K",
+      "comments": 8,
+      "titleEn": "Reuse Mature Open-Source Solutions First",
+      "tagsEn": [
+        "Open Source Reuse",
+        "GitHub",
+        "Component Integration",
+        "Glue Code",
+        "Avoid Reinventing the Wheel"
+      ],
+      "descriptionEn": "Prompt AI to search for and reuse mature open-source libraries or components for complex features, writing only the necessary glue code.",
+      "scenarioEn": "Use when asking AI to implement mature problem areas such as authentication, state management, or complex UI logic without starting from scratch.",
+      "problemFocus": "AI 默认倾向从零实现复杂功能，导致代码冗长、bug 多、维护成本高。",
+      "problemFocusEn": "AI often defaults to implementing complex features from scratch, creating verbose code, more bugs, and higher maintenance cost.",
+      "createdAt": "2026-07-08 15:58:00",
+      "category": "prompt"
     }
   ],
   "skills_full": [

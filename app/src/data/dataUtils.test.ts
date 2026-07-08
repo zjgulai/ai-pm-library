@@ -11,7 +11,7 @@ import {
 } from "./dataUtils";
 
 const expectedCounts: Record<Category, number> = {
-  prompt: 201,
+  prompt: 202,
   skill: 314,
   hook: 80,
   mcp: 80,

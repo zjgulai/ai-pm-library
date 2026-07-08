@@ -2,7 +2,7 @@
   "generatedFrom": "src/data/catalogSource.json",
   "categories": {
     "prompt": {
-      "count": 201,
+      "count": 202,
       "path": "/catalog/prompt.json"
     },
     "skill": {
