@@ -615,9 +615,11 @@ Stars 为 2026-07-22 GitHub API 快照，不能单独证明成熟度。`JustVugg
 - [x] 校验 Git remote 为无内嵌 token 的 `https://github.com/zjgulai/ai-pm-library.git`，远端 `main` 与本地基线同为 `37d7ca3`。
 - [x] 完成本地 `verify`、production Docker build、local smoke、Compose app-only 和 secret ignore 门禁。
 - [x] 生产只读盘点：`promptforge_app` 与 `ai_video_nginx` 在 `lighthouse_ai_video_net` 且 healthy；旧 `promptforge_mysql` 在 `promptforge_net` 且保持不动；远端 Compose 仅有 `app`；`.env.prod` 为 `600`。
-- [ ] 精确 stage 本轮 14 个正式文件，排除 `DDDD.pem`、`tmp/`、截图、候选 JSON 和用户草稿。
-- [ ] 创建中文原子 commit，并 push 到 `origin/main`；核对远端 SHA 与本地一致。
-- [ ] 在 `/opt/promptforge/.deploy-backups/` 创建部署前备份与容器清单。
-- [ ] 使用 `PROMPTFORGE_SSH_KEY=.../DDDD.pem ./deploy.sh --smoke` 执行 app-only 部署。
-- [ ] 独立执行 E8：容器 health、内部 ping、nginx 到 app、`nginx -t`、env 权限、六类生产计数、legacy router 404 和共宿主域名检查。
-- [ ] 将 commit SHA、远端备份路径、production smoke 报告和残余风险回填到本节。
+- [x] 精确 stage 本轮 14 个正式文件，排除 `DDDD.pem`、`tmp/`、截图、候选 JSON 和用户草稿。
+- [x] 创建中文原子 commit `66de531dede2a216ea5ecc9e7ab47b61025bb9bf` 并 push 到 `origin/main`；远端 SHA 与本地一致。
+- [x] 在 `/opt/promptforge/.deploy-backups/20260722174415-66de531-content-release` 创建部署前备份与容器清单；旧镜像保留为 `promptforge_app:rollback-20260722174415-66de531`。
+- [x] 使用根目录 `DDDD.pem` 执行 `deploy.sh --smoke`，只重建并替换 `promptforge_app`；production smoke 12 项全部通过，报告为 `tmp/outputs/smoke-e2e-report-20260722094840.json`。
+- [x] 独立 E8 通过：新镜像 `sha256:fb8624c5d6b291e6022452ac590f52064fe477c5058802a239db54c70aa3dd7d` healthy；容器内 ping 为 200；nginx 到 app、`nginx -t`、env `600` 和 app-only Compose 均通过。
+- [x] 线上六类计数为 209/322/87/87/90/105，总计 900；新增 GitHub ID `1307490`、`1307491` 可读取；legacy router 保持 `404 NOT_FOUND`。
+
+共宿主验收结果：`kg`、根域名、`video`、`mkt`、`person` 均为 200；`voc` 为预期的 302 登录跳转。旧 `promptforge_mysql` 始终保持 healthy 且仅在 `promptforge_net`，未删除或重启任何 DB 容器、网络或 volume，也未修改共享 nginx 配置。
