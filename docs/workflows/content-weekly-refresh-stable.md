@@ -5,7 +5,7 @@ module: content
 topic: weekly-refresh
 status: stable
 created: 2026-06-02
-updated: 2026-07-08
+updated: 2026-07-22
 owner: self
 source: human+ai
 ---
@@ -444,3 +444,180 @@ npm run smoke:e2e:prod
 - `mcp`: 81
 - `agent`: 84
 - `github`: 99
+
+## 本轮 2026-07-18 近 30 天高质量内容增量记录
+
+本轮按用户指定把常规 7 天窗口扩展为最近 30 天，检索窗口为 `2026-06-18` 到 `2026-07-18`。只采用 T1 官方公告、官方 changelog、标准组织公告，以及具备明确许可证和近期维护信号的 T2 官方仓库。
+
+### 项目框架与发布链路复核
+
+本轮先在隔离副本运行 Understand Anything 的扫描、导入图和领域分析，避免在真实工作区产生 `.ua/` 中间产物：
+
+- 扫描范围：`app/`，共 158 个文件；主动排除 secrets、数据库、构建产物、`tmp/` 和已生成的 `public/catalog/*`。
+- 导入关系：93 个文件存在 import，识别 144 条内部依赖边。
+- 领域图：4 个业务域、9 条关键流程、43 个步骤；标准 schema 校验通过，0 个 issue。
+- 架构结论：六个分类共享同一个 `catalogSource.json` 内容模型和同一条生成发布链路；前端按分类懒加载静态 JSON，公开 API 仍保持只读边界，未挂载旧的 DB-backed catalog 路由。
+
+因此本轮只增量修改内容源、六类计数、生成目录和说明文档，不触碰数据库 schema、写 API、部署配置或生产环境。
+
+### 候选评分与入库
+
+| 类别 | 入库主题 | 主来源 | 评分 |
+| --- | --- | --- | ---: |
+| `prompt` | 长时程 Agent 委派契约 | OpenAI · 2026-06-25 | 92 |
+| `prompt` | 团队频道 AI 委派 | Anthropic · 2026-06-23 | 93 |
+| `skill` | 并行 Agent 工作分解与成本核算 | GitHub · 2026-07-08 | 91 |
+| `skill` | AI 使用反思与原创思维边界 | Anthropic · 2026-07-09 | 88 |
+| `hook` | 浏览器 Agent 权限与网络域名前置 | GitHub · 2026-07-01 | 92 |
+| `hook` | AI 安全审查发布门禁 | GitHub · 2026-07-14 | 94 |
+| `mcp` | Enterprise-Managed Authorization | MCP · 2026-06-18 | 95 |
+| `mcp` | 2026-07-28 SDK Beta 迁移验收 | MCP · 2026-06-29 | 93 |
+| `agent` | 可审计科研 Agent 工作台试点 | Anthropic · 2026-06-30 | 92 |
+| `agent` | 多 Agent Provider 权限一致性验收 | GitHub · 2026-07-07 | 91 |
+| `github` | Understand Anything 评估卡 | Egonex-AI · 2026-07-17 | 94 |
+| `github` | MCP Python SDK v2 Beta 评估卡 | MCP Python SDK · 2026-07-14 | 92 |
+
+12 条内容使用 12 个不同的主来源 URL，入库前已按标题、source URL 和用途执行去重；每类 2 条，均高于 75 分门槛。
+
+本轮暂缓：
+
+- MCP TypeScript SDK：主分支仍标为 v2 pre-alpha，且 GitHub API license 为 `NOASSERTION`，不作为本轮开源采用候选。
+- MCP Go SDK、C# SDK：虽有近期 push，但 GitHub API license 为 `NOASSERTION`，按硬性门禁暂缓。
+- MCP Java SDK：许可证明确，但最近 release 不在本轮 30 天窗口内，未挤占高置信名额。
+- 二手新闻、社区讨论和没有主来源页面的汇总全部拒绝。
+
+本轮增量后本地内容规模为 876 条：
+
+- `prompt`: 205
+- `skill`: 318
+- `hook`: 83
+- `mcp`: 83
+- `agent`: 86
+- `github`: 101
+
+### 本地验证证据
+
+- Understand Anything core：`pnpm --filter @understand-anything/core build` 通过；`pnpm --filter @understand-anything/core test` 为 46 个测试文件、963 个测试全部通过。
+- 领域图 schema：56 个节点、56 条边，`validateGraph` 返回 `success: true`、0 个 issue。
+- `npm run verify`：TypeScript check、ESLint、catalog contract、49 个 Markdown 文档治理与链接检查、10 个 Vitest 文件共 36 个测试、Vite/API build、`npm audit --audit-level=high` 全部通过；高危漏洞为 0。
+- 本地 `npm run smoke:e2e`：10 项通过、1 项跳过、0 项失败；六类静态目录总数为 876，桌面与移动端路由、搜索、筛选、展开、复制、只读 tRPC 边界和浏览器 console 均通过。
+- 跳过项仅为生产共宿主域名检查，因为本轮 smoke 目标是 `127.0.0.1`；未把本地 smoke 误报为生产验收。
+
+本节只记录本地 E0-E5 工作；未执行 commit、push、deploy、生产写入或外部发送，E6-E8 保持未执行。
+
+## 本轮 2026-07-20 二次近 30 天增量记录
+
+本轮按用户“再做一次”的要求，在上一轮未提交的 876 条本地状态上继续增量；检索窗口为 `2026-06-20` 到 `2026-07-20`。候选池保存在忽略目录 `tmp/outputs/tmp-content-refresh-30day-candidates-20260720-u2.json`，未加入正式资产。
+
+### Understand Anything 安装与项目复核
+
+- 上游仓库已迁移为 `Egonex-AI/Understand-Anything`；本轮固定到 commit `5c3bc1b7fdefd17b19b44420e89d279ded21dce8`，归档 SHA-256 为 `6c39e12f09dfb9bf3324db98ba94ac36720233a384e557868aaaff03e438b08f`。
+- 通过 Codex 官方 skill installer 安装 `understand`、`understand-chat`、`understand-dashboard`、`understand-diff`、`understand-domain`、`understand-explain`、`understand-figma`、`understand-knowledge`、`understand-onboard` 九个入口。
+- 上游 core build 通过；46 个测试文件共 967 个测试通过。Codex 原生复制目录能被发现，但运行带依赖的脚本时使用 universal plugin root，以保证 `graphology` 等 workspace 依赖可解析。
+- 在包含当前脏工作树内容的隔离 `app/` 快照执行分析，主动排除 secrets、数据库、大体积目录 JSON 与临时产物：扫描 156 个文件，识别 144 条内部 import。
+- 合并图为 523 个节点、845 条边；语义复核将 `promptAnalyticsData.json` 的节点类型从错误预期的 `file` 对齐到已有 `config` 节点，并恢复 1 条被丢弃的 import。最终确定性校验为 0 issue、22 个无边孤立节点 warning。
+- 识别 9 层：UI、前端数据与状态、API、数据与契约、内容自动化工具、测试与验收、配置与构建、基础设施、文档；生成 12 步中文导览。
+- 图谱副本保存在忽略目录 `tmp/outputs/tmp-understand-knowledge-graph-20260720-u2.json`，SHA-256 为 `f6c13eb1f791582a2e8af8f5b406b38f0d44284f389fb57a8c2c2855c41ab2e2`。
+
+架构事实保持不变：`catalogSource.json` 是内容单一来源；生成脚本拆成六类静态 JSON 与 manifest；React 页面按类别懒加载，筛选、搜索和卡片交互在前端完成；公开 Hono/tRPC 只保留 `ping`，Drizzle schema、seed 和 migration 属于预留/离线数据链路，未暴露生产写入口。
+
+### 候选评分与入库
+
+| 类别 | 入库主题 | 主来源 | 评分 |
+| --- | --- | --- | ---: |
+| `prompt` | GPT-5.6 模型与推理档位路由 | OpenAI · 2026-07-09 | 94 |
+| `prompt` | ChatGPT Work 跨应用长任务委派 | OpenAI · 2026-07-09 | 93 |
+| `skill` | Coding Agent 产品化反馈环 | Anthropic · 2026-07-06 | 87 |
+| `skill` | 仓库级 AI 编码效能度量 | GitHub · 2026-07-17 | 92 |
+| `hook` | Copilot Code Review 环境前置 | GitHub · 2026-07-17 | 95 |
+| `hook` | Agent OpenTelemetry 治理 | GitHub · 2026-07-08 | 94 |
+| `mcp` | MCP Tasks 长时程操作实验评估 | MCP 官方组织 · 2026-07-15 | 88 |
+| `mcp` | Skills Over MCP 分发扩展评估 | MCP 官方组织 · 2026-07-17 | 89 |
+| `agent` | Code Scanning Agentic Autofix 处置 | GitHub · 2026-07-10 | 94 |
+| `agent` | 仓库概览与新贡献者引导 | GitHub · 2026-07-09 | 86 |
+| `github` | Google Workspace CLI 评估 | googleworkspace · 2026-07-17 | 91 |
+| `github` | brain0 决策图与溯源评估 | Brain0-ai · 2026-07-19 | 84 |
+
+12 条内容使用 12 个不同的主来源 URL，并与现有内容执行 URL、标题和用途去重。另把既有 Understand Anything 评估卡的固定 commit、近期维护信号和活跃度更新到本轮实测状态。
+
+本轮增量后本地内容规模为 888 条：
+
+- `prompt`: 207
+- `skill`: 320
+- `hook`: 85
+- `mcp`: 85
+- `agent`: 88
+- `github`: 103
+
+### 本地验证证据与边界
+
+- `npm run verify` 最终通过：TypeScript、ESLint、catalog contract、49 个 Markdown 文档治理与链接检查、10 个 Vitest 文件共 36 个测试、Vite/API build、high audit 全部通过；高危漏洞为 0。首次运行发现更新已有条目后 `github.json` 过期，重新生成静态目录后同路径复测通过。
+- `npm run smoke:e2e` 在启动本地生产构建后为 10 项通过、1 项跳过、0 项失败；六类目录总数 888，桌面/移动路由、搜索、筛选、展开、复制、只读 tRPC 和 console 均通过。首次运行因未启动 `127.0.0.1:3000` 全部连接拒绝，启动服务后原样复测通过。
+- `docker compose config --services` 只输出 `app`。
+- Docker production image 未形成通过证据：第一次从错误的 `deploy/` 目录构建找不到 Dockerfile；改到正确的 `app/` 后，Docker daemon 访问 `mirror.ccs.tencentyun.com` 获取 `node:20-alpine` metadata 时返回 `EOF`，本机也没有该基础镜像缓存。未修改镜像源或基础镜像来掩盖环境失败。
+- 未执行 commit、push、deploy、生产 smoke、生产写入或外部发送；E6-E8 保持未执行。
+
+## 本轮 2026-07-22 三次近 30 天高质量增量记录
+
+本轮在上一轮未提交的 888 条本地状态上继续增量；检索窗口为 `2026-06-22` 到 `2026-07-22`。候选池保存在忽略目录 `tmp/outputs/tmp-content-refresh-30day-candidates-20260722-u3.json`，未加入正式资产。
+
+### Understand Anything 来源校正与项目复核
+
+- 发现既有展开包版本虽为 `2.9.4`，但 `install.sh` 仍指向旧 `Egonex-AI` 来源且安装目录缺少 `.git`，不能形成可追踪更新证据。
+- 本轮从 `Lum1104/Understand-Anything` 官方仓库重新安装 Codex 核心技能，固定 HEAD `6ae71878beb50226a1e4b7e2f52ac6468c86f74b`，包版本 `2.9.4`；官方 clone 位于 `~/.understand-anything/repo`，旧展开包保存在 `~/.understand-anything/repo-backup-20260722T1722`。
+- 官方 clone 执行 `pnpm install --frozen-lockfile` 与 `pnpm --filter @understand-anything/core build` 通过；Node.js `v22.22.0`、pnpm `10.6.2`。安装过程提示 Kotlin tree-sitter build script 未获批准，但 core TypeScript build 不受影响。
+- 复用上一轮图谱副本作为架构导航：523 个节点、845 条边、9 个架构层、12 步中文导览。该图谱基线为 commit `d0b9f73`，不是当前 `37d7ca3` 的新鲜图谱，因此本轮只把它用于导航，并用当前源码、内容生成脚本和测试重新核验实际链路。
+- 当前事实仍是 `catalogSource.json` 单一来源，经 `generate-catalog.mjs` 拆成六类静态 JSON 与 manifest；React 按分类加载并完成搜索、筛选、收藏和展开；公开 Hono/tRPC 只保留只读 `ping`，Drizzle 仍属于预留/离线链路。
+- 正式 `.ua/` 分析目录当前不存在。全量重建会先生成并要求人工确认 `.understandignore`，本轮没有绕过该门禁，也未把旧图谱写成当前图谱。
+
+### 候选评分与入库
+
+| 类别 | 入库主题 | 主来源 | 评分 |
+| --- | --- | --- | ---: |
+| `prompt` | 多模态界面验收与视觉证据 | GitHub · 2026-07-01 | 91 |
+| `prompt` | 高能力 Cyber Agent 评测环境威胁建模 | OpenAI · 2026-07-21 | 96 |
+| `skill` | 企业 Agent 会话审计与 SIEM 接入 | GitHub · 2026-07-02 | 94 |
+| `skill` | Agent 单会话 AI Credits 预算治理 | GitHub · 2026-07-01 | 92 |
+| `hook` | Copilot 托管设置完整性前置 | GitHub · 2026-07-08 | 96 |
+| `hook` | GitHub Actions Copilot CLI 无 PAT 门禁 | GitHub · 2026-07-02 | 95 |
+| `mcp` | Open Connector 多 SaaS Agent 网关 | `oomol-lab/open-connector` · 3071 stars | 92 |
+| `mcp` | MCP Interceptors 实验扩展 | MCP 官方组织 · 23 stars | 84 |
+| `agent` | Shepherd 可回放 Agent 执行监督 | `shepherd-agents/shepherd` · 1519 stars | 92 |
+| `agent` | LLM Space 本地 Agent 调试评测 | `deer-flow/llm-space` · 1164 stars | 89 |
+| `github` | grok-build Coding Agent Harness | `xai-org/grok-build` · 21615 stars | 97 |
+| `github` | OpenWiki Agent 代码库知识维护 | `langchain-ai/openwiki` · 12837 stars | 96 |
+
+Stars 为 2026-07-22 GitHub API 快照，不能单独证明成熟度。`JustVugg/colibri` 虽有 17695 stars，但主题偏超大模型推理运行时，与当前 AI PM / Agent 工作流主线弱，本轮暂缓；`experimental-ext-server-card` 仅 4 stars 且 SEP 仍为 Draft，也未占用 MCP 名额。
+
+本轮增量后本地内容规模为 900 条：
+
+- `prompt`: 209
+- `skill`: 322
+- `hook`: 87
+- `mcp`: 87
+- `agent`: 90
+- `github`: 105
+
+### 本地验证证据与边界
+
+- 首次 `npm run verify` 在 `npm audit --audit-level=high` 发现 2 个 high（`brace-expansion`、`fast-uri`）和 2 个 moderate。`npm audit fix --dry-run` 证明 high 可用非强制传递依赖更新消除，随后通过 npm 将 4 个 lockfile 项更新到 `brace-expansion` 1.1.16/2.1.2 和 `fast-uri` 3.1.4。
+- 更新后 `npm run verify` 全部通过：TypeScript check、ESLint、catalog contract、49 个 Markdown 文档治理与链接检查、10 个 Vitest 文件共 36 个测试、Vite/API build 和 high audit 均为绿。
+- `npm audit --omit=dev --audit-level=high` 退出码为 0；生产依赖仍报告 `@hono/node-server` 的 1 个 moderate。自动修复需要跨 major 到 2.x，本轮不使用 `--force`。
+- 本地生产构建启动后，`npm run smoke:e2e` 为 11 项通过、1 项跳过、0 项失败；报告为 `tmp/outputs/smoke-e2e-report-20260722094004.json`。跳过项仅是本地 `127.0.0.1` 不执行生产共宿主域名检查。
+- `docker build --network=host --target production -t promptforge-app:predeploy app` 通过，镜像 ID 为 `sha256:3fade894f9d294a5819e69f6ef49c569a7e102c77e41aa121c3c8ccfe1a71572`；容器内 manifest 总量为 900，六类计数与本地一致。首次默认网络构建在 `npm ci` 长时间无进展后被终止，未改镜像源或 Dockerfile。
+- `git diff --check` 通过；`bash -n deploy/deploy.sh` 通过；`docker compose config --services` 在 `deploy/` 只输出 `app`。
+
+### Commit、Push、Deploy 与生产发布 TODO
+
+发布目标是把上述 900 条 static-first catalog 作为一个可追踪版本推送到 `origin/main`，随后只重建并替换 `promptforge_app`，不操作旧 `promptforge_mysql`、`promptforge_net`、volume、共享 nginx 配置或其他同机服务。
+
+- [x] 校验 `DDDD.pem` 存在、权限为 `600`、被 `*.pem` 忽略；只使用指纹核验，不记录密钥正文。
+- [x] 校验 Git remote 为无内嵌 token 的 `https://github.com/zjgulai/ai-pm-library.git`，远端 `main` 与本地基线同为 `37d7ca3`。
+- [x] 完成本地 `verify`、production Docker build、local smoke、Compose app-only 和 secret ignore 门禁。
+- [x] 生产只读盘点：`promptforge_app` 与 `ai_video_nginx` 在 `lighthouse_ai_video_net` 且 healthy；旧 `promptforge_mysql` 在 `promptforge_net` 且保持不动；远端 Compose 仅有 `app`；`.env.prod` 为 `600`。
+- [ ] 精确 stage 本轮 14 个正式文件，排除 `DDDD.pem`、`tmp/`、截图、候选 JSON 和用户草稿。
+- [ ] 创建中文原子 commit，并 push 到 `origin/main`；核对远端 SHA 与本地一致。
+- [ ] 在 `/opt/promptforge/.deploy-backups/` 创建部署前备份与容器清单。
+- [ ] 使用 `PROMPTFORGE_SSH_KEY=.../DDDD.pem ./deploy.sh --smoke` 执行 app-only 部署。
+- [ ] 独立执行 E8：容器 health、内部 ping、nginx 到 app、`nginx -t`、env 权限、六类生产计数、legacy router 404 和共宿主域名检查。
+- [ ] 将 commit SHA、远端备份路径、production smoke 报告和残余风险回填到本节。

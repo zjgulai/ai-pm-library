@@ -10074,5 +10074,203 @@
     "problemFocusEn": "Team experience remains tribal knowledge, forcing AI coding agents to relearn context every time.",
     "createdAt": "2026-07-08 16:20:00",
     "category": "skill"
+  },
+  {
+    "id": 1307458,
+    "title": "并行 Agent 工作分解与成本核算技能",
+    "role": "developer",
+    "tags": [
+      "并行Agent",
+      "任务分解",
+      "成本治理",
+      "会话管理",
+      "近30天精选"
+    ],
+    "content": "## 目标\n把大型开发任务拆成互不覆盖的并行工作流，并把主会话与 subagent 成本纳入同一证据包。\n\n## 执行步骤\n1. 绘制依赖关系，只有无前置依赖且文件所有权不重叠的任务才并行。\n2. 为每个工作流写清目标、输入、文件边界、验收命令和停止条件。\n3. 指定一个主会话负责集成，不让多个 agent 同时修改共享入口或 lockfile。\n4. 分别记录各 subagent 的耗时、token/credit、测试结果与未完成项。\n5. 汇总总会话成本，比较串行基线，识别返工和重复探索。\n6. 集成后运行跨模块验证；单个工作流通过不等于整体通过。\n\n## 验收\n- 文件所有权无冲突。\n- 每个工作流有独立证据。\n- 总成本包含所有委派工作。\n- 集成测试通过且无遗漏变更。\n\n## 来源\n- GitHub Copilot in Visual Studio Code, June 2026 releases: https://github.blog/changelog/2026-07-08-github-copilot-in-visual-studio-code-june-2026-releases/\n- 发布日期：2026-07-08",
+    "description": "把并行 agent 会话组织、工作流隔离和 subagent 成本可见性转成可执行的工程技能。",
+    "scenario": "一个研发任务可拆成实现、测试、文档或审查等独立工作流时。",
+    "author": "GitHub · 2026-07-08",
+    "likes": 0,
+    "views": "0",
+    "comments": 0,
+    "titleEn": "Parallel-Agent Work Decomposition and Cost Accounting Skill",
+    "tagsEn": [
+      "Parallel Agents",
+      "Task Decomposition",
+      "Cost Governance",
+      "Session Management",
+      "30-Day Selection"
+    ],
+    "descriptionEn": "An executable engineering skill for parallel-agent session organization, workstream isolation, and subagent cost visibility.",
+    "scenarioEn": "When an engineering task can be split into independent implementation, testing, documentation, or review workstreams.",
+    "problemFocus": "并行 agent 虽能提速，但容易发生文件冲突、重复探索和子任务成本不可见。",
+    "problemFocusEn": "Parallel agents can accelerate work but often create file conflicts, duplicated exploration, and hidden subtask costs.",
+    "createdAt": "2026-07-18 21:00:00",
+    "category": "skill"
+  },
+  {
+    "id": 1307459,
+    "title": "AI 使用反思与原创思维边界技能",
+    "role": "productManager",
+    "tags": [
+      "AI素养",
+      "反思",
+      "原创思维",
+      "工作复盘",
+      "近30天精选"
+    ],
+    "content": "## 目标\n用真实使用记录复盘 AI 如何改变你的思考和产出，同时识别应保留给人的判断。\n\n## 四步流程\n1. **委派盘点**：列出最近完成的任务，区分信息检索、草拟、判断、决策和真实执行。\n2. **证据对照**：抽样对比 AI 初稿、人工修改和最终结果，记录事实错误、遗漏与新增价值。\n3. **原创性检查**：标出哪些观点来自自己的经验，哪些来自 AI 建议，哪些仍无法确认来源。\n4. **边界更新**：为下一周期定义可直接委派、必须复核、不得委派三类任务。\n\n## 输出\n- 高价值使用模式与可复用提示。\n- 低价值或造成返工的模式。\n- 人必须保留的判断清单。\n- 下周期一个可量化的改进行动。\n\n不得把对话次数当作能力增长，也不得在没有样本对照时宣称效率提升。\n\n## 来源\n- Anthropic, Reflect with Claude: https://www.anthropic.com/news/reflect-with-claude\n- 发布日期：2026-07-09",
+    "description": "基于真实 AI 使用记录进行委派盘点、证据对照、原创性检查和边界更新的周期复盘技能。",
+    "scenario": "个人或团队希望评估 AI 使用质量，而不是只统计消息量或使用时长。",
+    "author": "Anthropic · 2026-07-09",
+    "likes": 0,
+    "views": "0",
+    "comments": 0,
+    "titleEn": "AI-Use Reflection and Original-Thinking Boundary Skill",
+    "tagsEn": [
+      "AI Fluency",
+      "Reflection",
+      "Original Thinking",
+      "Work Review",
+      "30-Day Selection"
+    ],
+    "descriptionEn": "A periodic reflection skill that reviews delegation, compares evidence, checks originality, and updates human-AI boundaries from real usage records.",
+    "scenarioEn": "Individuals or teams evaluating AI-use quality instead of merely counting messages or time spent.",
+    "problemFocus": "AI 使用复盘常停留在主观感受，无法说明哪些委派有效、哪些判断应由人保留。",
+    "problemFocusEn": "AI-use reviews often remain subjective and cannot show which delegation works or which judgments should remain human-owned.",
+    "createdAt": "2026-07-18 21:00:00",
+    "category": "skill"
+  },
+  {
+    "id": 1307470,
+    "title": "Coding Agent 产品化反馈环技能",
+    "role": "developer",
+    "tags": [
+      "Coding Agent",
+      "反馈闭环",
+      "渐进交付",
+      "产品工程",
+      "近30天精选"
+    ],
+    "content": "## 目标\n把内部 coding CLI 迭代为团队可依赖的 agent 产品，同时保留工程反馈速度。\n\n## 技能步骤\n1. 从真实内部任务收集失败轨迹，不先用理想化 demo 定义需求。\n2. 把高频失败分成上下文、工具、权限、交互、恢复和可观测性六类。\n3. 每轮只改善一个可测瓶颈，并保留前后对照任务。\n4. 让研究、工程和早期用户共同评审行为，不只评审模型分数。\n5. 将反复出现的人工纠正固化为指令、工具契约或测试。\n6. 发布前验证任务成功率、恢复路径、用户控制与回滚。\n\n## 产出\n失败分类表、最小实验、行为评估集、用户反馈摘要和发布门槛。\n\n## 来源\n- Anthropic, The Making of Claude Code: https://www.anthropic.com/features/making-of-claude-code\n- 发布日期：2026-07-06",
+    "description": "借鉴 Claude Code 从内部 CLI 到 coding agent 的演进方式，用真实失败轨迹驱动产品化反馈环。",
+    "scenario": "团队正在自研 coding agent、CLI agent 或内部自动化助手。",
+    "author": "Anthropic · 2026-07-06",
+    "likes": 0,
+    "views": "0",
+    "comments": 0,
+    "titleEn": "Coding-Agent Productization Feedback Loop Skill",
+    "tagsEn": [
+      "Coding Agent",
+      "Feedback Loop",
+      "Incremental Delivery",
+      "Product Engineering",
+      "30-Day Selection"
+    ],
+    "descriptionEn": "Uses real failure traces to drive the productization loop from an internal coding CLI to a dependable agent.",
+    "scenarioEn": "Teams building a coding agent, CLI agent, or internal automation assistant.",
+    "problemFocus": "Agent 团队容易追逐功能数量和离线分数，却缺少真实任务失败到产品改进的稳定反馈环。",
+    "problemFocusEn": "Agent teams can chase feature counts and offline scores without a stable loop from real-task failures to product improvements.",
+    "createdAt": "2026-07-20 10:00:00",
+    "category": "skill"
+  },
+  {
+    "id": 1307471,
+    "title": "仓库级 AI 编码效能度量技能",
+    "role": "productManager",
+    "tags": [
+      "Copilot指标",
+      "仓库分析",
+      "AI效能",
+      "采用治理",
+      "近30天精选"
+    ],
+    "content": "## 目标\n用仓库级证据判断 coding agent 和 AI code review 在哪里产生价值，而不是只统计席位或消息量。\n\n## 执行步骤\n1. 为每个仓库登记业务关键度、语言、团队规模和基线周期。\n2. 按日采集 agent 创建/合并 PR、AI review 数量与建议类型；保留 API 日期和权限证据。\n3. 与 lead time、返工、缺陷和人工 review 负担联动分析，不把相关性写成因果。\n4. 区分启用、活跃、产出、合并和质量五层漏斗。\n5. 对低活跃仓库先检查可用性、项目指令和任务适配，再决定培训或停用。\n6. 输出可行动的仓库分组和下一周期实验。\n\n## 来源\n- GitHub, Repository-level Copilot usage metrics: https://github.blog/changelog/2026-07-17-repository-level-github-copilot-usage-metrics-generally-available/\n- 发布日期：2026-07-17",
+    "description": "将仓库级 Copilot PR 与 review 指标接入采用漏斗和质量证据，支持精细化 enablement。",
+    "scenario": "平台团队或 AI PM 评估多仓库 coding agent 的采用度与实际收益。",
+    "author": "GitHub · 2026-07-17",
+    "likes": 0,
+    "views": "0",
+    "comments": 0,
+    "titleEn": "Repository-Level AI Coding Effectiveness Measurement Skill",
+    "tagsEn": [
+      "Copilot Metrics",
+      "Repository Analytics",
+      "AI Effectiveness",
+      "Adoption Governance",
+      "30-Day Selection"
+    ],
+    "descriptionEn": "Connects repository-level Copilot PR and review metrics to adoption funnels and quality evidence for targeted enablement.",
+    "scenarioEn": "Platform teams or AI PMs evaluating coding-agent adoption and impact across repositories.",
+    "problemFocus": "只看席位、活跃用户或消息量无法判断 AI 编码是否真正改善具体仓库的交付。",
+    "problemFocusEn": "Seats, active users, or message counts alone cannot show whether AI coding improves delivery in a specific repository.",
+    "createdAt": "2026-07-20 10:00:00",
+    "category": "skill"
+  },
+  {
+    "id": 1307482,
+    "title": "企业 Agent 会话审计与 SIEM 接入技能",
+    "role": "operations",
+    "tags": [
+      "Agent审计",
+      "SIEM",
+      "会话流",
+      "DLP",
+      "近30天精选"
+    ],
+    "content": "## 目标\n把 agent 的 prompt、response 与 tool call 接入企业审计面，同时控制敏感内容扩散。\n\n## 执行步骤\n1. 盘点支持的 agent 表面、租户条件、事件 schema 与可用时间窗口。\n2. 按 prompt、response、tool、identity、repository 和 outcome 建立数据分类。\n3. 在流式出口前做 secrets/PII 脱敏，只保留调查所需最小内容。\n4. 将事件映射到 SIEM，保留 session、actor、tool 和时间关联键。\n5. 定义 RBAC、留存、告警规则和应急查询；48 小时回拉窗口之外依赖自有留存。\n6. 用非敏感测试会话验证丢包、乱序、重放和权限拒绝。\n\n## 边界\n当前能力仅适用于 GitHub Enterprise Cloud + EMU 公测；会话内容本身属于高敏感审计数据。\n\n## 来源\n- GitHub, Copilot agent session streaming is now in public preview: https://github.blog/changelog/2026-07-02-copilot-agent-session-streaming-is-now-in-public-preview/\n- 发布日期：2026-07-02",
+    "description": "设计 agent 会话内容的流式审计、脱敏、SIEM 映射、留存与异常查询闭环。",
+    "scenario": "GitHub Enterprise Cloud EMU 组织需要统一调查 cloud agent、CLI 与 IDE agent 会话。",
+    "author": "GitHub · 2026-07-02",
+    "likes": 0,
+    "views": "0",
+    "comments": 0,
+    "titleEn": "Enterprise Agent-Session Audit and SIEM Integration Skill",
+    "tagsEn": [
+      "Agent Audit",
+      "SIEM",
+      "Session Streaming",
+      "DLP",
+      "30-Day Selection"
+    ],
+    "descriptionEn": "Designs streaming audit, redaction, SIEM mapping, retention, and investigation for agent-session content.",
+    "scenarioEn": "GitHub Enterprise Cloud EMU organizations investigating cloud-agent, CLI, and IDE agent sessions centrally.",
+    "problemFocus": "Agent 工具调用跨多个客户端后，传统仓库审计无法还原完整会话，直接全量采集又会放大敏感数据风险。",
+    "problemFocusEn": "As agent tool use spans clients, repository audit alone cannot reconstruct sessions, while unfiltered collection amplifies sensitive-data risk.",
+    "createdAt": "2026-07-22 17:30:00",
+    "category": "skill"
+  },
+  {
+    "id": 1307483,
+    "title": "Agent 单会话 AI Credits 预算治理技能",
+    "role": "productManager",
+    "tags": [
+      "AI Credits",
+      "会话预算",
+      "Copilot CLI",
+      "成本治理",
+      "近30天精选"
+    ],
+    "content": "## 目标\n为交互、CI 和无人值守 agent 任务设置可解释的单会话成本上限与续跑规则。\n\n## 执行步骤\n1. 按任务类型记录历史 credits、成功率、时长和人工接管成本。\n2. 执行前给出预算估算，并用 `/limits` 或等效接口确认当前额度。\n3. 为 Copilot CLI/SDK 设置 `--max-ai-credits` 或会话限制；子 agent 与 compaction 统一归集。\n4. 到达 70% / 90% 阈值时分别压缩上下文、停止低价值探索并准备可续跑检查点。\n5. 识别 soft cap：正在生成的响应可能产生少量超额，不把上限写成硬结算保证。\n6. 输出任务结果、credits、超限原因和下次基线。\n\n## 边界\n功能为 public preview；需要 Copilot CLI 1.0.66+ 或 SDK 1.0.5+。\n\n## 来源\n- GitHub, Set AI credit session limits in Copilot CLI and SDK: https://github.blog/changelog/2026-07-01-set-ai-credit-session-limits-in-copilot-cli-and-sdk/\n- 发布日期：2026-07-01",
+    "description": "将 agent 会话预算、阈值动作、子 agent 归集、soft cap 和续跑检查点固化为成本治理流程。",
+    "scenario": "平台团队需要限制 Copilot CLI/SDK 长任务的单次 AI credit 消耗。",
+    "author": "GitHub · 2026-07-01",
+    "likes": 0,
+    "views": "0",
+    "comments": 0,
+    "titleEn": "Per-Session AI-Credit Budget Governance Skill for Agents",
+    "tagsEn": [
+      "AI Credits",
+      "Session Budget",
+      "Copilot CLI",
+      "Cost Governance",
+      "30-Day Selection"
+    ],
+    "descriptionEn": "Operationalizes session budgets, threshold actions, subagent attribution, soft-cap behavior, and resumable checkpoints.",
+    "scenarioEn": "Platform teams limiting per-task AI-credit consumption for long-running Copilot CLI or SDK sessions.",
+    "problemFocus": "Agent 长任务的子任务和上下文压缩会累积 credits，缺少单会话门禁时只能事后发现成本失控。",
+    "problemFocusEn": "Subtasks and context compaction accumulate credits in long agent runs, making cost overruns visible only after the fact without session gates.",
+    "createdAt": "2026-07-22 17:30:00",
+    "category": "skill"
   }
 ]

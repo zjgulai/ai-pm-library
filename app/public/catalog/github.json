@@ -3253,5 +3253,203 @@
     "problemFocusEn": "Personal automation can easily touch privacy, external submissions, and irreversible sending.",
     "createdAt": "2026-07-08 16:20:00",
     "category": "github"
+  },
+  {
+    "id": 1307466,
+    "title": "Understand Anything：代码库知识图谱工具评估卡",
+    "role": "developer",
+    "tags": [
+      "代码理解",
+      "知识图谱",
+      "Agent Skills",
+      "增量分析",
+      "近30天精选"
+    ],
+    "content": "## 项目定位\nUnderstand Anything 通过扫描文件、导入关系和领域上下文生成代码库知识图谱，并提供 understand、chat、diff、domain、explain 等技能。\n\n## 安装前审计\n1. 固定 commit 与归档校验值，检查 LICENSE、依赖和脚本。\n2. 配置 `.understandignore`，排除 secrets、数据库、构建产物和大体积生成文件。\n3. 先在隔离副本运行扫描，不污染真实工作区。\n4. 核验文件数、导入边、入口点和领域图，而不是只看 README。\n5. 运行 core build 与 test，再决定是否用于真实项目。\n\n## 使用边界\n- 图谱是代码快照，不替代运行测试。\n- 代码变化后检查 stale 状态并增量更新。\n- 不把第三方 skill 的指令置于项目 AGENTS.md 之上。\n\n## 来源\n- Egonex-AI/Understand-Anything: https://github.com/Egonex-AI/Understand-Anything\n- 固定 commit: 5c3bc1b7fdefd17b19b44420e89d279ded21dce8\n- 近30天信号：2026-07-19 扩展 Rust 测试与 benchmark 的 `.understandignore` 建议模式\n- License: MIT",
+    "description": "把代码库扫描、领域知识图谱、增量过期检测和对话式理解整合进 agent 工作流的开源工具评估卡。",
+    "scenario": "接手陌生代码库、准备重构或需要让 agent 快速建立可更新的架构上下文。",
+    "author": "GitHub 30-Day Selection · 2026-07-18",
+    "likes": 75200,
+    "views": "75.2K",
+    "comments": 0,
+    "titleEn": "Understand Anything: Codebase Knowledge-Graph Tool Evaluation Card",
+    "tagsEn": [
+      "Code Understanding",
+      "Knowledge Graph",
+      "Agent Skills",
+      "Incremental Analysis",
+      "30-Day Selection"
+    ],
+    "descriptionEn": "An evaluation card for integrating codebase scanning, domain knowledge graphs, incremental staleness checks, and conversational understanding into agent workflows.",
+    "scenarioEn": "Onboarding to an unfamiliar codebase, preparing a refactor, or giving agents updatable architectural context.",
+    "problemFocus": "大型仓库的代码理解容易依赖一次性全文读取，缺少结构化关系、领域解释和变更后的过期提醒。",
+    "problemFocusEn": "Large-repository understanding often relies on one-off full reads without structured relationships, domain explanations, or staleness signals after changes.",
+    "createdAt": "2026-07-18 21:00:00",
+    "category": "github"
+  },
+  {
+    "id": 1307467,
+    "title": "MCP Python SDK v2 Beta：迁移风险评估卡",
+    "role": "developer",
+    "tags": [
+      "MCP",
+      "Python SDK",
+      "Beta",
+      "迁移评估",
+      "近30天精选"
+    ],
+    "content": "## 项目定位\n官方 MCP Python SDK v2 正在预发布阶段。v2.0.0b2 可用于隔离迁移验证，不应在缺少版本约束与契约测试时直接替换生产 v1。\n\n## 评估步骤\n1. 盘点现有 FastMCP、client、transport、auth 与 middleware 用法。\n2. 在独立环境固定 `v2.0.0b2`，保留当前生产 lockfile。\n3. 运行 initialize、资源、prompt、tool、取消、超时和错误处理契约测试。\n4. 对照 migration guide 记录 API、类型和行为差异。\n5. 扫描 transitive dependencies、许可证和 Python 版本要求。\n6. 定义回滚到 v1 的命令和稳定版采用门槛。\n\n## 结论格式\n- 可试点 / 暂缓 / 阻断。\n- 已验证能力。\n- 破坏性变化。\n- 未验证项与跟踪日期。\n\n## 来源\n- MCP Python SDK v2.0.0b2: https://github.com/modelcontextprotocol/python-sdk/releases/tag/v2.0.0b2\n- 发布日期：2026-07-14\n- Stars: 23647\n- License: MIT",
+    "description": "针对官方 MCP Python SDK v2 beta 的版本固定、契约测试、依赖审计与生产迁移门槛评估。",
+    "scenario": "Python MCP server/client 团队准备从 v1 评估 v2，但需要保持生产链路可回滚。",
+    "author": "GitHub 30-Day Selection · 2026-07-18",
+    "likes": 23647,
+    "views": "23.6K",
+    "comments": 0,
+    "titleEn": "MCP Python SDK v2 Beta: Migration Risk Evaluation Card",
+    "tagsEn": [
+      "MCP",
+      "Python SDK",
+      "Beta",
+      "Migration Evaluation",
+      "30-Day Selection"
+    ],
+    "descriptionEn": "Evaluates version pinning, contract testing, dependency auditing, and production adoption gates for the official MCP Python SDK v2 beta.",
+    "scenarioEn": "Python MCP server/client teams evaluating v2 from v1 while keeping production rollback-ready.",
+    "problemFocus": "预发布 SDK 的新能力容易诱发过早升级，忽略版本漂移、破坏性变化和回滚成本。",
+    "problemFocusEn": "New prerelease SDK capabilities can trigger premature upgrades that ignore version drift, breaking changes, and rollback cost.",
+    "createdAt": "2026-07-18 21:00:00",
+    "category": "github"
+  },
+  {
+    "id": 1307478,
+    "title": "Google Workspace CLI：Agent 办公自动化评估卡",
+    "role": "operations",
+    "tags": [
+      "Google Workspace",
+      "CLI",
+      "Agent Skills",
+      "OAuth",
+      "近30天精选"
+    ],
+    "content": "## 项目定位\n`gws` 从 Google Discovery Service 动态构建 Drive、Gmail、Calendar、Sheets、Docs、Chat 等命令，提供结构化 JSON 和 40+ agent skills。\n\n## 试点评估\n1. 固定 CLI 版本，确认项目仍在 v1.0 前活跃开发阶段。\n2. 只为一个只读服务配置最小 OAuth scopes；凭据进入系统 keyring 或受控文件，不写入仓库。\n3. 先运行 schema introspection 与 `--dry-run`，再验证分页、退出码和错误 JSON。\n4. 写操作必须有人审、幂等键、目标确认和审计记录。\n5. 逐项审查内置 skills，不整包授予跨服务权限。\n6. 记录 Discovery API 变化导致命令面漂移的兼容性风险。\n\n## 来源\n- googleworkspace/cli: https://github.com/googleworkspace/cli\n- 近期维护信号：2026-07-17\n- License: Apache-2.0",
+    "description": "评估 Google Workspace 动态 CLI、结构化输出和 agent skills 的权限、稳定性与办公自动化适配。",
+    "scenario": "团队希望让 agent 操作 Google Drive、Gmail、Calendar、Sheets 或 Docs。",
+    "author": "GitHub 30-Day Selection · 2026-07-20",
+    "likes": 29800,
+    "views": "29.8K",
+    "comments": 0,
+    "titleEn": "Google Workspace CLI: Agent Office-Automation Evaluation Card",
+    "tagsEn": [
+      "Google Workspace",
+      "CLI",
+      "Agent Skills",
+      "OAuth",
+      "30-Day Selection"
+    ],
+    "descriptionEn": "Evaluates permissions, stability, and agent-automation fit for the dynamic Google Workspace CLI, structured output, and bundled skills.",
+    "scenarioEn": "Teams enabling agents to work with Google Drive, Gmail, Calendar, Sheets, or Docs.",
+    "problemFocus": "统一办公 CLI 能降低集成成本，但动态命令面和宽 OAuth scopes 可能带来兼容性与越权风险。",
+    "problemFocusEn": "A unified office CLI lowers integration cost, but a dynamic command surface and broad OAuth scopes can create compatibility and overpermission risks.",
+    "createdAt": "2026-07-20 10:00:00",
+    "category": "github"
+  },
+  {
+    "id": 1307479,
+    "title": "brain0：AI 代码决策图与溯源评估卡",
+    "role": "developer",
+    "tags": [
+      "AI代码溯源",
+      "Decision Graph",
+      "DLP",
+      "Drift Detection",
+      "近30天精选"
+    ],
+    "content": "## 项目定位\nbrain0 将 git 事实与 Codex/Claude Code 本地会话意图关联，形成 commit、文件、symbol、prompt 和风险的决策图；默认 offline-first。\n\n## 评估步骤\n1. 在隔离仓库验证它读取的 git 历史与本地 agent transcript 范围。\n2. 检查 sensitive-read/DLP 只记录路径和 secret kind，不采集 secret value。\n3. 抽样核对 prompt-to-commit、drift 和 line blame，记录误关联率与缺失会话。\n4. 比较先验风险与后续 revert/fix 证据，避免把评分当安全结论。\n5. 验证零 egress 模式；启用 Ollama 或 hosted LLM 前另行完成数据审批。\n6. MCP 接入只返回必要引用，保持该工具作为只读 observer。\n\n## 来源\n- Brain0-ai/brain0: https://github.com/Brain0-ai/brain0\n- 近期维护信号：2026-07-19\n- License: Apache-2.0",
+    "description": "评估把 AI agent 意图、代码改动、敏感读取、漂移和后验风险连接成只读决策图的工具。",
+    "scenario": "团队需要回答哪条 prompt 引入变更、agent 读过什么以及声明与实际 diff 是否一致。",
+    "author": "GitHub 30-Day Selection · 2026-07-20",
+    "likes": 462,
+    "views": "462",
+    "comments": 0,
+    "titleEn": "brain0: AI-Code Decision Graph and Provenance Evaluation Card",
+    "tagsEn": [
+      "AI Code Provenance",
+      "Decision Graph",
+      "DLP",
+      "Drift Detection",
+      "30-Day Selection"
+    ],
+    "descriptionEn": "Evaluates a read-only decision graph connecting AI-agent intent, code changes, sensitive reads, drift, and evidence-informed risk.",
+    "scenarioEn": "Teams asking which prompt introduced a change, what an agent read, and whether its claims match the actual diff.",
+    "problemFocus": "Git 记录了改了什么，却通常没有 agent 的意图、上下文读取和声明偏差，导致 AI 代码难以审计。",
+    "problemFocusEn": "Git records what changed but usually lacks agent intent, context reads, and claim drift, making AI-written code hard to audit.",
+    "createdAt": "2026-07-20 10:00:00",
+    "category": "github"
+  },
+  {
+    "id": 1307490,
+    "title": "grok-build：终端 Coding Agent Harness 评估卡",
+    "role": "developer",
+    "tags": [
+      "Coding Agent",
+      "Rust",
+      "MCP",
+      "Sandbox",
+      "高Stars"
+    ],
+    "content": "## 项目定位\n`grok-build` 是 SpaceXAI 终端 coding agent 的公开源码镜像，覆盖 TUI、headless/CI、ACP、工具、MCP、skills、plugins、hooks 与 sandbox。\n\n## 评估步骤\n1. 固定 commit 与 Rust toolchain，在隔离仓库运行只读任务和最小编辑任务。\n2. 绘制 prompt/context、tool registry、执行 sandbox、MCP 与插件扩展点的边界。\n3. 对比交互 TUI、headless/CI 和 ACP 嵌入的输入输出及恢复语义。\n4. 验证 shell/web/file 工具权限、网络控制、取消、长任务检查点和失败可观测性。\n5. 运行仓库测试并记录未覆盖平台；不把 stars 或低 issue 数当成熟度证明。\n6. 注意仓库是内部 monorepo 的定期同步镜像，当前不接收常规外部贡献。\n\n## 来源\n- xai-org/grok-build: https://github.com/xai-org/grok-build\n- 创建：2026-07-14；近期 push：2026-07-21\n- Stars 快照：21615；Forks: 4032；License: Apache-2.0",
+    "description": "评估高热度 Rust coding agent 在 TUI、CI、ACP、MCP、扩展系统和 sandbox 上的完整 harness 设计。",
+    "scenario": "团队拆解终端 coding agent 架构，或比较自研 harness 的工具与隔离边界。",
+    "author": "GitHub High-Star Selection · 2026-07-22",
+    "likes": 21615,
+    "views": "21.6K",
+    "comments": 0,
+    "titleEn": "grok-build: Terminal Coding-Agent Harness Evaluation Card",
+    "tagsEn": [
+      "Coding Agent",
+      "Rust",
+      "MCP",
+      "Sandbox",
+      "High Stars"
+    ],
+    "descriptionEn": "Evaluates a high-visibility Rust coding-agent harness across TUI, CI, ACP, MCP, extension systems, and sandboxing.",
+    "scenarioEn": "Teams studying terminal coding-agent architecture or benchmarking tools and isolation boundaries in an internal harness.",
+    "problemFocus": "终端 coding agent 的价值不只来自模型，工具协议、长任务恢复、扩展系统和 sandbox 共同决定其可用性与风险。",
+    "problemFocusEn": "Terminal coding-agent quality depends not only on models but also tool protocols, long-task recovery, extension systems, and sandboxing.",
+    "createdAt": "2026-07-22 17:30:00",
+    "category": "github"
+  },
+  {
+    "id": 1307491,
+    "title": "OpenWiki：Agent 代码库知识维护评估卡",
+    "role": "developer",
+    "tags": [
+      "Agent Wiki",
+      "代码库理解",
+      "知识维护",
+      "CI",
+      "高Stars"
+    ],
+    "content": "## 项目定位\nOpenWiki 用 CLI 为代码库和个人知识源生成并持续维护 agent wiki，可通过 CI 自动更新并管理 AGENTS.md/CLAUDE.md 中的自有标记块。\n\n## 评估步骤\n1. 固定 v0.2.2 或已审版本，在隔离分支仅接入一个代码仓库。\n2. 记录它扫描的文件、连接器和环境变量范围；凭据不得进入仓库。\n3. 先生成 wiki 草稿，抽样核对架构、入口、约束和引用是否对应当前代码。\n4. 运行 CI 更新时只创建可审查 PR，不直接覆盖人工维护区块。\n5. 对 AGENTS.md/CLAUDE.md 只允许修改工具自有标记块，并审查 instruction injection 风险。\n6. 设定 freshness、删除传播、连接器撤权和回滚规则；把 wiki 视为派生上下文而非唯一事实源。\n\n## 来源\n- langchain-ai/openwiki: https://github.com/langchain-ai/openwiki\n- 创建：2026-06-22；近期 push：2026-07-22；Release: 0.2.2\n- Stars 快照：12837；Forks: 889；License: MIT",
+    "description": "评估高热度 Agent wiki 的代码扫描、CI 更新、指令文件区块治理、freshness 与回滚边界。",
+    "scenario": "团队希望为 coding agent 持续维护代码库文档和 onboarding 上下文。",
+    "author": "GitHub High-Star Selection · 2026-07-22",
+    "likes": 12837,
+    "views": "12.8K",
+    "comments": 0,
+    "titleEn": "OpenWiki: Agent Codebase-Knowledge Maintenance Evaluation Card",
+    "tagsEn": [
+      "Agent Wiki",
+      "Codebase Understanding",
+      "Knowledge Maintenance",
+      "CI",
+      "High Stars"
+    ],
+    "descriptionEn": "Evaluates code scanning, CI updates, instruction-file block governance, freshness, and rollback for a high-visibility agent wiki.",
+    "scenarioEn": "Teams maintaining codebase documentation and onboarding context continuously for coding agents.",
+    "problemFocus": "自动维护的 wiki 能降低上下文过期，但如果直接覆盖指令文件或缺少引用核验，会把错误摘要稳定注入 agent。",
+    "problemFocusEn": "Automated wikis reduce context staleness, but overwriting instruction files or skipping citation checks can persistently inject incorrect summaries into agents.",
+    "createdAt": "2026-07-22 17:30:00",
+    "category": "github"
   }
 ]

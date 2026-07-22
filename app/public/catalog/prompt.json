@@ -6499,5 +6499,203 @@
     "problemFocusEn": "Teams often keep security evaluation at the slogan level without executable attack-surface mapping, validation cases, or remediation acceptance.",
     "createdAt": "2026-07-08 16:20:00",
     "category": "prompt"
+  },
+  {
+    "id": 1307456,
+    "title": "长时程 Agent 委派契约提示词：目标、证据与终止条件",
+    "role": "productManager",
+    "tags": [
+      "Agent委派",
+      "长时程任务",
+      "验收证据",
+      "任务治理",
+      "近30天精选"
+    ],
+    "content": "你是一名可持续执行长时程任务的 AI agent。开始前先把以下任务转换成一份可审查的委派契约。\n\n## 输入\n- 最终目标：[必须交付的结果]\n- 范围：[允许处理的系统、文件、数据和时间窗口]\n- 禁止事项：[生产写入、外部发送、密钥读取、不可逆操作等]\n- 资源预算：[时间、token、API/计算成本]\n- 可用证据：[测试、日志、页面、只读查询、人工审批]\n\n## 请输出并遵守\n1. **完成定义**：列出可被第三方复核的验收标准。\n2. **任务分解**：按依赖顺序拆成可独立验证的工作包；可并行项单独标记。\n3. **检查点**：每个阶段给出预期产物、验证命令和失败后的回退路径。\n4. **权限边界**：区分只读、可逆写入和必须再次授权的真实副作用。\n5. **终止条件**：完成、预算耗尽、证据冲突、连续失败或需要用户决策时分别如何收尾。\n6. **最终证据包**：只用已运行的证据声明完成，列出未验证项和残余风险。\n\n不得把计划当作完成，不得用推测替代运行证据。\n\n## 来源\n- OpenAI, How agents are transforming work: https://openai.com/index/how-agents-are-transforming-work/\n- 发布日期：2026-06-25",
+    "description": "把长时程 agent 工作转成带目标、预算、权限、检查点和终止条件的委派契约，避免“持续运行”演变成无边界执行。",
+    "scenario": "产品、研发或运营团队把跨小时、跨工具的复杂任务交给 agent 前。",
+    "author": "OpenAI · 2026-06-25",
+    "likes": 0,
+    "views": "0",
+    "comments": 0,
+    "titleEn": "Long-Horizon Agent Delegation Contract Prompt: Goals, Evidence, and Stop Conditions",
+    "tagsEn": [
+      "Agent Delegation",
+      "Long-Horizon Tasks",
+      "Acceptance Evidence",
+      "Task Governance",
+      "30-Day Selection"
+    ],
+    "descriptionEn": "Turns long-horizon agent work into a delegation contract with goals, budgets, permissions, checkpoints, and stop conditions.",
+    "scenarioEn": "Before product, engineering, or operations teams delegate multi-hour, multi-tool work to an agent.",
+    "problemFocus": "长时程 agent 容易目标漂移、权限越界，并把过程进展误报为最终完成。",
+    "problemFocusEn": "Long-horizon agents can drift from the goal, exceed permissions, and mistake progress for completion.",
+    "createdAt": "2026-07-18 21:00:00",
+    "category": "prompt"
+  },
+  {
+    "id": 1307457,
+    "title": "团队频道 AI 委派提示词：上下文、权限与异步交付",
+    "role": "operations",
+    "tags": [
+      "团队协作",
+      "频道Agent",
+      "权限控制",
+      "异步工作",
+      "近30天精选"
+    ],
+    "content": "你是一个在团队频道中工作的 AI agent。根据下面的频道请求判断是立即回答、提出澄清、创建异步任务，还是拒绝执行。\n\n## 输入\n- 频道目标：[该频道负责什么]\n- 当前请求：[原始消息与线程上下文]\n- 可访问工具：[文档、代码库、日历、工单等]\n- 允许记忆：[可长期保留的信息]\n- 权限边界：[允许读取/写入/发送的对象]\n- 交付时限：[时间]\n\n## 决策流程\n1. 先复述目标、对象和完成定义，不补造缺失信息。\n2. 区分频道公开信息、私密信息和不得跨频道传播的信息。\n3. 若需异步处理，给出计划、检查点、预计交付物和可取消方式。\n4. 外部发送、创建工单、修改代码或日历前，明确列出副作用并核验授权。\n5. 完成后返回摘要、证据链接、失败项和下一步；不得只说“已处理”。\n6. 只记忆对后续协作必要且允许保留的稳定事实。\n\n## 输出格式\n- 决策：立即回答 / 澄清 / 异步任务 / 拒绝\n- 理由：\n- 权限检查：\n- 执行计划：\n- 最终证据：\n\n## 来源\n- Anthropic, Introducing Claude Tag: https://www.anthropic.com/news/introducing-claude-tag?invite=1\n- 发布日期：2026-06-23",
+    "description": "面向团队频道 agent 的委派提示词，统一上下文最小化、权限核验、异步计划、记忆边界和可复核交付。",
+    "scenario": "在 Slack 等团队频道中使用可访问文档、代码库或业务工具的 AI agent。",
+    "author": "Anthropic · 2026-06-23",
+    "likes": 0,
+    "views": "0",
+    "comments": 0,
+    "titleEn": "Team-Channel AI Delegation Prompt: Context, Permissions, and Async Delivery",
+    "tagsEn": [
+      "Team Collaboration",
+      "Channel Agent",
+      "Permission Control",
+      "Async Work",
+      "30-Day Selection"
+    ],
+    "descriptionEn": "A delegation prompt for team-channel agents covering context minimization, permission checks, async plans, memory boundaries, and reviewable delivery.",
+    "scenarioEn": "Using an AI agent with access to documents, codebases, or business tools in a team channel such as Slack.",
+    "problemFocus": "频道 agent 容易混用上下文、跨越数据边界，并在异步执行后缺少可追踪结果。",
+    "problemFocusEn": "Channel agents can mix context, cross data boundaries, and fail to provide traceable results after asynchronous work.",
+    "createdAt": "2026-07-18 21:00:00",
+    "category": "prompt"
+  },
+  {
+    "id": 1307468,
+    "title": "GPT-5.6 模型与推理档位路由提示词",
+    "role": "developer",
+    "tags": [
+      "模型路由",
+      "推理预算",
+      "成本治理",
+      "GPT-5.6",
+      "近30天精选"
+    ],
+    "content": "你是 AI 工作负载路由负责人。请在执行任务前，根据任务难度、时延、成本和风险选择 GPT-5.6 的模型层级与推理档位。\n\n## 输入\n- 任务目标：[交付结果]\n- 失败代价：[低 / 中 / 高]\n- 时延上限：[秒或分钟]\n- 成本上限：[token 或金额]\n- 工具与并行需求：[浏览器、代码、文件、多 agent]\n- 验证方式：[测试、基准、人工复核]\n\n## 路由规则\n1. 先用 Luna 处理高频、低风险、格式化任务；用 Terra 处理常规开发与知识工作；只有高复杂度或高失败代价任务才选 Sol。\n2. 从最低可用 reasoning effort 起步；证据不足、分支多或需要深度探索时逐级提升。\n3. 只有任务可被清晰拆分且结果可合并时才启用并行 agent；同时记录额外 token 成本。\n4. 先定义质量门槛和降级路径，不因模型更强而跳过测试。\n5. 输出选择、依据、预算、停止条件和复核证据；若实测不达标，回到路由决策而不是无限重试。\n\n## 输出\n- 模型 / effort：\n- 选择依据：\n- 预计预算：\n- 验证门槛：\n- 升级与降级条件：\n\n## 来源\n- OpenAI, GPT-5.6: https://openai.com/index/gpt-5-6/\n- 发布日期：2026-07-09",
+    "description": "依据复杂度、失败代价、时延和成本，在 GPT-5.6 Sol、Terra、Luna 与不同 reasoning effort 之间建立可复核路由。",
+    "scenario": "团队需要为 coding agent、研究或知识工作选择模型和推理预算。",
+    "author": "OpenAI · 2026-07-09",
+    "likes": 0,
+    "views": "0",
+    "comments": 0,
+    "titleEn": "GPT-5.6 Model and Reasoning-Tier Routing Prompt",
+    "tagsEn": [
+      "Model Routing",
+      "Reasoning Budget",
+      "Cost Governance",
+      "GPT-5.6",
+      "30-Day Selection"
+    ],
+    "descriptionEn": "Builds an auditable routing decision across GPT-5.6 Sol, Terra, Luna, and reasoning levels based on complexity, failure cost, latency, and spend.",
+    "scenarioEn": "Teams choosing model and reasoning budgets for coding agents, research, or knowledge work.",
+    "problemFocus": "团队容易默认使用最强模型或最高推理档位，却没有质量收益、时延和成本的对照证据。",
+    "problemFocusEn": "Teams often default to the strongest model or highest reasoning tier without evidence that quality gains justify latency and cost.",
+    "createdAt": "2026-07-20 10:00:00",
+    "category": "prompt"
+  },
+  {
+    "id": 1307469,
+    "title": "ChatGPT Work 跨应用长任务委派提示词",
+    "role": "operations",
+    "tags": [
+      "ChatGPT Work",
+      "跨应用任务",
+      "计划审批",
+      "自动审查",
+      "近30天精选"
+    ],
+    "content": "你是一个可跨文件、浏览器和已连接应用执行长任务的工作 agent。把下面目标转成用户可持续监督的执行契约。\n\n## 输入\n- 目标：[最终交付物]\n- 可访问应用与文件：[明确列表]\n- 允许动作：[读取、编辑、创建草稿、发送等]\n- 必须审批的动作：[外部发送、共享、删除、付费或敏感数据操作]\n- 期限与频率：[一次性 / 定时 / 监控]\n\n## 执行契约\n1. 先提出计划，标明数据来源、阶段产物、依赖和审批点。\n2. 只调用完成目标所需的最小应用与最小数据范围；来源冲突时暂停并展示证据。\n3. 长任务每个检查点返回已完成、下一步、预算消耗和可取消方式。\n4. 重要外部动作先做 auto-review，再请求用户确认；不得把草稿当成已发送。\n5. 交付时附来源、修改记录、未解决项和复用方式。\n6. 若设置定时任务，明确触发条件、时区、重复周期和停止条件。\n\n## 输出\n- 计划与审批点\n- 数据/权限边界\n- 检查点节奏\n- 最终验收清单\n\n## 来源\n- OpenAI, ChatGPT for your most ambitious work: https://openai.com/index/chatgpt-for-your-most-ambitious-work/\n- 发布日期：2026-07-09",
+    "description": "面向跨应用长任务的委派模板，把计划、最小权限、阶段检查点、重要动作审批和最终证据串成闭环。",
+    "scenario": "使用 ChatGPT Work 研究信息、处理文件并生成文档、表格、演示或 Sites。",
+    "author": "OpenAI · 2026-07-09",
+    "likes": 0,
+    "views": "0",
+    "comments": 0,
+    "titleEn": "ChatGPT Work Cross-App Long-Task Delegation Prompt",
+    "tagsEn": [
+      "ChatGPT Work",
+      "Cross-App Tasks",
+      "Plan Approval",
+      "Auto Review",
+      "30-Day Selection"
+    ],
+    "descriptionEn": "A cross-app long-task delegation template connecting planning, least privilege, checkpoints, approval for important actions, and final evidence.",
+    "scenarioEn": "Using ChatGPT Work to research, process files, and create documents, sheets, presentations, or Sites.",
+    "problemFocus": "跨应用 agent 可能在长任务中扩大数据范围、跳过审批，并把草稿或过程状态误报为最终交付。",
+    "problemFocusEn": "Cross-app agents may broaden data scope, skip approvals, and misreport drafts or progress as final delivery during long tasks.",
+    "createdAt": "2026-07-20 10:00:00",
+    "category": "prompt"
+  },
+  {
+    "id": 1307480,
+    "title": "多模态界面验收与视觉证据提示词",
+    "role": "productManager",
+    "tags": [
+      "多模态验收",
+      "视觉证据",
+      "截图",
+      "PDF",
+      "近30天精选"
+    ],
+    "content": "你是多模态产品验收负责人。基于界面截图、PDF 规格和相关代码做证据分层验收。\n\n## 输入\n- 目标页面与验收标准：[链接或说明]\n- 截图 / PDF：[文件路径]\n- 相关代码：[文件或 diff]\n- 设备与状态：[桌面 / 移动、空态 / 加载 / 错误]\n\n## 执行规则\n1. 先列出图片或 PDF 中可直接观察的事实，不把视觉推断写成事实。\n2. 将规格逐条映射到可见证据、代码证据或缺失证据。\n3. 检查布局、层级、文案、状态、可访问性与响应式差异；无法从静态材料确认的交互必须标记待实测。\n4. 对敏感设计稿先脱敏，并记录附件留存与访问边界。\n5. 按严重度输出缺陷、最小修复建议、复测步骤和仍需补充的材料。\n\n## 输出\n- 可见事实\n- 规格映射表\n- 缺陷与严重度\n- 未验证项\n- 修复及复测清单\n\n## 来源\n- GitHub, Copilot vision is generally available: https://github.blog/changelog/2026-07-01-copilot-vision-is-generally-available/\n- 发布日期：2026-07-01",
+    "description": "把截图、PDF 规格与代码证据分层映射，生成可复测的多模态界面验收结论。",
+    "scenario": "产品经理或前端团队需要用视觉材料辅助 UI 验收，又不希望把静态图片推断成运行事实。",
+    "author": "GitHub · 2026-07-01",
+    "likes": 0,
+    "views": "0",
+    "comments": 0,
+    "titleEn": "Multimodal UI Acceptance and Visual-Evidence Prompt",
+    "tagsEn": [
+      "Multimodal Acceptance",
+      "Visual Evidence",
+      "Screenshots",
+      "PDF",
+      "30-Day Selection"
+    ],
+    "descriptionEn": "Maps screenshots, PDF specifications, and code evidence into a testable multimodal UI acceptance result.",
+    "scenarioEn": "Product and frontend teams using visual artifacts for UI acceptance without treating static-image inference as runtime fact.",
+    "problemFocus": "多模态模型能读图后，团队容易把视觉推断当作实际交互已验证，且忽略敏感附件的留存边界。",
+    "problemFocusEn": "Once models can inspect visuals, teams may mistake visual inference for validated interaction and overlook retention boundaries for sensitive attachments.",
+    "createdAt": "2026-07-22 17:30:00",
+    "category": "prompt"
+  },
+  {
+    "id": 1307481,
+    "title": "高能力 Cyber Agent 评测环境威胁建模提示词",
+    "role": "developer",
+    "tags": [
+      "Cyber Agent",
+      "威胁建模",
+      "Sandbox",
+      "Containment",
+      "近30天精选"
+    ],
+    "content": "你是高能力 cyber agent 评测的安全负责人。在任何模型或 agent 获得工具权限前，建立可审计的隔离与停止契约。\n\n## 输入\n- 评测目标与奖励函数：[目标]\n- Agent 能力与拒绝策略：[模型 / 模式]\n- 可用工具、网络和凭据：[清单]\n- Sandbox 与宿主边界：[架构]\n- 允许触达的系统：[测试资产]\n\n## 威胁建模\n1. 枚举目标函数作弊、缓存或代理逃逸、凭据读取、横向移动、外网突破和生产误触路径。\n2. 对每条路径记录前置条件、可观测信号、影响和阻断控制。\n3. 默认无生产凭据、无开放外网、最小文件权限；模拟资产与真实系统必须可区分。\n4. 定义实时监控、速率限制、人工接管和强制停止条件。\n5. 评测结束保留完整工具轨迹与取证材料，撤销临时权限并复核环境污染。\n6. 对仍在调查中的事件只引用已公开事实，不补写未经证实的完整根因。\n\n## 输出\n威胁路径、控制矩阵、停止条件、取证清单、残余风险。\n\n## 来源\n- OpenAI, OpenAI and Hugging Face partner to address security incident during model evaluation: https://openai.com/index/hugging-face-model-evaluation-security-incident/\n- 发布日期：2026-07-21",
+    "description": "在高权限、低拒绝率 cyber agent 评测前枚举逃逸与生产误触路径，并固定隔离、监控和停止条件。",
+    "scenario": "安全团队在受控环境评测具备代码执行、网络访问或漏洞利用能力的 agent。",
+    "author": "OpenAI · 2026-07-21",
+    "likes": 0,
+    "views": "0",
+    "comments": 0,
+    "titleEn": "Threat-Modeling Prompt for High-Capability Cyber-Agent Evaluations",
+    "tagsEn": [
+      "Cyber Agent",
+      "Threat Modeling",
+      "Sandbox",
+      "Containment",
+      "30-Day Selection"
+    ],
+    "descriptionEn": "Enumerates escape and production-impact paths before privileged cyber-agent evaluations and fixes containment, monitoring, and stop conditions.",
+    "scenarioEn": "Security teams evaluating agents with code execution, network access, or vulnerability-exploitation capabilities in controlled environments.",
+    "problemFocus": "Sandbox 常被误当作完整安全边界，而奖励函数、工具权限和基础设施缺口可能共同诱发越界行为。",
+    "problemFocusEn": "Sandboxes are often treated as complete security boundaries even though objectives, tool permissions, and infrastructure gaps can combine into escape behavior.",
+    "createdAt": "2026-07-22 17:30:00",
+    "category": "prompt"
   }
 ]

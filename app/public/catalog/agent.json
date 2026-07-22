@@ -2770,5 +2770,203 @@
     "problemFocusEn": "Voice agents often ignore privacy, latency, accents, noise, and false activation issues.",
     "createdAt": "2026-07-08 16:20:00",
     "category": "agent"
+  },
+  {
+    "id": 1307464,
+    "title": "可审计科研 Agent 工作台试点模板",
+    "role": "researcher",
+    "tags": [
+      "科研Agent",
+      "可审计产物",
+      "计算环境",
+      "复现性",
+      "近30天精选"
+    ],
+    "content": "## 试点目标\n验证科研 agent 能否在受控计算环境中完成一个可复现的小型研究任务，并留下可审计产物。\n\n## 试点设计\n1. 选择公开数据集和低风险问题，预先写出成功指标。\n2. 固定数据版本、环境、包、随机种子和计算预算。\n3. 只开放任务需要的工具、MCP server 与 skills。\n4. 要求 agent 保存假设、代码、命令、结果、失败尝试和引用来源。\n5. 由研究者复核统计方法、因果表述和负结果，不接受仅有自然语言摘要。\n6. 在干净环境复跑，比较关键结果与差异。\n\n## 交付物\n- 可执行 notebook 或脚本。\n- 环境与数据说明。\n- 引用清单和许可证。\n- 结果表、限制与复现实验记录。\n\n## 来源\n- Anthropic, Claude Science AI workbench: https://www.anthropic.com/news/claude-science-ai-workbench\n- 发布日期：2026-06-30",
+    "description": "强调固定环境、工具最小化、完整研究轨迹和干净环境复跑的科研 agent 试点模板。",
+    "scenario": "实验室或研发团队评估 AI workbench 是否能支持可复现的分析与研究流程。",
+    "author": "Anthropic · 2026-06-30",
+    "likes": 0,
+    "views": "0",
+    "comments": 0,
+    "titleEn": "Auditable Scientific-Agent Workbench Pilot Template",
+    "tagsEn": [
+      "Scientific Agent",
+      "Auditable Artifacts",
+      "Compute Environment",
+      "Reproducibility",
+      "30-Day Selection"
+    ],
+    "descriptionEn": "A scientific-agent pilot template built around pinned environments, minimal tools, complete research traces, and clean-environment reproduction.",
+    "scenarioEn": "Labs or R&D teams evaluating whether an AI workbench can support reproducible analysis and research workflows.",
+    "problemFocus": "科研 agent 的自然语言结论若没有环境、代码、失败记录和复跑证据，无法被研究者可靠审计。",
+    "problemFocusEn": "Scientific-agent conclusions cannot be reliably audited without environments, code, failure records, and rerun evidence.",
+    "createdAt": "2026-07-18 21:00:00",
+    "category": "agent"
+  },
+  {
+    "id": 1307465,
+    "title": "多 Agent Provider 权限一致性验收模板",
+    "role": "developer",
+    "tags": [
+      "Agent Provider",
+      "Codex",
+      "权限模式",
+      "IDE集成",
+      "近30天精选"
+    ],
+    "content": "## 目标\n在 IDE 中接入 Codex、Claude 或本地 agent provider 时，验证相同任务在不同 provider 下仍遵守一致的项目约束。\n\n## 验收矩阵\n1. **安装与身份**：CLI 路径、版本、登录主体和组织策略。\n2. **指令加载**：项目 instructions、prompt、skill、agent 与 hook 的优先级。\n3. **工具权限**：Default、Bypass、Autopilot 等模式下文件、终端、MCP 的实际行为。\n4. **可观测性**：debug log 是否能还原请求、工具调用、批准和失败。\n5. **回滚**：provider 不可用、权限异常或输出不兼容时如何切回。\n\n## 测试任务\n- 只读解释。\n- 可逆本地编辑。\n- 被策略拒绝的敏感操作。\n- 需要澄清的问题。\n\n只有四类任务都有运行证据，才可把 provider 标记为团队可用。\n\n## 来源\n- GitHub, Codex as agent provider and agentic enhancements in JetBrains IDEs: https://github.blog/changelog/2026-07-07-codex-as-agent-provider-and-agentic-enhancements-in-jetbrains-ides/\n- 发布日期：2026-07-07",
+    "description": "用于验证 Codex、Claude 等 agent provider 在 IDE 中的指令加载、权限模式、MCP 管理与日志一致性。",
+    "scenario": "团队在同一 IDE 中引入多个 agent provider 或更改默认 provider。",
+    "author": "GitHub · 2026-07-07",
+    "likes": 0,
+    "views": "0",
+    "comments": 0,
+    "titleEn": "Multi-Agent-Provider Permission Consistency Acceptance Template",
+    "tagsEn": [
+      "Agent Provider",
+      "Codex",
+      "Permission Modes",
+      "IDE Integration",
+      "30-Day Selection"
+    ],
+    "descriptionEn": "Validates instruction loading, permission modes, MCP management, and logging consistency for Codex, Claude, and other IDE agent providers.",
+    "scenarioEn": "Teams introducing multiple agent providers into one IDE or changing the default provider.",
+    "problemFocus": "切换 agent provider 时，团队常只验证能否运行，却没有验证项目指令、权限和审计行为是否一致。",
+    "problemFocusEn": "When switching agent providers, teams often test only whether it runs, not whether project instructions, permissions, and audit behavior remain consistent.",
+    "createdAt": "2026-07-18 21:00:00",
+    "category": "agent"
+  },
+  {
+    "id": 1307476,
+    "title": "Code Scanning Agentic Autofix 处置智能体模板",
+    "role": "developer",
+    "tags": [
+      "Agentic Autofix",
+      "CodeQL",
+      "漏洞修复",
+      "Draft PR",
+      "近30天精选"
+    ],
+    "content": "## 目标\n让修复 agent 从一个 code scanning alert 出发，产出可审查且被原分析验证的 draft PR。\n\n## 工作流\n1. 读取 alert 规则、数据流、严重度和受影响路径，限定最小修复范围。\n2. 探索相关文件并提出根因假说；不得只压制告警。\n3. 实施最小修复并补针对性回归测试。\n4. 重跑原始 CodeQL 或第三方分析；失败则基于新证据迭代。\n5. 只创建 draft PR，附修复摘要、为何关闭告警、验证步骤和残余风险。\n6. 多告警合并处理前验证同根因，避免把无关改动塞入一个 PR。\n\n## 门禁\n许可证、AI Credits、Actions minutes 和 cloud agent 策略必须满足；最终合并仍由人工决定。\n\n## 来源\n- GitHub, Agentic autofix for code scanning alerts: https://github.blog/changelog/2026-07-10-agentic-autofix-for-code-scanning-alerts-in-public-preview/\n- 发布日期：2026-07-10",
+    "description": "从告警探索、最小修复、重跑原分析到 draft PR 的安全处置智能体模板。",
+    "scenario": "组织使用 CodeQL 或第三方 code scanning，并希望让 agent 辅助修复。",
+    "author": "GitHub · 2026-07-10",
+    "likes": 0,
+    "views": "0",
+    "comments": 0,
+    "titleEn": "Code-Scanning Agentic Autofix Remediation Agent Template",
+    "tagsEn": [
+      "Agentic Autofix",
+      "CodeQL",
+      "Vulnerability Remediation",
+      "Draft PR",
+      "30-Day Selection"
+    ],
+    "descriptionEn": "A remediation-agent template from alert exploration and minimal fixes through rerunning the original analysis and opening a draft PR.",
+    "scenarioEn": "Organizations using CodeQL or third-party code scanning and wanting agent-assisted remediation.",
+    "problemFocus": "自动修复若不重跑原分析或保留人工审查，容易用表面 patch 关闭提示却未消除漏洞。",
+    "problemFocusEn": "Automated remediation can close a warning with a superficial patch without removing the vulnerability if it does not rerun the original analysis and retain human review.",
+    "createdAt": "2026-07-20 10:00:00",
+    "category": "agent"
+  },
+  {
+    "id": 1307477,
+    "title": "仓库概览与新贡献者引导智能体",
+    "role": "developer",
+    "tags": [
+      "仓库理解",
+      "贡献者引导",
+      "README",
+      "Onboarding",
+      "近30天精选"
+    ],
+    "content": "## 目标\n为首次接触仓库的人生成有证据的高层概览和贡献入口。\n\n## 工作流\n1. 读取 README、贡献指南、许可证、顶层目录、依赖清单和默认分支近期变更。\n2. 输出项目目的、关键技术、主要模块、启动入口和贡献规则，每项链接到仓库证据。\n3. 若 README 缺失，只生成候选草稿，不自动提交或覆盖现有文档。\n4. 区分已验证事实、从目录/依赖推断的架构和仍需维护者确认的问题。\n5. 提供 3 个由浅入深的阅读路径与适合新贡献者的小任务类型。\n6. 代码变更后标记概览可能过期，避免把一次性摘要当长期事实源。\n\n## 来源\n- GitHub, Ask Copilot for a repository overview: https://github.blog/changelog/2026-07-09-ask-copilot-for-a-repository-overview/\n- 发布日期：2026-07-09",
+    "description": "生成带证据链接、事实/推断分层和阅读路径的仓库概览，降低首次贡献门槛。",
+    "scenario": "开发者首次探索陌生 GitHub 仓库，或维护者改进 onboarding。",
+    "author": "GitHub · 2026-07-09",
+    "likes": 0,
+    "views": "0",
+    "comments": 0,
+    "titleEn": "Repository Overview and New-Contributor Onboarding Agent",
+    "tagsEn": [
+      "Repository Understanding",
+      "Contributor Onboarding",
+      "README",
+      "Onboarding",
+      "30-Day Selection"
+    ],
+    "descriptionEn": "Generates a repository overview with evidence links, fact/inference separation, and guided reading paths.",
+    "scenarioEn": "Developers exploring an unfamiliar GitHub repository or maintainers improving onboarding.",
+    "problemFocus": "高层仓库摘要容易忽略贡献规则、证据链接和过期风险，导致新人快速获得的是错误自信。",
+    "problemFocusEn": "High-level repository summaries can omit contribution rules, evidence links, and staleness risk, giving newcomers false confidence.",
+    "createdAt": "2026-07-20 10:00:00",
+    "category": "agent"
+  },
+  {
+    "id": 1307488,
+    "title": "Shepherd 可回放 Agent 执行监督模板",
+    "role": "developer",
+    "tags": [
+      "Agent Trace",
+      "Replay",
+      "Revert",
+      "Human Review",
+      "近30天精选"
+    ],
+    "content": "## 目标\n让 agent 的每一步执行成为可检查、可 fork、可 replay、可 revert 的持久 trace，并把真实写入放在接受动作之后。\n\n## 工作流\n1. 将工具函数签名视为权限面，只暴露任务所需最小函数。\n2. 每一步记录输入、输出、文件影响、环境与父 trace，不只保存最终回答。\n3. 工作结果先形成 reviewable proposal；人工接受后才应用到目标工作区。\n4. 失败时从已知节点 fork，不在污染状态上继续叠加 patch。\n5. replay 时固定依赖和输入，比较非确定性差异；revert 后验证工作区一致性。\n6. 用 macOS Seatbelt 或 Linux Landlock 限制执行，并记录平台不支持项。\n\n## 边界\n项目 README 自报 early alpha、API 可能变化且 Windows 不支持；性能数字需独立复核。\n\n## 来源\n- shepherd-agents/shepherd: https://github.com/shepherd-agents/shepherd\n- 创建：2026-06-24；近期 push：2026-07-21\n- Stars 快照：1519；License: MIT",
+    "description": "用持久 trace、proposal/accept、fork/replay/revert 和 OS sandbox 监督高风险 agent 执行。",
+    "scenario": "需要审查和回滚代码、文件或运维 agent 行为的团队。",
+    "author": "GitHub 30-Day Selection · 2026-07-22",
+    "likes": 1519,
+    "views": "1.5K",
+    "comments": 0,
+    "titleEn": "Shepherd Reproducible Agent-Execution Supervisor Template",
+    "tagsEn": [
+      "Agent Trace",
+      "Replay",
+      "Revert",
+      "Human Review",
+      "30-Day Selection"
+    ],
+    "descriptionEn": "Supervises high-risk agent execution with persistent traces, proposal/accept flow, fork/replay/revert, and OS sandboxes.",
+    "scenarioEn": "Teams that need to review and roll back code, file, or operations agent actions.",
+    "problemFocus": "只保存 agent 最终结果无法解释中间决策，也无法在失败点安全分叉或回滚真实副作用。",
+    "problemFocusEn": "Saving only final agent outputs obscures intermediate decisions and prevents safe branching or rollback at failure points.",
+    "createdAt": "2026-07-22 17:30:00",
+    "category": "agent"
+  },
+  {
+    "id": 1307489,
+    "title": "LLM Space 本地 Agent 调试评测智能体模板",
+    "role": "productManager",
+    "tags": [
+      "Agent Builder",
+      "Trace",
+      "Replay",
+      "Evaluation",
+      "Local First"
+    ],
+    "content": "## 目标\n把 prompt、tool、model 与运行 trace 纳入同一版本化实验面，形成 Agent 原型到评测的本地闭环。\n\n## 工作流\n1. 为 prompt、tool schema、model 与测试数据建立版本，禁止只改 UI 中的隐式状态。\n2. 每次运行记录逐步 trace、tool 参数、失败点、token/时延和最终 outcome。\n3. 从失败步骤 replay，分别验证 prompt、tool 或模型变更的影响。\n4. 用固定评测集跨多个运行比较成功、质量、成本和人工接管，不用单个 demo 下结论。\n5. 将稳定 thread 导出为 LangGraph agent 前，审查依赖、权限和生成 diff。\n6. API key 仅留本机；关闭或审批匿名 telemetry，并避免把本地优先误写成绝对零外传。\n\n## 边界\n当前仓库近期创建，但项目 README 称产品始于 2023 年且已到 v4；应表述为新仓库中的成熟迭代，不是全新项目。\n\n## 来源\n- deer-flow/llm-space: https://github.com/deer-flow/llm-space\n- 当前仓库创建：2026-06-28；近期 push：2026-07-22\n- Stars 快照：1164；License: MIT",
+    "description": "把 Agent prompt/tool/model 版本、逐步 trace、失败 replay 和跨运行评测统一到本地原型闭环。",
+    "scenario": "AI PM 和 Agent 工程师需要可解释地比较原型版本并复现失败。",
+    "author": "GitHub 30-Day Selection · 2026-07-22",
+    "likes": 1164,
+    "views": "1.2K",
+    "comments": 0,
+    "titleEn": "LLM Space Local Agent Debugging and Evaluation Template",
+    "tagsEn": [
+      "Agent Builder",
+      "Trace",
+      "Replay",
+      "Evaluation",
+      "Local First"
+    ],
+    "descriptionEn": "Unifies versioned prompts, tools, and models with step traces, failure replay, and cross-run evaluation in a local prototyping loop.",
+    "scenarioEn": "AI product managers and agent engineers comparing prototype versions and reproducing failures with evidence.",
+    "problemFocus": "Agent 原型常散落在聊天和脚本中，prompt/tool/model 变化无法与运行差异稳定关联。",
+    "problemFocusEn": "Agent prototypes often scatter across chats and scripts, making prompt, tool, and model changes hard to associate with run differences.",
+    "createdAt": "2026-07-22 17:30:00",
+    "category": "agent"
   }
 ]

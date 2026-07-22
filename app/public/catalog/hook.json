@@ -2673,5 +2673,203 @@
     "problemFocusEn": "A single agent is prone to confirmation bias, especially in security, deployment, migration, and large refactors.",
     "createdAt": "2026-07-08 16:20:00",
     "category": "hook"
+  },
+  {
+    "id": 1307460,
+    "title": "浏览器 Agent 权限与网络域名前置 Hook",
+    "role": "developer",
+    "tags": [
+      "浏览器Agent",
+      "权限门禁",
+      "网络白名单",
+      "Hook",
+      "近30天精选"
+    ],
+    "content": "## 触发时机\n在 agent 第一次调用浏览器工具、访问新域名或请求摄像头、位置、麦克风等权限前触发。\n\n## Hook 逻辑\n1. 解析目标 URL、重定向域名和所需浏览器权限。\n2. 对照 `allowedNetworkDomains` / `deniedNetworkDomains` 与项目数据分级。\n3. 默认阻断本地文件、内网管理面、凭据页面和未知上传端点。\n4. 对登录、提交表单、下载、剪贴板和设备权限要求人工确认。\n5. 记录请求域名、决策、批准人和会话 ID；不记录 cookie、token 或表单敏感值。\n6. 只读导航通过后，真实提交仍进入独立的副作用门禁。\n\n## 失败策略\n配置缺失、域名无法解析或重定向越界时 fail closed，并返回可操作的修复说明。\n\n## 来源\n- GitHub, Browser tools for GitHub Copilot in VS Code are generally available: https://github.blog/changelog/2026-07-01-browser-tools-for-github-copilot-in-vs-code-are-generally-available/\n- 发布日期：2026-07-01",
+    "description": "在浏览器 agent 首次访问域名或请求敏感权限前执行白名单、数据边界和真实提交检查。",
+    "scenario": "coding agent 使用真实浏览器进行搜索、截图、页面验证或表单操作。",
+    "author": "GitHub · 2026-07-01",
+    "likes": 0,
+    "views": "0",
+    "comments": 0,
+    "titleEn": "Browser-Agent Permission and Network-Domain Preflight Hook",
+    "tagsEn": [
+      "Browser Agent",
+      "Permission Gate",
+      "Network Allowlist",
+      "Hook",
+      "30-Day Selection"
+    ],
+    "descriptionEn": "Checks allowlists, data boundaries, and real-submit permissions before a browser agent first visits a domain or requests sensitive access.",
+    "scenarioEn": "Coding agents using a real browser for search, screenshots, page validation, or form actions.",
+    "problemFocus": "浏览器工具默认可用后，未知域名、重定向和设备权限会扩大 agent 的攻击面。",
+    "problemFocusEn": "Once browser tools are enabled by default, unknown domains, redirects, and device permissions expand the agent attack surface.",
+    "createdAt": "2026-07-18 21:00:00",
+    "category": "hook"
+  },
+  {
+    "id": 1307461,
+    "title": "AI 安全审查发布门禁 Hook",
+    "role": "developer",
+    "tags": [
+      "安全审查",
+      "发布门禁",
+      "漏洞复核",
+      "Hook",
+      "近30天精选"
+    ],
+    "content": "## 触发时机\n认证、授权、数据处理、文件路径、密码学或外部输入相关代码变更完成后，在提交或合并前触发。\n\n## 执行流程\n1. 锁定本次 workstream 的 diff，不扫描无关历史文件。\n2. 运行 AI 安全审查，要求返回漏洞类别、严重度、置信度、文件位置和修复建议。\n3. 对 injection、XSS、不安全数据处理、path traversal 和弱密码学发现建立处置记录。\n4. 高严重度且高置信度发现阻断发布；中低项必须标记修复、误报或接受风险。\n5. 修复后用同一路径重新扫描，并补自动化回归测试。\n6. 将 AI 结果与 code scanning、Dependabot、secret scanning 分层记录，不互相替代。\n\n## 禁止事项\n不得删除测试、降低扫描规则或只修改提示词来制造通过。\n\n## 来源\n- GitHub, Security reviews now available in the GitHub Copilot app: https://github.blog/changelog/2026-07-14-security-reviews-now-available-in-the-github-copilot-app/\n- 发布日期：2026-07-14",
+    "description": "把 AI 安全审查接入提交或合并前门禁，并要求对高置信度发现完成复核、修复和回归验证。",
+    "scenario": "高风险代码变更需要在进入代码库前进行轻量、可追踪的本地安全审查。",
+    "author": "GitHub · 2026-07-14",
+    "likes": 0,
+    "views": "0",
+    "comments": 0,
+    "titleEn": "AI Security Review Release-Gate Hook",
+    "tagsEn": [
+      "Security Review",
+      "Release Gate",
+      "Vulnerability Verification",
+      "Hook",
+      "30-Day Selection"
+    ],
+    "descriptionEn": "Adds AI security review to pre-commit or pre-merge gates and requires verification, remediation, and regression evidence for high-confidence findings.",
+    "scenarioEn": "High-risk code changes need a lightweight, traceable local security review before entering the repository.",
+    "problemFocus": "AI 安全扫描容易沦为一次性提示，发现项没有阻断规则、处置状态和复测证据。",
+    "problemFocusEn": "AI security scans can become one-off prompts without blocking rules, disposition states, or retest evidence.",
+    "createdAt": "2026-07-18 21:00:00",
+    "category": "hook"
+  },
+  {
+    "id": 1307472,
+    "title": "Copilot Code Review 环境前置 Hook",
+    "role": "developer",
+    "tags": [
+      "Code Review",
+      "AGENTS.md",
+      "Firewall",
+      "Runner",
+      "近30天精选"
+    ],
+    "content": "## 触发时机\nCopilot code review 开始前，或 PR 修改 review instructions 与 setup 配置时触发。\n\n## Hook 流程\n1. 从 PR head branch 读取 AGENTS.md、CLAUDE.md、GEMINI.md、REVIEW.md 和 instructions，显示将生效的层级。\n2. 校验 `.github/workflows/copilot-code-review.yml` 语法与依赖安装步骤；缺失时明确是否回退到 `copilot-setup-steps.yml`。\n3. 检查 runner 类型、最小权限和网络需求。\n4. 默认要求 firewall 开启；若使用 self-hosted runner，显式标记当前不受该 firewall 保护。\n5. 禁止 setup 输出 secrets；外网域名按最小白名单。\n6. 生成 preflight receipt 后才启动 review。\n\n## 来源\n- GitHub, Copilot code review customization: https://github.blog/changelog/2026-07-17-copilot-code-review-customization-and-configurability-improvements/\n- 发布日期：2026-07-17",
+    "description": "在 AI code review 前验证 head-branch instructions、独立 setup、runner 和 firewall 边界。",
+    "scenario": "团队用 Copilot code review 执行带自定义环境与项目规则的 PR 审查。",
+    "author": "GitHub · 2026-07-17",
+    "likes": 0,
+    "views": "0",
+    "comments": 0,
+    "titleEn": "Copilot Code Review Environment Preflight Hook",
+    "tagsEn": [
+      "Code Review",
+      "AGENTS.md",
+      "Firewall",
+      "Runner",
+      "30-Day Selection"
+    ],
+    "descriptionEn": "Validates head-branch instructions, dedicated setup, runners, and firewall boundaries before AI code review.",
+    "scenarioEn": "Teams running Copilot code review with custom environments and repository instructions.",
+    "problemFocus": "AI review 的指令、运行环境和网络边界如果未在启动前显式核验，结果不可复现且可能扩大攻击面。",
+    "problemFocusEn": "AI review becomes irreproducible and may expand attack surface when instructions, runtime, and network boundaries are not checked up front.",
+    "createdAt": "2026-07-20 10:00:00",
+    "category": "hook"
+  },
+  {
+    "id": 1307473,
+    "title": "Agent OpenTelemetry 治理 Hook",
+    "role": "developer",
+    "tags": [
+      "OpenTelemetry",
+      "Agent可观测性",
+      "DLP",
+      "企业策略",
+      "近30天精选"
+    ],
+    "content": "## 触发时机\nVS Code 或 CLI agent 启动、managed telemetry 配置变化，或 exporter 连接失败时触发。\n\n## Hook 流程\n1. 解析企业托管的 OTLP endpoint、协议、service name 与 resource attributes。\n2. 验证 managed value 优先于用户配置和 `OTEL_*` 环境变量。\n3. 默认关闭 prompt、response 与 tool content 采集；确需开启时记录数据分类、保留期和审批。\n4. exporter header 只传给 OTLP exporter，不注入 agent 启动的工具子进程。\n5. 用无敏感内容的测试 span 验证 collector 连通与字段。\n6. 失败时明确降级或阻断策略，不静默丢失审计数据。\n\n## 来源\n- GitHub, Enterprise-managed OpenTelemetry export: https://github.blog/changelog/2026-07-08-enterprise-managed-opentelemetry-export-for-vs-code-and-cli/\n- 发布日期：2026-07-08",
+    "description": "约束 agent 遥测出口、内容采集与 exporter header 传播，兼顾可观测性和 DLP。",
+    "scenario": "企业统一管理 VS Code Copilot Chat 与 Copilot CLI agent host 的 OTel 遥测。",
+    "author": "GitHub · 2026-07-08",
+    "likes": 0,
+    "views": "0",
+    "comments": 0,
+    "titleEn": "Agent OpenTelemetry Governance Hook",
+    "tagsEn": [
+      "OpenTelemetry",
+      "Agent Observability",
+      "DLP",
+      "Enterprise Policy",
+      "30-Day Selection"
+    ],
+    "descriptionEn": "Constrains agent telemetry destinations, content capture, and exporter-header propagation for observability with DLP.",
+    "scenarioEn": "Enterprises centrally managing OTel telemetry for VS Code Copilot Chat and the Copilot CLI agent host.",
+    "problemFocus": "Agent 遥测若把内容或认证 header 传播给工具子进程，会把可观测性配置转化为新的泄密路径。",
+    "problemFocusEn": "Agent telemetry can create a new exfiltration path if content or authentication headers propagate into tool subprocesses.",
+    "createdAt": "2026-07-20 10:00:00",
+    "category": "hook"
+  },
+  {
+    "id": 1307484,
+    "title": "Copilot 托管设置完整性前置 Hook",
+    "role": "developer",
+    "tags": [
+      "MDM",
+      "托管设置",
+      "配置完整性",
+      "Copilot",
+      "近30天精选"
+    ],
+    "content": "## 触发时机\nCopilot CLI 或 VS Code agent 启动前、托管策略文件变更后触发。\n\n## Hook 流程\n1. 枚举 MDM、server-managed 与 file-based 三类配置来源。\n2. 按 MDM > server-managed > file-based 计算最终值，并输出冲突来源。\n3. 对 file-based 配置验证 root 所有、不可 world-writable、不可为 symlink；任一不满足即拒绝采用。\n4. 核对 bypass permissions、默认模型、plugins、marketplaces 与 telemetry 是否符合组织策略。\n5. 生成只含键名、来源和最终状态的 receipt，不打印 secrets。\n6. 策略来源不可读或冲突未解决时 fail closed。\n\n## 来源\n- GitHub, Deploy managed Copilot settings via MDM in VS Code and CLI: https://github.blog/changelog/2026-07-08-deploy-managed-copilot-settings-via-mdm-in-vs-code-and-cli/\n- 发布日期：2026-07-08",
+    "description": "在 agent 启动前解析托管配置优先级并验证 file-based 设置的所有权、写权限与 symlink 边界。",
+    "scenario": "企业通过 MDM、服务端或本地文件统一约束 Copilot CLI 和 VS Code。",
+    "author": "GitHub · 2026-07-08",
+    "likes": 0,
+    "views": "0",
+    "comments": 0,
+    "titleEn": "Copilot Managed-Settings Integrity Preflight Hook",
+    "tagsEn": [
+      "MDM",
+      "Managed Settings",
+      "Configuration Integrity",
+      "Copilot",
+      "30-Day Selection"
+    ],
+    "descriptionEn": "Resolves managed-setting precedence and validates ownership, write permissions, and symlink boundaries before agent startup.",
+    "scenarioEn": "Enterprises governing Copilot CLI and VS Code through MDM, server-managed, or file-based settings.",
+    "problemFocus": "多来源策略若缺少优先级和文件完整性检查，攻击者可能通过低优先级或可写配置改变 agent 权限。",
+    "problemFocusEn": "Without precedence and file-integrity checks, attackers can alter agent permissions through lower-priority or writable configuration sources.",
+    "createdAt": "2026-07-22 17:30:00",
+    "category": "hook"
+  },
+  {
+    "id": 1307485,
+    "title": "GitHub Actions Copilot CLI 无 PAT 门禁 Hook",
+    "role": "developer",
+    "tags": [
+      "GitHub Actions",
+      "GITHUB_TOKEN",
+      "无PAT",
+      "最小权限",
+      "近30天精选"
+    ],
+    "content": "## 触发时机\n在 GitHub Actions 内启动 Copilot CLI 前触发。\n\n## Hook 流程\n1. 确认仓库归组织所有，且组织已允许 Copilot CLI 费用计入组织。\n2. workflow 仅授予 `copilot-requests: write` 及任务必需的最小其他权限。\n3. 要求使用内置 `GITHUB_TOKEN`，检测到长效 PAT 或自定义高权 token 即阻断。\n4. 固定 CLI 版本并设置单会话 credits 上限、cost center 与超限收尾策略。\n5. 检查 fork、pull_request_target 与不可信代码路径，避免把 token 暴露给攻击者控制的脚本。\n6. 输出身份、权限、计费归属和预算 receipt 后再执行。\n\n## 来源\n- GitHub, Copilot CLI no longer needs a personal access token in GitHub Actions: https://github.blog/changelog/2026-07-02-copilot-cli-no-longer-needs-a-personal-access-token-in-github-actions/\n- 发布日期：2026-07-02",
+    "description": "用组织策略、最小 `GITHUB_TOKEN` 权限和 credits 上限替代 CI 中的长效 PAT。",
+    "scenario": "组织仓库在 GitHub Actions 中运行 Copilot CLI 自动化。",
+    "author": "GitHub · 2026-07-02",
+    "likes": 0,
+    "views": "0",
+    "comments": 0,
+    "titleEn": "PAT-Free Copilot CLI Gate Hook for GitHub Actions",
+    "tagsEn": [
+      "GitHub Actions",
+      "GITHUB_TOKEN",
+      "PAT-Free",
+      "Least Privilege",
+      "30-Day Selection"
+    ],
+    "descriptionEn": "Replaces long-lived PATs in CI with organization policy, minimal GITHUB_TOKEN permissions, and AI-credit limits.",
+    "scenarioEn": "Organization-owned repositories running Copilot CLI automation in GitHub Actions.",
+    "problemFocus": "为了在 CI 调用 agent 而长期保存 PAT 会引入泄露、轮换和越权风险，内置 token 也需要最小权限和不可信代码门禁。",
+    "problemFocusEn": "Long-lived PATs for CI agents create leakage, rotation, and overprivilege risk, while built-in tokens still require least privilege and untrusted-code gates.",
+    "createdAt": "2026-07-22 17:30:00",
+    "category": "hook"
   }
 ]

@@ -2671,5 +2671,203 @@
     "problemFocusEn": "Browser issues are often inferred from code instead of validated with real page evidence.",
     "createdAt": "2026-07-08 16:20:00",
     "category": "mcp"
+  },
+  {
+    "id": 1307462,
+    "title": "Enterprise-Managed Authorization 零接触 OAuth 评估",
+    "role": "developer",
+    "tags": [
+      "MCP",
+      "OAuth",
+      "企业身份",
+      "权限治理",
+      "近30天精选"
+    ],
+    "content": "## 评估目标\n判断 Enterprise-Managed Authorization（EMA）能否让组织通过中央 IdP 为 MCP client 预配访问，而不让每个用户重复授权。\n\n## 检查清单\n1. 明确 IdP、MCP server、client 与资源所有者的信任边界。\n2. 验证预配凭据的签发、轮换、撤销、受众和最小 scope。\n3. 确认用户登录与 server 授权是两个独立证据层，不把“已登录”当作“可调用”。\n4. 测试离职、角色变更、设备丢失和 client 被禁用后的撤权时延。\n5. 记录调用主体、client、server、scope 与决策，不记录 token。\n6. 保留普通 OAuth 回退路径，并明确何时禁止零接触授权。\n\n## 试点验收\n- 一个只读 MCP server。\n- 一个最小权限用户组。\n- 成功、过期、撤销、scope 不足四类测试。\n- 无人工逐次授权且审计链完整。\n\n## 来源\n- Model Context Protocol, Enterprise-Managed Authorization: https://blog.modelcontextprotocol.io/posts/enterprise-managed-auth/\n- 发布日期：2026-06-18",
+    "description": "用于评估 MCP Enterprise-Managed Authorization 的身份边界、凭据生命周期、最小权限和撤权证据。",
+    "scenario": "企业希望通过中央 IdP 管理大量 MCP client 与 server 的 OAuth 接入。",
+    "author": "Model Context Protocol · 2026-06-18",
+    "likes": 0,
+    "views": "0",
+    "comments": 0,
+    "titleEn": "Enterprise-Managed Authorization Zero-Touch OAuth Evaluation",
+    "tagsEn": [
+      "MCP",
+      "OAuth",
+      "Enterprise Identity",
+      "Permission Governance",
+      "30-Day Selection"
+    ],
+    "descriptionEn": "Evaluates MCP Enterprise-Managed Authorization across identity boundaries, credential lifecycle, least privilege, and revocation evidence.",
+    "scenarioEn": "Enterprises using a central IdP to manage OAuth access across many MCP clients and servers.",
+    "problemFocus": "逐用户 OAuth 授权难以规模化，但中央预配若缺少 scope 与撤权治理会放大权限风险。",
+    "problemFocusEn": "Per-user OAuth consent does not scale, while central provisioning without scope and revocation governance amplifies access risk.",
+    "createdAt": "2026-07-18 21:00:00",
+    "category": "mcp"
+  },
+  {
+    "id": 1307463,
+    "title": "MCP 2026-07-28 SDK Beta 迁移验收",
+    "role": "developer",
+    "tags": [
+      "MCP",
+      "SDK迁移",
+      "兼容性",
+      "Beta验收",
+      "近30天精选"
+    ],
+    "content": "## 目标\n在隔离分支或样例服务中评估 2026-07-28 MCP specification release candidate 对 Python、TypeScript、Go 或 C# SDK 的影响。\n\n## 迁移步骤\n1. 锁定当前 SDK 版本、协议能力、transport 和认证方式。\n2. 阅读目标语言 beta migration guide，只选择一个最小 server/client 样例。\n3. 建立契约测试：initialize、tools/list、tools/call、错误响应、取消、超时和认证失败。\n4. 对照旧版与 beta 的类型、API、行为和遥测差异。\n5. 在 CI 中并行运行旧版与 beta，不直接替换生产依赖。\n6. 记录 blocker、回滚版本、依赖约束和稳定版跟踪条件。\n\n## 通过标准\n- 契约测试无行为回归。\n- beta 依赖被明确 pin。\n- 迁移可回滚。\n- 未把预发布 SDK 声明为生产稳定。\n\n## 来源\n- Model Context Protocol, Beta SDKs for the 2026-07-28 Spec Release Candidate: https://blog.modelcontextprotocol.io/posts/sdk-betas-2026-07-28/\n- 发布日期：2026-06-29",
+    "description": "面向 MCP 2026-07-28 规范候选版的多语言 SDK 隔离迁移、契约测试和回滚验收模板。",
+    "scenario": "MCP server 或 client 团队准备评估新规范与 beta SDK，但尚不应升级生产依赖。",
+    "author": "Model Context Protocol · 2026-06-29",
+    "likes": 0,
+    "views": "0",
+    "comments": 0,
+    "titleEn": "MCP 2026-07-28 SDK Beta Migration Acceptance",
+    "tagsEn": [
+      "MCP",
+      "SDK Migration",
+      "Compatibility",
+      "Beta Acceptance",
+      "30-Day Selection"
+    ],
+    "descriptionEn": "An isolated migration, contract-testing, and rollback template for language SDK betas targeting the MCP 2026-07-28 specification candidate.",
+    "scenarioEn": "MCP server or client teams evaluating the new specification and beta SDKs without upgrading production dependencies.",
+    "problemFocus": "协议和 SDK 同期变更容易把预发布接口误当稳定版，并在缺少契约测试时引入静默回归。",
+    "problemFocusEn": "Concurrent protocol and SDK changes can be mistaken for stable APIs and introduce silent regressions without contract tests.",
+    "createdAt": "2026-07-18 21:00:00",
+    "category": "mcp"
+  },
+  {
+    "id": 1307474,
+    "title": "MCP Tasks 长时程操作实验评估",
+    "role": "developer",
+    "tags": [
+      "MCP Tasks",
+      "长时程操作",
+      "状态机",
+      "延迟取回",
+      "近30天精选"
+    ],
+    "content": "## 评估目标\n在隔离样例中验证 MCP Tasks 是否适合昂贵计算、批处理或 agent 通信。\n\n## 评估步骤\n1. 明确任务创建、receiver-generated task ID、状态转换和终止态。\n2. 实现 call-now/fetch-later 样例，验证 polling、超时、取消和延迟结果取回。\n3. 测试 client 重连、重复请求、未知 task ID 与服务端重启。\n4. 将外部 job API 状态映射到 MCP task，避免把排队误报为执行成功。\n5. 记录保留期、访问控制、结果大小和清理策略。\n6. 因扩展仍为 experimental，只用于试点并 pin schema/commit。\n\n## 来源\n- modelcontextprotocol/ext-tasks: https://github.com/modelcontextprotocol/ext-tasks\n- 近期维护信号：2026-07-15\n- License: Apache-2.0",
+    "description": "评估 MCP Tasks 的持久状态机、轮询、延迟结果和外部作业映射，不把实验扩展误当稳定规范。",
+    "scenario": "MCP server 需要承载批处理、昂贵计算或长时程 agent 通信。",
+    "author": "Model Context Protocol · 2026-07-20",
+    "likes": 14,
+    "views": "14",
+    "comments": 0,
+    "titleEn": "MCP Tasks Long-Running Operation Experimental Evaluation",
+    "tagsEn": [
+      "MCP Tasks",
+      "Long-Running Operations",
+      "State Machine",
+      "Deferred Retrieval",
+      "30-Day Selection"
+    ],
+    "descriptionEn": "Evaluates durable state machines, polling, deferred results, and external-job mappings while treating the extension as experimental.",
+    "scenarioEn": "MCP servers carrying batch jobs, expensive computation, or long-running agent communication.",
+    "problemFocus": "同步 tool call 难以表达长任务生命周期，而未经治理的轮询和状态映射又会产生重复执行与假完成。",
+    "problemFocusEn": "Synchronous tool calls poorly express long-task lifecycles, while unmanaged polling and state mapping can cause duplicate execution and false completion.",
+    "createdAt": "2026-07-20 10:00:00",
+    "category": "mcp"
+  },
+  {
+    "id": 1307475,
+    "title": "Skills Over MCP 分发扩展评估",
+    "role": "developer",
+    "tags": [
+      "MCP Skills",
+      "技能发现",
+      "动态更新",
+      "企业分发",
+      "近30天精选"
+    ],
+    "content": "## 评估目标\n判断何时应通过 MCP 分发 workflow skills，何时继续使用本地静态技能。\n\n## 评估矩阵\n1. 发现：client 如何列出、选择和解释可用 skill。\n2. 版本：server 更新后如何 pin、缓存、回滚和提示变更。\n3. 信任：skill 内容、资源引用和工具权限由谁签名与审核。\n4. 组合：跨多个 MCP server 编排时如何解决命名、依赖与失败边界。\n5. 企业治理：RBAC、多租户、租户隔离和审计记录。\n6. 上下文成本：只按需加载，避免初始化时塞入数百行说明。\n\n## 采用结论\n输出本地安装 / MCP 分发 / 暂缓，并记录实验性质与未决问题。\n\n## 来源\n- modelcontextprotocol/experimental-ext-skills: https://github.com/modelcontextprotocol/experimental-ext-skills\n- 近期维护信号：2026-07-17\n- License: Apache-2.0",
+    "description": "从发现、版本、信任、组合和企业治理评估通过 MCP 动态分发 skills 的实验方案。",
+    "scenario": "MCP server 希望同时向 agent 提供工具与复杂多步骤使用方法。",
+    "author": "Model Context Protocol · 2026-07-20",
+    "likes": 162,
+    "views": "162",
+    "comments": 0,
+    "titleEn": "Skills Over MCP Distribution Extension Evaluation",
+    "tagsEn": [
+      "MCP Skills",
+      "Skill Discovery",
+      "Dynamic Updates",
+      "Enterprise Distribution",
+      "30-Day Selection"
+    ],
+    "descriptionEn": "Evaluates experimental dynamic skill distribution over MCP across discovery, versioning, trust, composition, and enterprise governance.",
+    "scenarioEn": "MCP servers that need to provide both tools and complex multi-step operating knowledge to agents.",
+    "problemFocus": "工具描述不能替代复杂工作流，但远程动态技能若缺少版本和信任机制会放大供应链风险。",
+    "problemFocusEn": "Tool descriptions cannot replace complex workflows, but remotely updated skills without version and trust controls amplify supply-chain risk.",
+    "createdAt": "2026-07-20 10:00:00",
+    "category": "mcp"
+  },
+  {
+    "id": 1307486,
+    "title": "Open Connector：多 SaaS Agent 网关评估",
+    "role": "developer",
+    "tags": [
+      "MCP Gateway",
+      "SaaS连接器",
+      "OAuth",
+      "Action Catalog",
+      "近30天精选"
+    ],
+    "content": "## 项目定位\nOpen Connector 通过 SDK、CLI、MCP、HTTP 和 OpenAPI 暴露统一 action catalog，为 agent 隔离 provider credentials 与连接管理。\n\n## 试点评估\n1. 固定 v1.3.0 或已审版本，只接入一个低风险 provider 和只读 scope。\n2. 设置 runtime/admin auth 与 `OOMOL_CONNECT_ENCRYPTION_KEY`；缺少加密时禁止把凭据或响应写入 SQLite/D1。\n3. 对 `execute_action` 建立 allowlist、参数 schema、速率限制和 redacted run log。\n4. 验证 account alias、连接撤销、token refresh 与多租户隔离。\n5. 对写操作在 provider 侧实现幂等与人工确认；MCP 路径不承诺 exactly-once。\n6. 将项目自述的 1,000+ providers / 10,000+ actions 作为能力声明，不当作独立验证。\n\n## 来源\n- oomol-lab/open-connector: https://github.com/oomol-lab/open-connector\n- 创建：2026-06-29；近期 push：2026-07-22\n- Stars 快照：3071；License: Apache-2.0",
+    "description": "评估多 SaaS connector/auth gateway 的加密、最小 scope、allowlist、审计与幂等边界。",
+    "scenario": "Agent 需要通过 MCP/API 接入多种 SaaS，但 provider credentials 不应直接进入模型上下文。",
+    "author": "GitHub 30-Day Selection · 2026-07-22",
+    "likes": 3071,
+    "views": "3.1K",
+    "comments": 0,
+    "titleEn": "Open Connector: Multi-SaaS Agent Gateway Evaluation",
+    "tagsEn": [
+      "MCP Gateway",
+      "SaaS Connectors",
+      "OAuth",
+      "Action Catalog",
+      "30-Day Selection"
+    ],
+    "descriptionEn": "Evaluates encryption, least-privilege scopes, allowlists, auditability, and idempotency boundaries for a multi-SaaS connector gateway.",
+    "scenarioEn": "Agents accessing multiple SaaS providers over MCP or APIs without exposing provider credentials to model context.",
+    "problemFocus": "统一 connector 能降低集成成本，但默认存储、宽 scope 和非幂等写操作会把网关变成高价值风险集中点。",
+    "problemFocusEn": "A unified connector lowers integration cost but default storage, broad scopes, and non-idempotent writes can turn the gateway into a concentrated high-value risk.",
+    "createdAt": "2026-07-22 17:30:00",
+    "category": "mcp"
+  },
+  {
+    "id": 1307487,
+    "title": "MCP Interceptors 实验扩展评估",
+    "role": "developer",
+    "tags": [
+      "MCP Interceptors",
+      "SEP-2624",
+      "Validator",
+      "Mutator",
+      "Experimental"
+    ],
+    "content": "## 评估目标\n验证 interceptor chain 是否能在 MCP trust boundary 上统一执行校验、脱敏和审计，同时避免把实验实现误当稳定规范。\n\n## 实验步骤\n1. 固定仓库 commit 与 SEP-2624 版本，记录提案仍未 accepted。\n2. 用 validator 样例验证 schema、scope 和策略 pass/fail；失败必须停止下游调用。\n3. 用 mutator 样例做 PII redaction，并保留变换前后哈希与审计原因。\n4. 测试链顺序、超时、异常、重入和多 interceptor 冲突。\n5. 区分 client、server 与 sidecar 信任边界，验证敏感数据在哪一侧暴露。\n6. 只用于原型和标准反馈；C# 仍在推进，Go/Python/TypeScript 实现计划不能写成已完成。\n\n## 来源\n- modelcontextprotocol/experimental-ext-interceptors: https://github.com/modelcontextprotocol/experimental-ext-interceptors\n- 近期 push：2026-07-21\n- Stars 快照：23；License: Apache-2.0；状态：Experimental",
+    "description": "原型验证 MCP validator/mutator chain 的校验、脱敏和审计能力，并显式保留 SEP 未接受边界。",
+    "scenario": "MCP 平台团队预研跨 client/server 的策略执行与可插拔治理层。",
+    "author": "Model Context Protocol · 2026-07-22",
+    "likes": 23,
+    "views": "23",
+    "comments": 0,
+    "titleEn": "MCP Interceptors Experimental Extension Evaluation",
+    "tagsEn": [
+      "MCP Interceptors",
+      "SEP-2624",
+      "Validator",
+      "Mutator",
+      "Experimental"
+    ],
+    "descriptionEn": "Prototypes validation, redaction, and audit chains while explicitly preserving the not-yet-accepted SEP boundary.",
+    "scenarioEn": "MCP platform teams researching pluggable policy enforcement across client and server trust boundaries.",
+    "problemFocus": "MCP 的脱敏和策略逻辑容易散落在各 tool 中，但过早依赖未接受扩展又会形成兼容性债务。",
+    "problemFocusEn": "MCP redaction and policy logic can scatter across tools, while premature dependence on an unaccepted extension creates compatibility debt.",
+    "createdAt": "2026-07-22 17:30:00",
+    "category": "mcp"
   }
 ]
