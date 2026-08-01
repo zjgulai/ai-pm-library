@@ -2871,5 +2871,71 @@
     "problemFocusEn": "Long-lived PATs for CI agents create leakage, rotation, and overprivilege risk, while built-in tokens still require least privilege and untrusted-code gates.",
     "createdAt": "2026-07-22 17:30:00",
     "category": "hook"
+  },
+  {
+    "id": 1307496,
+    "title": "GitHub Actions 可疑 Workflow 人工审批 Hook",
+    "role": "developer",
+    "tags": [
+      "GitHub Actions",
+      "供应链安全",
+      "人工审批",
+      "CI/CD",
+      "近30天精选"
+    ],
+    "content": "## 触发时机\nGitHub 将 public repository 的 workflow run 标记为潜在恶意并 hold 时触发。\n\n## Hook 流程\n1. 保持 run 暂停，禁止机器人或脚本自动批准。\n2. 展示 workflow 与可信基线的 diff，重点检查权限、secrets、外连、下载执行、混淆脚本和触发器。\n3. 核对提交者、凭据是否可能被盗用、变更来源与预期业务目的。\n4. 由具 write 权限的协作者通过 authenticated web session 人工批准或拒绝。\n5. 批准后监控首次运行的网络、secret access 和产物；异常立即取消并轮换受影响凭据。\n6. 保存 hold 原因、审查证据、审批人和结果 receipt。\n\n## 边界\n平台检测不是完整供应链防护；当前自动 hold 仅适用于 github.com public repositories，不覆盖 GHES。\n\n## 来源\n- GitHub, Actions holds potentially malicious workflows for approval: https://github.blog/changelog/2026-07-28-github-actions-holds-unproven-workflows-for-approval/\n- 发布日期：2026-07-28",
+    "description": "在可疑 Actions workflow 执行前强制进行权限、secret、外连和脚本 diff 审查，并留存人工审批证据。",
+    "scenario": "公开仓库需要降低被盗凭据注入恶意 CI/CD workflow 的供应链风险。",
+    "author": "GitHub · 2026-07-28",
+    "likes": 0,
+    "views": "0",
+    "comments": 0,
+    "titleEn": "Human-Approval Hook for Suspicious GitHub Actions Workflows",
+    "tagsEn": [
+      "GitHub Actions",
+      "Supply Chain Security",
+      "Human Approval",
+      "CI/CD",
+      "30-Day Selection"
+    ],
+    "descriptionEn": "Holds suspicious workflows until permissions, secrets, network access, and script diffs receive authenticated human review.",
+    "scenarioEn": "Public repositories reducing supply-chain risk from malicious CI workflows pushed with compromised credentials.",
+    "problemFocus": "被盗凭据可以把窃取 CI secrets 的 workflow 伪装成正常提交，若自动放行会在审查前执行攻击代码。",
+    "problemFocusEn": "Compromised credentials can disguise secret-stealing workflows as normal commits, executing attack code before review if automatically allowed.",
+    "createdAt": "2026-08-01 15:30:00",
+    "category": "hook"
+  },
+  {
+    "id": 1307497,
+    "title": "GitHub Issue Agent 建议、置信度与理由门禁 Hook",
+    "role": "productManager",
+    "tags": [
+      "GitHub Issues",
+      "Agent Automation",
+      "Confidence",
+      "Rationale",
+      "Public Preview"
+    ],
+    "content": "## 触发时机\nAgent 准备修改 issue label、field、type、assignee 或关闭状态时触发。\n\n## Hook 流程\n1. 要求 agent 为每个动作输出结构化 intent、理由和 high/medium/low confidence。\n2. 默认使用 suggest 模式；medium/low confidence 必须进入人工建议面板。\n3. 仅对可回滚、影响低且经过样本校准的 high-confidence 动作自动应用。\n4. 记录变更前后值、agent 身份、规则版本和 rationale，支持 `has:suggestions` 跟踪待审项。\n5. 对关闭 issue、外部用户分派和敏感字段设独立更高门槛。\n6. 定期抽样误分与人工拒绝项，调整阈值而非隐藏失败。\n\n## 边界\n官方明确 approvals 是 workflow convenience，不是 server-side security control；agent 若已有权限仍可直接应用动作，且功能处于 public preview。\n\n## 来源\n- GitHub, Agent automation controls in GitHub Issues: https://github.blog/changelog/2026-07-23-agent-automation-controls-in-github-issues-in-public-preview/\n- 发布日期：2026-07-23",
+    "description": "用 intent、confidence、rationale 和建议队列约束 Issue 自动化，同时明确审批并非安全边界。",
+    "scenario": "产品和工程团队用 agent 自动分类、分派、补全或关闭 GitHub Issues。",
+    "author": "GitHub · 2026-07-23",
+    "likes": 0,
+    "views": "0",
+    "comments": 0,
+    "titleEn": "Suggestion, Confidence, and Rationale Gate Hook for GitHub Issue Agents",
+    "tagsEn": [
+      "GitHub Issues",
+      "Agent Automation",
+      "Confidence",
+      "Rationale",
+      "Public Preview"
+    ],
+    "descriptionEn": "Constrains issue automation with structured intent, confidence, rationale, and suggestion queues while stating that approvals are not a security boundary.",
+    "scenarioEn": "Product and engineering teams using agents to classify, assign, enrich, or close GitHub Issues.",
+    "problemFocus": "自动修改 issue 元数据若没有理由、置信度和待审队列，会让错误分类静默扩散并破坏项目视图。",
+    "problemFocusEn": "Issue automation without rationale, confidence, and a review queue can silently spread misclassification and corrupt project views.",
+    "createdAt": "2026-08-01 15:30:00",
+    "category": "hook"
   }
 ]

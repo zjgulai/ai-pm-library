@@ -2869,5 +2869,71 @@
     "problemFocusEn": "MCP redaction and policy logic can scatter across tools, while premature dependence on an unaccepted extension creates compatibility debt.",
     "createdAt": "2026-07-22 17:30:00",
     "category": "mcp"
+  },
+  {
+    "id": 1307498,
+    "title": "MCP 2026-07-28 正式规范迁移闭环",
+    "role": "developer",
+    "tags": [
+      "MCP 2026-07-28",
+      "Stateless",
+      "Conformance",
+      "Breaking Change",
+      "正式规范"
+    ],
+    "content": "## 目标\n将既有 RC/Beta 试验收敛为 MCP `2026-07-28` 正式规范的可回滚生产迁移，而不是把预发布测试当完成。\n\n## 迁移闭环\n1. 固定正式 specification 与目标语言稳定 SDK，记录仍在使用的旧协议版本。\n2. 迁移无 session/initialize 的 stateless 请求，验证 `_meta`、`MCP-Protocol-Version`、`Mcp-Method` 与 capability discovery。\n3. 检查 Roots、Sampling、Logging 的 deprecated 状态和替代路径；不提前删除仍在兼容期的能力。\n4. 用官方 conformance suite 覆盖 tool schema、错误码、authorization、缓存和扩展协商。\n5. 对 `$ref`、schema depth、验证耗时与任意 JSON structuredContent 设资源上限。\n6. 在旧/新协议双栈与真实负载下比较，保留回滚版本、指标和客户端兼容矩阵。\n\n## 通过标准\n正式 SDK 已 pin；conformance 与业务契约均通过；旧版回滚可执行；deprecated/extension 状态没有被误写成 removed/core。\n\n## 来源\n- Model Context Protocol Specification 2026-07-28: https://modelcontextprotocol.io/specification/2026-07-28\n- 正式发布日期：2026-07-28",
+    "description": "把 RC/Beta 评估闭环为 MCP 2026-07-28 正式规范的 stateless、conformance、兼容和回滚迁移。",
+    "scenario": "MCP client/server 已做预发布试点，准备采用正式协议与稳定 SDK。",
+    "author": "Model Context Protocol · 2026-07-28",
+    "likes": 0,
+    "views": "0",
+    "comments": 0,
+    "titleEn": "MCP 2026-07-28 Final-Spec Migration Closure",
+    "tagsEn": [
+      "MCP 2026-07-28",
+      "Stateless",
+      "Conformance",
+      "Breaking Change",
+      "Final Specification"
+    ],
+    "descriptionEn": "Closes RC and beta testing into a rollback-safe migration to the MCP 2026-07-28 final specification with stateless transport and conformance evidence.",
+    "scenarioEn": "MCP clients and servers moving from prerelease trials to the final protocol and stable SDKs.",
+    "problemFocus": "预发布 SDK 通过不等于正式迁移完成，stateless 传输、弃用、schema 和兼容行为仍需按最终规范复验。",
+    "problemFocusEn": "Passing prerelease SDK tests does not complete migration; stateless transport, deprecations, schemas, and compatibility require final-spec validation.",
+    "createdAt": "2026-08-01 15:30:00",
+    "category": "mcp"
+  },
+  {
+    "id": 1307499,
+    "title": "Waggle MCP Agent Handoff Artifact 评估",
+    "role": "developer",
+    "tags": [
+      "MCP",
+      "Agent Handoff",
+      "Artifact",
+      "Token Budget",
+      "GitHub高星"
+    ],
+    "content": "## 项目定位\nWaggle 用短 artifact reference 在 agent 间延迟解析、搜索和读取交接材料，避免把完整上下文反复塞进 prompt。\n\n## 试点评估\n1. 固定 v0.5.3 或已审 commit，在本地 SQLite 模式运行两个只读 agent。\n2. 对同一交接任务比较内嵌全文与 reference 模式的 token、时延、召回和丢失信息。\n3. 为 artifact 定义 owner、tenant、TTL、撤销、最大尺寸和允许内容类型。\n4. 验证按预算 resolve/search/read、并发修改、失效 reference 与离线恢复。\n5. 跨机 daemon 必须补认证、加密、访问审计和租户隔离。\n6. 不把短 token 当 secret；敏感内容仍按原数据等级治理。\n\n## 来源\n- modiqo/waggle: https://github.com/modiqo/waggle\n- 创建：2026-07-08；近期 push：2026-07-20；Release: v0.5.3\n- Stars 快照：795；License: Apache-2.0",
+    "description": "评估 MCP-native artifact reference 在多 Agent 交接中的 token 节省、按预算解析、TTL、撤销和隔离边界。",
+    "scenario": "多 Agent 工作流需要传递大型研究或代码产物，但不希望重复注入完整上下文。",
+    "author": "GitHub 30-Day Selection · 2026-08-01",
+    "likes": 795,
+    "views": "795",
+    "comments": 0,
+    "titleEn": "Waggle MCP Agent-Handoff Artifact Evaluation",
+    "tagsEn": [
+      "MCP",
+      "Agent Handoff",
+      "Artifact",
+      "Token Budget",
+      "GitHub High Stars"
+    ],
+    "descriptionEn": "Evaluates token savings, budgeted resolution, TTL, revocation, and isolation for MCP-native artifact references in multi-agent handoffs.",
+    "scenarioEn": "Multi-agent workflows transferring large research or code artifacts without reinjecting full context.",
+    "problemFocus": "跨 agent 复制完整上下文成本高且易过期，但引用令牌若无租户隔离、TTL 和撤销会变成新的数据泄露入口。",
+    "problemFocusEn": "Copying full context across agents is costly and stale, while reference tokens without tenancy, TTL, and revocation create a new leakage path.",
+    "createdAt": "2026-08-01 15:30:00",
+    "category": "mcp"
   }
 ]

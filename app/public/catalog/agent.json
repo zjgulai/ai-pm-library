@@ -2968,5 +2968,71 @@
     "problemFocusEn": "Agent prototypes often scatter across chats and scripts, making prompt, tool, and model changes hard to associate with run differences.",
     "createdAt": "2026-07-22 17:30:00",
     "category": "agent"
+  },
+  {
+    "id": 1307500,
+    "title": "AOS CE 可验证 Agent OS 试点智能体模板",
+    "role": "developer",
+    "tags": [
+      "Agent OS",
+      "Least Privilege",
+      "Provenance",
+      "MCP",
+      "高Stars"
+    ],
+    "content": "## 项目定位\nAOS Community Edition 是可组合的 agent operating system，覆盖 CLI/HTTP API、capsules、provider/model、审计和 MCP elicitation。\n\n## 试点步骤\n1. 固定 2026.1.3 或已审 release，先验证 checksums、Sigstore 与 build provenance，不直接执行远程 pipe-to-shell。\n2. 在隔离环境创建单一低风险 capsule，把每个 capability 当权限面并应用 least privilege。\n3. pin runtime、provider、model 和配置，记录每次 agent run 的 principal、工具调用与产物。\n4. 分别测试 MCP elicitation 的 client/native/deny 模式及失败默认值。\n5. 对撤权、升级、签名失败、provider 不可用和跨 capsule 访问做 fail-closed 验收。\n6. 复杂 OS 替换面通过威胁建模和运维演练前，不进入生产。\n\n## 来源\n- unicity-aos/aos-ce: https://github.com/unicity-aos/aos-ce\n- 创建：2026-07-12；近期 push：2026-07-31；Release: 2026.1.3\n- Stars 快照：8575；License: MIT OR Apache-2.0（GitHub API 标 Apache-2.0）",
+    "description": "以签名发行、runtime pin、最小 capability、principal 审计和 MCP elicitation 模式评估可验证 Agent OS。",
+    "scenario": "平台团队研究统一 Agent runtime 与权限治理，但只允许从隔离低风险 capsule 起步。",
+    "author": "GitHub High-Star Selection · 2026-08-01",
+    "likes": 8575,
+    "views": "8.6K",
+    "comments": 0,
+    "titleEn": "AOS CE Verifiable Agent-OS Pilot Template",
+    "tagsEn": [
+      "Agent OS",
+      "Least Privilege",
+      "Provenance",
+      "MCP",
+      "High Stars"
+    ],
+    "descriptionEn": "Evaluates a verifiable agent OS through signed releases, runtime pinning, least-privilege capabilities, principal audits, and MCP elicitation modes.",
+    "scenarioEn": "Platform teams researching a unified agent runtime and permission model starting with isolated low-risk capsules.",
+    "problemFocus": "Agent OS 把模型、工具、连接器和执行面集中后，供应链、权限与升级风险也会集中，不能用高 stars 替代治理验证。",
+    "problemFocusEn": "An agent OS centralizes models, tools, connectors, and execution, concentrating supply-chain, permission, and upgrade risk that stars cannot validate.",
+    "createdAt": "2026-08-01 15:30:00",
+    "category": "agent"
+  },
+  {
+    "id": 1307501,
+    "title": "Better Harness Agent Work Loop 证据改进智能体",
+    "role": "productManager",
+    "tags": [
+      "Harness Engineering",
+      "Evidence",
+      "Work Loop",
+      "Continuous Improvement",
+      "高Stars"
+    ],
+    "content": "## 目标\n用真实 project/session evidence 诊断 agent work loop，把“任务理解—受控执行—验证—交付—学习”转成可复查改进，而不是凭静态配置猜使用效果。\n\n## 工作流\n1. 只读收集一个项目和已选会话证据，排除 secrets、个人对话和无关目录。\n2. 将每项结论绑定到实际任务、工具调用、文件变更、测试或缺失证据。\n3. 区分 observed、inferred、missing evidence；host adapter 不支持的能力不得标记失败。\n4. 按影响、频率、可验证性排序改进项，每次只试一个最小变化。\n5. 用同类任务复跑并比较质量、耗时、返工和验收证据，避免把相关性写成因果。\n6. 修复、配置写入或自动化必须另行审批；报告本身不获得执行权限。\n\n## 来源\n- QoderAI/better-harness: https://github.com/QoderAI/better-harness\n- 创建：2026-07-21；近期 push：2026-08-01\n- Stars 快照：1337；License: MIT；部分 host 插件仍为 Beta",
+    "description": "从项目与会话证据识别 Agent Work Loop 的缺口，输出可验证、按优先级排序的最小改进。",
+    "scenario": "AI PM 和工程团队希望持续提高 Codex、Claude、Qoder、Cursor 等 coding agent 的交付可靠性。",
+    "author": "GitHub 30-Day Selection · 2026-08-01",
+    "likes": 1337,
+    "views": "1.3K",
+    "comments": 0,
+    "titleEn": "Better Harness Evidence-Driven Agent Work-Loop Improver",
+    "tagsEn": [
+      "Harness Engineering",
+      "Evidence",
+      "Work Loop",
+      "Continuous Improvement",
+      "High Stars"
+    ],
+    "descriptionEn": "Diagnoses agent work-loop gaps from project and session evidence, producing prioritized, minimal, verifiable improvements.",
+    "scenarioEn": "AI product and engineering teams improving delivery reliability across Codex, Claude, Qoder, Cursor, and other coding agents.",
+    "problemFocus": "仅检查配置无法证明 agent 实际怎样工作，缺少 session 证据时容易优化错误环节并夸大改进效果。",
+    "problemFocusEn": "Static configuration does not show how an agent actually works; without session evidence teams optimize the wrong loop and overstate gains.",
+    "createdAt": "2026-08-01 15:30:00",
+    "category": "agent"
   }
 ]

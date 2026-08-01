@@ -3451,5 +3451,71 @@
     "problemFocusEn": "Automated wikis reduce context staleness, but overwriting instruction files or skipping citation checks can persistently inject incorrect summaries into agents.",
     "createdAt": "2026-07-22 17:30:00",
     "category": "github"
+  },
+  {
+    "id": 1307502,
+    "title": "OpenWorker：本地优先 AI Coworker 评估卡",
+    "role": "productManager",
+    "tags": [
+      "AI Coworker",
+      "Connectors",
+      "MCP",
+      "Approvals",
+      "高Stars"
+    ],
+    "content": "## 项目定位\nOpenWorker 是 README 标注 open beta 的桌面端开源 AI coworker，支持 25+ connectors、MCP、定时自动化和关键动作审批。\n\n## 评估步骤\n1. 固定 commit/版本，在非生产账号只启用 GitHub、Jira 或 Slack 的最小只读 scope。\n2. 用读取 issue、整理客户简报等任务验证 connector 准确性和失败恢复。\n3. 构造写入、发送和 shell 命令，确认关键动作确实进入人工审批而非直接执行。\n4. 核对本地 secret store、模型请求 egress 与 OAuth broker，记录每类数据离开本机的条件。\n5. 测试 connector 撤权、token refresh、定时任务取消和本地数据删除。\n6. 输出 scope、审批、外传、日志与回滚矩阵；Beta 试点通过前不接生产凭据。\n\n## 来源\n- andrewyng/openworker: https://github.com/andrewyng/openworker\n- 创建：2026-07-20；近期 push：2026-07-30\n- Stars 快照：11399；Forks: 1533；License: MIT",
+    "description": "评估高热度本地优先 AI coworker 的连接器最小权限、关键动作审批、模型外传和撤权边界。",
+    "scenario": "产品和运营团队试点能跨 GitHub、Slack、Jira、Notion 等应用工作的桌面 agent。",
+    "author": "GitHub High-Star Selection · 2026-08-01",
+    "likes": 11399,
+    "views": "11.4K",
+    "comments": 0,
+    "titleEn": "OpenWorker: Local-First AI Coworker Evaluation Card",
+    "tagsEn": [
+      "AI Coworker",
+      "Connectors",
+      "MCP",
+      "Approvals",
+      "High Stars"
+    ],
+    "descriptionEn": "Evaluates least-privilege connectors, approval gates, model egress, and revocation for a high-visibility local-first AI coworker.",
+    "scenarioEn": "Product and operations teams piloting a desktop agent across GitHub, Slack, Jira, Notion, and other work apps.",
+    "problemFocus": "本地优先不等于完全离线，连接器、模型调用和 OAuth broker 仍可能触达敏感组织数据。",
+    "problemFocusEn": "Local-first is not fully offline; connectors, model calls, and an OAuth broker can still touch sensitive organizational data.",
+    "createdAt": "2026-08-01 15:30:00",
+    "category": "github"
+  },
+  {
+    "id": 1307503,
+    "title": "Codex Security：AI 代码安全扫描与发布门禁评估卡",
+    "role": "developer",
+    "tags": [
+      "Codex Security",
+      "Vulnerability",
+      "Scan Compare",
+      "Release Gate",
+      "高Stars"
+    ],
+    "content": "## 项目定位\n`openai/codex-security` 是 OpenAI 官方 CLI 与 TypeScript SDK，用于 find、validate、fix 漏洞并比较多次 scan。\n\n## 评估步骤\n1. 固定 CLI/SDK 版本和目标 commit，在仓库副本上运行最小范围 scan。\n2. 由安全人员抽样验证 findings、攻击路径、复现证据和覆盖缺口，不把模型判断当已证实漏洞。\n3. 使用 `scans compare` 区分 new、persisting、reopened、resolved 与 unknown；coverage 不完整时缺失项保持 unknown。\n4. 对建议修复先生成最小 patch，运行原测试与安全复验，禁止自动合并。\n5. report、state 和扫描历史按敏感安全数据私有保存；CI 只注入最小范围 API key。\n6. 发布门禁基于已验证高风险 finding 与可重复证据，并保留人工 override receipt。\n\n## 边界\n使用需要 Codex Security access；工具不能发现全部漏洞，自动修复也不能绕过正常 review。\n\n## 来源\n- openai/codex-security: https://github.com/openai/codex-security\n- 创建：2026-07-13；近期 push：2026-07-31\n- Stars 快照：7863；Forks: 517；License: Apache-2.0",
+    "description": "评估 OpenAI 官方安全扫描 CLI/SDK 的 finding 验证、scan compare、未知状态、修复复验和发布门禁。",
+    "scenario": "安全与工程团队希望把 AI 漏洞扫描接入 PR 或发布流程，但保留证据和人工判断。",
+    "author": "GitHub High-Star Selection · 2026-08-01",
+    "likes": 7863,
+    "views": "7.9K",
+    "comments": 0,
+    "titleEn": "Codex Security: AI Code-Scanning and Release-Gate Evaluation Card",
+    "tagsEn": [
+      "Codex Security",
+      "Vulnerability",
+      "Scan Compare",
+      "Release Gate",
+      "High Stars"
+    ],
+    "descriptionEn": "Evaluates OpenAI's security CLI and SDK across finding validation, scan comparison, unknown states, fix revalidation, and release gating.",
+    "scenarioEn": "Security and engineering teams adding AI vulnerability scanning to PR or release workflows while preserving evidence and human judgment.",
+    "problemFocus": "AI 安全扫描若把未复现 finding、覆盖缺失或自动 patch 当确定结论，会制造误报、漏报和修复回归。",
+    "problemFocusEn": "Treating unverified findings, coverage gaps, or generated patches as certain results creates false positives, misses, and remediation regressions.",
+    "createdAt": "2026-08-01 15:30:00",
+    "category": "github"
   }
 ]

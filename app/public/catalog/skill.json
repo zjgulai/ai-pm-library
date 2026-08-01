@@ -10272,5 +10272,71 @@
     "problemFocusEn": "Subtasks and context compaction accumulate credits in long agent runs, making cost overruns visible only after the fact without session gates.",
     "createdAt": "2026-07-22 17:30:00",
     "category": "skill"
+  },
+  {
+    "id": 1307494,
+    "title": "可自动化工作流建模与批准点设计技能",
+    "role": "operations",
+    "tags": [
+      "工作流建模",
+      "自动化",
+      "审批",
+      "责任人",
+      "近30天精选"
+    ],
+    "content": "## 目标\n在把重复工作交给 ChatGPT、Codex、skill 或 workspace agent 前，先把业务过程建模成可验收、可暂停的 workflow brief。\n\n## 步骤\n1. 选择一个真实的周/月重复流程，记录当前耗时、失败点和最终责任人。\n2. 映射 trigger、所需 context、source materials、tools、owner、approvals 与 good output。\n3. 将每个外部写入、敏感数据访问和不可逆动作设为显式人工批准点。\n4. 写出 happy path、缺输入、来源冲突、工具失败和超时的处理分支。\n5. 先用低风险样本手动运行，比较质量、成本、时延和人工返工。\n6. 只有触发条件稳定、输出可判定、失败可恢复时，才封装 skill 或定时自动化。\n\n## 交付\nWorkflow brief、责任矩阵、审批点、验收样本、失败处理和暂不自动化事项。\n\n## 来源\n- OpenAI Academy, Skill Lab: Automating Workflows: https://academy.openai.com/en/public/clubs/work-users-ynjqu/events/skill-lab-automating-workflows-tko7y70ynu\n- 发布日期：2026-07-30",
+    "description": "先建模触发器、上下文、工具、责任人、批准点与好输出，再决定是否 skill 化或自动运行。",
+    "scenario": "运营和产品团队希望把稳定的重复流程交给 AI，但仍需保留责任与审批边界。",
+    "author": "OpenAI Academy · 2026-07-30",
+    "likes": 0,
+    "views": "0",
+    "comments": 0,
+    "titleEn": "Automatable Workflow Modeling and Approval-Point Design Skill",
+    "tagsEn": [
+      "Workflow Modeling",
+      "Automation",
+      "Approvals",
+      "Ownership",
+      "30-Day Selection"
+    ],
+    "descriptionEn": "Models triggers, context, tools, ownership, approvals, and good outputs before a process becomes a skill or scheduled automation.",
+    "scenarioEn": "Operations and product teams automating stable recurring work while preserving accountability and approval boundaries.",
+    "problemFocus": "团队常在流程、责任和失败处理尚未稳定时直接自动化，导致错误被更快放大。",
+    "problemFocusEn": "Teams often automate before process, ownership, and failure handling stabilize, accelerating errors instead of outcomes.",
+    "createdAt": "2026-08-01 15:30:00",
+    "category": "skill"
+  },
+  {
+    "id": 1307495,
+    "title": "Copilot Code Review Skills 与只读 MCP 接入验收技能",
+    "role": "developer",
+    "tags": [
+      "Code Review",
+      "Agent Skills",
+      "Read-only MCP",
+      "Attribution",
+      "近30天精选"
+    ],
+    "content": "## 目标\n让 Copilot code review 使用版本化 Agent Skills 和最小只读 MCP 上下文，同时保留来源归因与误报回退。\n\n## 接入步骤\n1. 在 `.github/skills/<skill>/SKILL.md` 固定审查目标、仓库规则、禁止事项和验收标准。\n2. 逐个列出 MCP server、tool、读取对象与敏感字段；只启用 review 必需的 read-only tools。\n3. secrets 进入受控配置，不写入 skill、日志、PR 或模型可见示例。\n4. 用历史 PR 建正/负样本，核验评论是否确实由 skill/MCP 证据支持。\n5. 抽样检查评论中的 skill/MCP attribution，对无引用或上下文不足的发现降级为建议。\n6. 定期复核默认启用 server、权限漂移、误报率与撤权路径。\n\n## 边界\nGA 不证明 skill 内容正确；read-only 仍可能读取并外发敏感上下文，必须执行数据最小化。\n\n## 来源\n- GitHub, Copilot code review: Agent Skills and MCP now generally available: https://github.blog/changelog/2026-07-29-copilot-code-review-agent-skills-and-mcp-now-generally-available/\n- 发布日期：2026-07-29",
+    "description": "为 Copilot code review 建立版本化 skill、最小只读 MCP、来源归因抽检和误报回退流程。",
+    "scenario": "团队希望让 AI code review 理解内部规则和外部上下文，同时控制读取范围。",
+    "author": "GitHub · 2026-07-29",
+    "likes": 0,
+    "views": "0",
+    "comments": 0,
+    "titleEn": "Copilot Code Review Skills and Read-Only MCP Acceptance Skill",
+    "tagsEn": [
+      "Code Review",
+      "Agent Skills",
+      "Read-only MCP",
+      "Attribution",
+      "30-Day Selection"
+    ],
+    "descriptionEn": "Establishes versioned review skills, minimal read-only MCP context, attribution sampling, and false-positive fallback for Copilot code review.",
+    "scenarioEn": "Teams giving AI code review internal rules and external context while controlling the data it can read.",
+    "problemFocus": "Skill 与 MCP 能提高审查上下文，但缺少权限清单、归因核验和样本评测时也会把错误规则规模化。",
+    "problemFocusEn": "Skills and MCP improve review context but can scale incorrect rules without permission inventory, attribution checks, and sample evaluation.",
+    "createdAt": "2026-08-01 15:30:00",
+    "category": "skill"
   }
 ]

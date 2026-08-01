@@ -5,7 +5,7 @@ module: content
 topic: weekly-refresh
 status: stable
 created: 2026-06-02
-updated: 2026-07-22
+updated: 2026-08-01
 owner: self
 source: human+ai
 ---
@@ -623,3 +623,72 @@ Stars 为 2026-07-22 GitHub API 快照，不能单独证明成熟度。`JustVugg
 - [x] 线上六类计数为 209/322/87/87/90/105，总计 900；新增 GitHub ID `1307490`、`1307491` 可读取；legacy router 保持 `404 NOT_FOUND`。
 
 共宿主验收结果：`kg`、根域名、`video`、`mkt`、`person` 均为 200；`voc` 为预期的 302 登录跳转。旧 `promptforge_mysql` 始终保持 healthy 且仅在 `promptforge_net`，未删除或重启任何 DB 容器、网络或 volume，也未修改共享 nginx 配置。
+
+## 本轮 2026-08-01 四次近 30 天高质量增量记录
+
+本轮在已发布的 900 条基线上继续增量；检索窗口为 `2026-07-01` 到 `2026-08-01`。候选池保存在忽略目录 `tmp/outputs/tmp-content-refresh-30day-candidates-20260801-u4.json`，未加入正式资产。
+
+### Understand Anything 与当前架构边界
+
+- 当前 Codex 可发现 `lum1104/Understand-Anything` 的 `understand` 核心技能，官方 clone 仍位于 `~/.understand-anything/repo`，core build 产物存在。
+- 本项目没有正式 `.ua/` 图谱；按该技能规则，全量分析必须先生成并由用户确认 `.understandignore`。本轮没有绕过确认门禁，也没有把旧快照标成当前图谱。
+- 结合上一轮图谱导航和当前源码复核，canonical 内容源仍为 `app/src/data/catalogSource.json`；`generate-catalog.mjs` 生成六类静态 JSON 与 manifest，React 前端按类别加载，公开 Hono/tRPC 仍只暴露只读 `ping`。
+- 因而本轮继续采用 static-first 增量：只修改内容源、计数、派生目录、测试预期和发布记录；不启用 Drizzle/seed/migration，不增加 DB-backed 写 API。
+
+### 候选评分与入库
+
+| 类别 | 入库主题 | 主来源 | 评分 |
+| --- | --- | --- | ---: |
+| `prompt` | 高风险法律研究与证据核验 | OpenAI Academy · 2026-07-28 | 94 |
+| `prompt` | Codex Agentic Coding 增量 Steering 契约 | OpenAI Academy · 2026-07-31 | 92 |
+| `skill` | 可自动化工作流建模与批准点设计 | OpenAI Academy · 2026-07-30 | 95 |
+| `skill` | Copilot Code Review Skills + Read-only MCP | GitHub · 2026-07-29 | 95 |
+| `hook` | Actions 可疑 Workflow 人工审批 | GitHub · 2026-07-28 | 96 |
+| `hook` | Issue Agent 建议、置信度与理由门禁 | GitHub · 2026-07-23 | 91 |
+| `mcp` | MCP 2026-07-28 正式规范迁移闭环 | MCP 官方规范 · 2026-07-28 | 97 |
+| `mcp` | Waggle Agent Handoff Artifact | `modiqo/waggle` · 795 stars | 87 |
+| `agent` | AOS CE 可验证 Agent OS 试点 | `unicity-aos/aos-ce` · 8575 stars | 93 |
+| `agent` | Better Harness Work Loop 证据改进 | `QoderAI/better-harness` · 1337 stars | 90 |
+| `github` | OpenWorker 本地优先 AI Coworker | `andrewyng/openworker` · 11399 stars | 96 |
+| `github` | Codex Security 扫描与发布门禁 | `openai/codex-security` · 7863 stars | 97 |
+
+GitHub API stars/forks 快照采集于 2026-08-01 14:59–15:03（Asia/Shanghai），只能反映当时热度。12 条均使用不同主来源 URL，并按 URL、标题和语义用途与 900 条基线去重；每类 2 条。
+
+高 stars 未自动入库：`xai-org/grok-build` 和 `synthetic-sciences/openscience` 已存在；`JustVugg/colibri` 虽 21538 stars 但偏模型推理；`MoonshotAI/Kimi-K3` 偏模型资产且非 SPDX 许可；`MDX-Tom/gpt-5.6-instruct` 属 jailbreak prompt pack；`kvcache-ai/AgentENV` 明示尚无 authorization。上述项目均未占用本轮名额。
+
+本轮增量后本地内容规模为 912 条：
+
+- `prompt`: 211
+- `skill`: 324
+- `hook`: 89
+- `mcp`: 89
+- `agent`: 92
+- `github`: 107
+
+### 本地验证证据与依赖边界
+
+- `npm run verify` 最终通过：TypeScript、ESLint、catalog contract、49 个 Markdown 文档治理与链接检查、10 个 Vitest 文件共 36 个测试、Vite/API build 和 high audit 均为绿。
+- 首次 high audit 发现当日新增的 `brace-expansion`、`postcss` 与 `react-router` advisories；在不使用 `--force` 的前提下更新到 `brace-expansion` 1.1.18/2.1.4、`postcss` 8.5.25 和官方修复版 `react-router` 8.3.0，整套门禁复测通过。
+- React Router 8.3.0 要求 Node.js `>=22.22.0`，因此 production Docker 两阶段基座由 Node 20 固定为 `node:22.22-alpine`；容器内实测 Node 为 `v22.22.3`。应用仅使用 library-mode `HashRouter/Routes/Route/Link/Outlet`，未使用自定义 RSC entry。
+- `npm audit --omit=dev --audit-level=high` 退出码为 0；生产依赖仍有 `@hono/node-server` 的 1 个 moderate，自动修复需 `--force` 跨 major 到 2.x，本轮不扩张依赖升级范围。
+- 本地 production build 的 `npm run smoke:e2e` 为 11 项通过、1 项跳过、0 项失败，报告为 `tmp/outputs/smoke-e2e-report-20260801072747.json`；跳过项仅为本地地址不执行共宿主域名检查。
+- `docker compose config --services` 只输出 `app`；`bash -n deploy/deploy.sh` 与 `git diff --check` 通过。
+- production image `promptforge-app:predeploy` 构建通过，镜像 ID 为 `sha256:0e12cc49d12876222157ad97e474754a6e7412c366656fb1676c294694d6ab24`；容器内 manifest 为 211/324/89/89/92/107，总计 912。
+- Docker Hub metadata 连续发生 IPv6 OAuth timeout，ECR token 也返回 EOF；本地仅从可访问的 DaoCloud mirror 拉取同 digest Node 基座并重新标记为标准 `node:22.22-alpine`，Dockerfile 没有写入镜像源。基座 digest 为 `sha256:e58326d0d441090181ac150dc2078d3e2cf6a0d42e809aebba3ef5880935ffdd`。
+- 生产只读盘点通过：`promptforge_app`、`ai_video_nginx` 和旧 `promptforge_mysql` 均 healthy；MySQL 仍只在 `promptforge_net`，app/nginx 在 `lighthouse_ai_video_net`；远端 Compose 只含 `app`，`.env.prod` 为 `600`，`/opt` 可用空间约 92.5 GiB。
+- 远端 Docker Hub/认证端点同样超时且无 Node 22 缓存，但 DaoCloud registry IPv4 可达；发布时先拉取并核验同 digest 基座，再本地标记为标准 tag，之后才允许 app-only build。
+
+### Commit、Push、Deploy 与生产发布 TODO
+
+发布目标是把 912 条 static-first catalog 作为可追踪版本推送到 `origin/main`，只重建并替换 `promptforge_app`；不操作旧 `promptforge_mysql`、`promptforge_net`、volume、共享 nginx 或其他共宿主服务。
+
+- [x] 重新生成六类静态目录并验证 manifest 为 912 条。
+- [x] 完成 `git diff --check`、TypeScript、ESLint、catalog/docs contract、Vitest、build 和依赖安全门禁。
+- [x] 启动本地 production build 并完成 E2E smoke；验证只读 tRPC 和 legacy router 边界。
+- [x] 完成 app-only Compose 配置检查和 production Docker image 构建；核对镜像内 manifest。
+- [x] 校验 `DDDD.pem` 存在、权限 `600` 且被忽略；只记录公钥指纹，不读取或记录私钥正文。
+- [x] 生产只读盘点 app、nginx、MySQL、network、env 权限和共宿主状态。
+- [ ] 精确 stage 正式文件，排除用户草稿、`tmp/`、PEM、env、secrets 和其他无关改动；创建中文原子 commit 并 push。
+- [ ] 创建远端备份和 rollback image tag，使用 `deploy.sh --smoke` 执行 app-only 部署。
+- [ ] 独立 E8 验收容器 health、nginx、线上 912 条计数、新 ID、legacy 404、env `600`、app-only Compose 和共宿主服务。
+- [ ] 将实际 commit、image、smoke 与回滚证据回填本节，再创建 docs-only evidence commit 并 push。

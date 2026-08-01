@@ -12,12 +12,12 @@ import {
 import { CATEGORY_COUNTS } from "./catalogMeta";
 
 const expectedCounts: Record<Category, number> = {
-  prompt: 209,
-  skill: 322,
-  hook: 87,
-  mcp: 87,
-  agent: 90,
-  github: 105,
+  prompt: 211,
+  skill: 324,
+  hook: 89,
+  mcp: 89,
+  agent: 92,
+  github: 107,
 };
 
 const sampleItems: Item[] = [
