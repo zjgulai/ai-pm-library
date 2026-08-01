@@ -14,6 +14,7 @@ const checkCohosts = readBool(
   process.env.PROMPTFORGE_SMOKE_CHECK_COHOSTS,
   baseHost === 'kg.lute-tlz-dddd.top',
 )
+const bypassBrowserProxy = readBool(process.env.PROMPTFORGE_SMOKE_BYPASS_PROXY, false)
 const writeScreenshots = readBool(process.env.PROMPTFORGE_SMOKE_SCREENSHOTS, true)
 const outputPath = resolve(
   process.env.PROMPTFORGE_SMOKE_OUTPUT_PATH ?? `${projectRoot}/tmp/outputs/smoke-e2e-report-${runId}.json`,
@@ -38,6 +39,7 @@ let catalogCountsCache = null
 const report = {
   baseUrl,
   runId,
+  bypassBrowserProxy,
   startedAt: new Date().toISOString(),
   checks: [],
   screenshots: [],
@@ -114,9 +116,13 @@ async function loadCatalogCountsFromAssets() {
 }
 
 async function launchBrowser() {
+  const browserArgs = [
+    '--disable-gpu',
+    ...(bypassBrowserProxy ? ['--no-proxy-server'] : []),
+  ]
   const attempts = [
-    { label: 'bundled chromium', options: { headless: true, args: ['--disable-gpu'] } },
-    { label: 'system chrome', options: { channel: 'chrome', headless: true, args: ['--disable-gpu'] } },
+    { label: 'bundled chromium', options: { headless: true, args: browserArgs } },
+    { label: 'system chrome', options: { channel: 'chrome', headless: true, args: browserArgs } },
   ]
   const failures = []
 

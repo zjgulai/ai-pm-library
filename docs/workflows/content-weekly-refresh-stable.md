@@ -765,7 +765,18 @@ Stars 为 2026-08-01 GitHub API 快照，只用作活跃度/采用面信号，�
 - [x] 使用根目录 `DDDD.pem` 校验 SSH 可达、权限 `600` 与公钥指纹，不记录私钥正文。
 - [x] 现场确认远端 Compose 仅含 `app`；app/nginx/MySQL 均 healthy，旧 MySQL 仍只在 `promptforge_net`，env 为 `600`。
 - [x] 通过完整本地门禁与 production image 内 manifest 验收。
-- [ ] 精确暂存本轮 924 条内容、派生目录、计数、报告和工作流，排除用户既有跨境电商草稿。
-- [ ] 创建中文原子 commit、push 到 `origin/main` 并核对远端 SHA。
-- [ ] 创建远端备份与 rollback image tag，只执行 app-only deploy，不使用 `--remove-orphans`。
-- [ ] 独立验收公网/容器目录计数、健康、nginx、只读 API、legacy 404、env 权限和共宿主服务。
+- [x] 精确暂存本轮 924 条内容、派生目录、计数、报告和工作流，排除用户既有跨境电商草稿。
+- [x] 创建中文原子 commit、push 到 `origin/main` 并核对远端 SHA。
+- [x] 创建远端备份与 rollback image tag，只执行 app-only deploy，不使用 `--remove-orphans`。
+- [x] 独立验收公网/容器目录计数、健康、nginx、只读 API、legacy 404、env 权限和共宿主服务。
+
+### Commit、部署与独立 E8 证据
+
+- 内容原子 commit 为 `597d8fb218c0d9ab7a53ee69096dcb96a44f7f74`，已 push 到 `origin/main`，远端 SHA 与本地一致；提交仅含 14 个本轮正式文件，用户既有跨境电商草稿、`tmp/`、PEM、env 和 secrets 均未入库。
+- 部署前备份为 `/opt/promptforge/.deploy-backups/20260801204020-597d8fb-x-bookmarks`，目录权限 `700`、内部证据文件为 `600`；旧生产镜像保留为 `promptforge_app:rollback-20260801204020-597d8fb`，指向 `sha256:6a19ab0e37acdf5d7e83c2719ee4ed722669921474fe8126881a2699126ce177`。
+- `deploy.sh --smoke` 只同步、构建和替换 `promptforge_app`。Compose 报告 `promptforge_mysql` 为 orphan，但没有使用 `--remove-orphans`；旧 MySQL 未重启，仍使用 `sha256:6cd09145362dfe6831b14545de3d5fd6cc75c37cfd6ef8561429c1fc73518b39` 且只在 `promptforge_net`。
+- 新生产镜像为 `sha256:e6b74c063aab5cd060acf6ee6227945c145391f78aedbaa1416b7053fe65fe98`；`promptforge_app` 为 healthy、Node 为 `v22.22.3`，只连接 `lighthouse_ai_video_net`。容器 ping、nginx-to-app 与 `nginx -t` 均通过，app 日志无运行错误。
+- 部署脚本内首轮与第一次原样复测的静态目录、只读 API、共宿主检查通过，但 System Chrome 继承 macOS 系统代理后稳定出现 `ERR_CONNECTION_RESET`/导航超时；同机 HTTP/1.1、HTTP/2、Node fetch 和容器链路均为 200。用独立 Playwright 对照确认 `--no-proxy-server` 后页面稳定 200，因此新增默认关闭的 `PROMPTFORGE_SMOKE_BYPASS_PROXY` 显式开关，不改变默认代理策略。
+- 启用该开关后的 `npm run smoke:e2e:prod` 12 项全部通过，报告为 `tmp/outputs/smoke-e2e-report-20260801125023.json`；桌面/移动路由、搜索、筛选、展开、复制、console、静态目录、只读 tRPC 与共宿主检查均为绿。
+- 独立 E8：容器与公网 manifest 均为 213/326/91/91/94/109，总计 924；新增 ID `1307504`、`1307515` 可读取；legacy `prompts.list` 为 `404 NOT_FOUND`；`.env.prod` 为 `600`，远端 Compose 仍只含 `app`。
+- 共宿主最终状态：`kg`、根域名、`video`、`person` 为 200；`mkt` 为指向共享登录页的 302；`voc` 为指向 Superset welcome 的 302。共享 nginx 配置未修改。
