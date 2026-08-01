@@ -688,7 +688,19 @@ GitHub API stars/forks 快照采集于 2026-08-01 14:59–15:03（Asia/Shanghai�
 - [x] 完成 app-only Compose 配置检查和 production Docker image 构建；核对镜像内 manifest。
 - [x] 校验 `DDDD.pem` 存在、权限 `600` 且被忽略；只记录公钥指纹，不读取或记录私钥正文。
 - [x] 生产只读盘点 app、nginx、MySQL、network、env 权限和共宿主状态。
-- [ ] 精确 stage 正式文件，排除用户草稿、`tmp/`、PEM、env、secrets 和其他无关改动；创建中文原子 commit 并 push。
-- [ ] 创建远端备份和 rollback image tag，使用 `deploy.sh --smoke` 执行 app-only 部署。
-- [ ] 独立 E8 验收容器 health、nginx、线上 912 条计数、新 ID、legacy 404、env `600`、app-only Compose 和共宿主服务。
-- [ ] 将实际 commit、image、smoke 与回滚证据回填本节，再创建 docs-only evidence commit 并 push。
+- [x] 精确 stage 正式文件，排除用户草稿、`tmp/`、PEM、env、secrets 和其他无关改动；创建中文原子 commit 并 push。
+- [x] 创建远端备份和 rollback image tag，使用 `deploy.sh --smoke` 执行 app-only 部署。
+- [x] 独立 E8 验收容器 health、nginx、线上 912 条计数、新 ID、legacy 404、env `600`、app-only Compose 和共宿主服务。
+- [x] 将实际 commit、image、smoke 与回滚证据回填本节，并创建证据补充 commit 后 push。
+
+### Commit、部署与独立 E8 证据
+
+- 内容与依赖原子 commit 为 `38324b70f564ef8298ed1283c24d4512fa90b3d6`，已 push 到 `origin/main`，远端 SHA 与本地一致；提交仅含 16 个正式文件，用户草稿和忽略目录均未入库。
+- 部署前备份为 `/opt/promptforge/.deploy-backups/20260801153934-38324b7-content-release`，目录权限 `700`；旧镜像保留为 `promptforge_app:rollback-20260801153934-38324b7`，指向 `sha256:fb8624c5d6b291e6022452ac590f52064fe477c5058802a239db54c70aa3dd7d`。
+- `deploy.sh --smoke` 只同步/构建/替换 `app`。Compose 报告旧 MySQL 为 orphan，但没有使用 `--remove-orphans`；旧 `promptforge_mysql` 没有删除、重启或换网。
+- 新生产镜像为 `sha256:6a19ab0e37acdf5d7e83c2719ee4ed722669921474fe8126881a2699126ce177`，容器 `promptforge_app` 为 `running/healthy`，Node 为 `v22.22.3`，只连接 `lighthouse_ai_video_net`。
+- 部署脚本首次 production smoke 的 PromptForge 11 项功能均通过，但因 `mkt` 返回正常共享登录 302 而触发旧断言失败。验收脚本随后改为：`mkt` 的 302 只允许指向 `https://lute-tlz-dddd.top/login.html`，`voc` 的 302 只允许指向 `/superset/`；不是无条件放宽 3xx。
+- 更新后的 `npm run smoke:e2e:prod` 12 项全部通过，报告为 `tmp/outputs/smoke-e2e-report-20260801074706.json`；桌面/移动端路由、搜索、筛选、展开、复制、console、只读 tRPC 和共宿主检查均为绿。
+- 独立 E8：容器内 manifest 与公网 manifest 均为 211/324/89/89/92/107，总计 912；新增 GitHub ID `1307502`、`1307503` 可读取；legacy `prompts.list` 为 `404 NOT_FOUND`；容器内 ping 和 nginx-to-app 均为 200，`nginx -t` 成功。
+- `.env.prod` 保持 `600`，远端 Compose 仍只含 `app`。`promptforge_mysql` 继续使用部署前镜像 `sha256:6cd09145362dfe6831b14545de3d5fd6cc75c37cfd6ef8561429c1fc73518b39`，状态 healthy 且只在 `promptforge_net`。
+- 共宿主最终状态：`kg`、根域名、`video`、`person` 为 200；`mkt` 为指向共享登录页的 302；`voc` 为指向 Superset welcome 的 302。共享 nginx 配置未修改。

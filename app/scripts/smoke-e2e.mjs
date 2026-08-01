@@ -246,15 +246,30 @@ async function runStaticAndApiChecks() {
   await step('co-hosted domains survive nginx promptforge mapping', async () => {
     const targets = [
       { url: 'https://video.lute-tlz-dddd.top/', allowed: [200] },
-      { url: 'https://mkt.lute-tlz-dddd.top/', allowed: [200] },
+      {
+        url: 'https://mkt.lute-tlz-dddd.top/',
+        allowed: [200, 302],
+        redirectPrefixes: ['https://lute-tlz-dddd.top/login.html'],
+      },
       { url: 'https://lute-tlz-dddd.top/', allowed: [200] },
-      { url: 'https://voc.lute-tlz-dddd.top/', allowed: [200, 302] },
+      {
+        url: 'https://voc.lute-tlz-dddd.top/',
+        allowed: [200, 302],
+        redirectPrefixes: ['/superset/', 'https://voc.lute-tlz-dddd.top/superset/'],
+      },
     ]
     const statuses = []
     for (const target of targets) {
       const response = await fetch(target.url, { redirect: 'manual' })
       statuses.push(`${target.url}:${response.status}`)
       assert(target.allowed.includes(response.status), `${target.url} status ${response.status}`)
+      if (response.status >= 300 && response.status < 400) {
+        const location = response.headers.get('location') || ''
+        assert(
+          target.redirectPrefixes?.some((prefix) => location.startsWith(prefix)),
+          `${target.url} unexpected redirect ${location || '(missing location)'}`,
+        )
+      }
     }
     return { statuses }
   })
