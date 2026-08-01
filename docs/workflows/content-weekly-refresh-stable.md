@@ -704,3 +704,68 @@ GitHub API stars/forks 快照采集于 2026-08-01 14:59–15:03（Asia/Shanghai�
 - 独立 E8：容器内 manifest 与公网 manifest 均为 211/324/89/89/92/107，总计 912；新增 GitHub ID `1307502`、`1307503` 可读取；legacy `prompts.list` 为 `404 NOT_FOUND`；容器内 ping 和 nginx-to-app 均为 200，`nginx -t` 成功。
 - `.env.prod` 保持 `600`，远端 Compose 仍只含 `app`。`promptforge_mysql` 继续使用部署前镜像 `sha256:6cd09145362dfe6831b14545de3d5fd6cc75c37cfd6ef8561429c1fc73518b39`，状态 healthy 且只在 `promptforge_net`。
 - 共宿主最终状态：`kg`、根域名、`video`、`person` 为 200；`mkt` 为指向共享登录页的 302；`voc` 为指向 Superset welcome 的 302。共享 nginx 配置未修改。
+
+## 2026-08-01 X 全量书签增量（924 条）
+
+本轮根据用户已登录的本地 X 书签页执行全量采集，不沿用“14 条”抽样结论。最终获得 166 条唯一 status URL；到达页尾的证据为连续 10 次 Page Down 无新增、3 次 End 无新增及 X footer 可见。原始盘点保存在忽略文件 `tmp/tmp-x-bookmarks-inventory-20260801-full.json`，正式分析见 `drafts/analysis/content-x-bookmarks-taxonomy-draft-20260801.md`。
+
+### 全量分类与门禁
+
+- 最近 1 个月窗口（2026-07-02—2026-08-01）：124 条；窗口外保留审计：42 条。
+- 六类分布：prompt 12、skill 36、hook 16、mcp 10、agent 31、github 61。
+- 初筛：accept 64、defer 52、reject 50；accept 仅代表进入官方溯源候选，不等于入库。
+- 识别 13 组语义重复、6 条无正文记录；#119 OpenWiki 与当前 catalog 精确重复。
+- 盗版/付费墙绕过、系统提示词泄露、反检测、安全控制绕过、未验证医疗建议及纯广告内容按硬门禁拒绝。
+- 抓取、浏览器登录态、OSINT、金融、声音克隆、桌面命令和社交 API 候选默认 defer，等待授权、ToS、隐私和隔离实测。
+
+### 官方溯源与入库
+
+X 仅作为 T4 发现层。最终 12 条全部回到官方仓库或研究页面，复核 title/URL/语义去重、stars、license、近期 push/release，并将安全边界写入可执行内容。
+
+| 类别 | 入库主题 | 主来源 | 评分 |
+| --- | --- | --- | ---: |
+| `prompt` | 产品系统拆解：JTBD、核心循环与下一步机会 | `yanliudesign/product-teardown-skill` | 89 |
+| `prompt` | 女性人像约束锁定、风格路由与负面约束 | `liyue-aigc/female-portrait-director` · 1242 stars | 90 |
+| `skill` | SkillOpt 验证门控的 Agent Skill 优化 | `microsoft/SkillOpt` · 15448 stars | 98 |
+| `skill` | book-to-skill 技术资料渐进披露蒸馏 | `virgiliojr94/book-to-skill` · 14490 stars | 94 |
+| `hook` | OpenSpec Plus 规格就绪与 TDD 分片门禁 | `sudokar/openspec-plus` · 139 stars | 88 |
+| `hook` | BrowserAct 敏感浏览器动作确认与人工接管 | `browser-act/skills` · 5053 stars | 91 |
+| `mcp` | Desktop Commander 本机终端与文件权限评估 | `wonderwhy-er/DesktopCommanderMCP` · 9028 stars | 92 |
+| `mcp` | Langflow Agent Flow 转 MCP Tool 发布验收 | `langflow-ai/langflow` · 152698 stars | 96 |
+| `agent` | DeepTutor 终身个性化学习 Agent 试点 | `HKUDS/DeepTutor` · 31706 stars | 96 |
+| `agent` | Fractal 递归分层 Agent Loop 安全试点 | `plasma-ai/fractal` · 652 stars | 84 |
+| `github` | MarkItDown 多格式文档转 Markdown 安全评估 | `microsoft/markitdown` · 170592 stars | 98 |
+| `github` | CLI-Anything GUI 软件 Agent-Native Harness 评估 | `HKUDS/CLI-Anything` · 46448 stars | 95 |
+
+Stars 为 2026-08-01 GitHub API 快照，只用作活跃度/采用面信号，不能替代 license、安全和适配性验证。Product Teardown 仓库未声明 license，本条只抽象通用方法结构，不复制代码、HTML 或品牌模板。
+
+本轮增量后本地内容规模为 924 条：
+
+- `prompt`: 213
+- `skill`: 326
+- `hook`: 91
+- `mcp`: 91
+- `agent`: 94
+- `github`: 109
+
+### 本轮执行边界与验证证据
+
+- 内容整理批次先完成本地增量；后续发布批次在重新通过远端只读门禁后，获用户“继续下一批”授权执行 commit、push、app-only deploy 与独立 E8。发布前线上仍以已发布的 912 条版本为准。
+- 用户既有草稿 `drafts/analysis/promptforge-crossborder-ecommerce-value-report-draft-20260630.md` 未修改、未暂存。
+- Deep Research 报告门禁通过：required sections、编号引用、完整 bibliography、占位符、截断、来源数量和链接检查均为绿；16/16 个官方引用 URL 可访问，0 suspicious、0 unverified。
+- `npm run verify` 通过：TypeScript、ESLint、catalog contract、50 个 Markdown 文档治理与链接检查、10 个 Vitest 文件共 36 个测试、Vite/API build 与 high audit 均为绿。
+- high audit 仍报告既有 `@hono/node-server` 2 个 moderate advisory，当前无可用修复；high 级退出码为 0，本轮没有为内容更新扩张依赖升级范围。
+- 本地 production build 的 `npm run smoke:e2e` 为 11 项通过、1 项跳过、0 项失败；报告为 `tmp/outputs/smoke-e2e-report-20260801095615.json`，跳过项仅为本地地址不执行共宿主域名检查。
+- `git diff --check` 通过；生成 manifest 为 213/326/91/91/94/109，总计 924。
+- 发布批次再次执行 `npm run verify`、`bash -n deploy/deploy.sh` 与 app-only Compose 检查，均通过；第一次从仓库根目录误执行 `npm run verify` 仅因根目录无 `package.json` 退出，切换到 `app/` 后原命令完整通过。
+- production image `promptforge-app:predeploy` 构建通过，镜像 ID 为 `sha256:d26e86a31fd3dc98a1e9a242ee44c5b40275da99c08e7fe66471daaa61e4fe6c`；镜像内 Node 为 `v22.22.3`，manifest 为 213/326/91/91/94/109，总计 924。
+
+### Commit、Push、Deploy 与生产验收 TODO
+
+- [x] 使用根目录 `DDDD.pem` 校验 SSH 可达、权限 `600` 与公钥指纹，不记录私钥正文。
+- [x] 现场确认远端 Compose 仅含 `app`；app/nginx/MySQL 均 healthy，旧 MySQL 仍只在 `promptforge_net`，env 为 `600`。
+- [x] 通过完整本地门禁与 production image 内 manifest 验收。
+- [ ] 精确暂存本轮 924 条内容、派生目录、计数、报告和工作流，排除用户既有跨境电商草稿。
+- [ ] 创建中文原子 commit、push 到 `origin/main` 并核对远端 SHA。
+- [ ] 创建远端备份与 rollback image tag，只执行 app-only deploy，不使用 `--remove-orphans`。
+- [ ] 独立验收公网/容器目录计数、健康、nginx、只读 API、legacy 404、env 权限和共宿主服务。

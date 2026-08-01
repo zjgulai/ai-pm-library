@@ -2,27 +2,27 @@
   "generatedFrom": "src/data/catalogSource.json",
   "categories": {
     "prompt": {
-      "count": 211,
+      "count": 213,
       "path": "/catalog/prompt.json"
     },
     "skill": {
-      "count": 324,
+      "count": 326,
       "path": "/catalog/skill.json"
     },
     "hook": {
-      "count": 89,
+      "count": 91,
       "path": "/catalog/hook.json"
     },
     "mcp": {
-      "count": 89,
+      "count": 91,
       "path": "/catalog/mcp.json"
     },
     "agent": {
-      "count": 92,
+      "count": 94,
       "path": "/catalog/agent.json"
     },
     "github": {
-      "count": 107,
+      "count": 109,
       "path": "/catalog/github.json"
     }
   }

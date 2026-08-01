@@ -10338,5 +10338,75 @@
     "problemFocusEn": "Skills and MCP improve review context but can scale incorrect rules without permission inventory, attribution checks, and sample evaluation.",
     "createdAt": "2026-08-01 15:30:00",
     "category": "skill"
+  },
+  {
+    "id": 1307506,
+    "title": "SkillOpt：验证门控的 Agent Skill 优化技能",
+    "role": "developer",
+    "tags": [
+      "Agent Skills",
+      "Skill Optimization",
+      "Validation Gate",
+      "Self-Evolving",
+      "Evaluation",
+      "高Stars"
+    ],
+    "content": "## 目标\n把 skill 文档视为冻结模型之外的可训练状态，但任何改写都必须通过独立验证集。\n\n## 优化循环\n1. 固定任务集、基线 skill、模型、预算与评分器。\n2. 在训练任务上执行 rollout，保存输入、工具轨迹、结果和失败类型。\n3. 汇总反思，只提出 bounded edits，不允许无界重写。\n4. 在 held-out tasks 上比较候选与当前 `best_skill.md`；只有预设指标提高且无安全回归才晋升。\n5. 保存 rejected-edit buffer、版本、成本和回滚点，防止重复尝试失败变体。\n6. 离线演化前脱敏历史会话，排除 secrets、客户数据和未经授权内容。\n\n## 来源\n- microsoft/SkillOpt: https://github.com/microsoft/SkillOpt\n- Microsoft Research: https://www.microsoft.com/en-us/research/blog/skillopt-agent-skills-as-trainable-parameters/\n- X 书签线索: https://x.com/opensourcelab9/status/2080057809950150778\n- Stars 快照：15448；近期 push：2026-07-29；License: MIT。项目性能数字须在自有任务集复验。",
+    "description": "用 rollout、受限编辑、独立验证集和 best-skill 晋升规则约束 Agent Skill 的自动优化。",
+    "scenario": "团队希望让编码、研究或运营 Skill 持续改进，同时避免从训练样例过拟合或污染稳定版本。",
+    "author": "Microsoft SkillOpt · 2026-08-01",
+    "likes": 15448,
+    "views": "15.4K",
+    "comments": 0,
+    "titleEn": "SkillOpt: Validation-Gated Agent-Skill Optimization",
+    "tagsEn": [
+      "Agent Skills",
+      "Skill Optimization",
+      "Validation Gate",
+      "Self-Evolving",
+      "Evaluation",
+      "High Stars"
+    ],
+    "descriptionEn": "Constrains automated Agent Skill improvement with rollouts, bounded edits, held-out evaluation, and best-skill promotion.",
+    "scenarioEn": "Teams continuously improving coding, research, or operations skills without overfitting training examples or corrupting stable versions.",
+    "problemFocus": "没有独立验证和版本晋升门禁的自改进 Skill 容易过拟合少量轨迹，并把偶然成功写回稳定配置。",
+    "problemFocusEn": "Self-improving skills without held-out validation and promotion gates can overfit a few trajectories and persist accidental wins.",
+    "createdAt": "2026-08-01 18:15:00",
+    "category": "skill"
+  },
+  {
+    "id": 1307507,
+    "title": "book-to-skill：技术资料渐进披露蒸馏技能",
+    "role": "researcher",
+    "tags": [
+      "知识蒸馏",
+      "Technical Books",
+      "Progressive Disclosure",
+      "SKILL.md",
+      "Source Grounding",
+      "高Stars"
+    ],
+    "content": "## 目标\n把已获授权的技术书、文档目录或多来源集合转换成按需加载的 Skill，而不是把整本资料塞入上下文。\n\n## 蒸馏步骤\n1. 记录输入来源、版本、许可和允许的再分发范围；权利不明则只生成私人索引。\n2. 建立章节地图、术语表、模式清单和引用锚点，保留原文定位。\n3. 将核心 `SKILL.md` 控制在入口与路由层，把细节拆到章节、patterns、glossary 和 cheatsheet。\n4. 每个结论回链原章节；抽样核对数字、限制、代码与反例，降低无依据扩写。\n5. 用真实任务测试渐进披露是否能找到正确章节，并记录遗漏与冲突。\n6. 上游更新时只重建受影响分片，保留旧版本和差异说明。\n\n## 来源\n- virgiliojr94/book-to-skill: https://github.com/virgiliojr94/book-to-skill\n- X 书签线索: https://x.com/XAMTO_AI/status/2082539152101331094\n- Stars 快照：14490；近期 push：2026-07-31；License: MIT。代码许可不等于输入书籍可再分发。",
+    "description": "把获授权的技术资料拆成可追溯、按需加载、可增量更新的 Skill 知识结构。",
+    "scenario": "研究者或工程团队希望把长篇技术资料转为 Codex、Claude Code 等 Agent 可调用的知识技能。",
+    "author": "X Bookmarks · book-to-skill · 2026-08-01",
+    "likes": 14490,
+    "views": "14.5K",
+    "comments": 0,
+    "titleEn": "book-to-skill: Progressive-Disclosure Distillation for Technical Sources",
+    "tagsEn": [
+      "Knowledge Distillation",
+      "Technical Books",
+      "Progressive Disclosure",
+      "SKILL.md",
+      "Source Grounding",
+      "High Stars"
+    ],
+    "descriptionEn": "Turns authorized technical sources into traceable, on-demand, incrementally maintainable skill knowledge.",
+    "scenarioEn": "Researchers and engineering teams converting long technical materials into agent-callable skills for Codex or Claude Code.",
+    "problemFocus": "把长文整体注入上下文既浪费 token 又难追溯，而无来源锚点的摘要会放大遗漏、幻觉和版权风险。",
+    "problemFocusEn": "Injecting entire books wastes context and hurts traceability, while source-free summaries amplify omissions, hallucinations, and copyright risk.",
+    "createdAt": "2026-08-01 18:15:00",
+    "category": "skill"
   }
 ]

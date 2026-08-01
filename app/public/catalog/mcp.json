@@ -2935,5 +2935,75 @@
     "problemFocusEn": "Copying full context across agents is costly and stale, while reference tokens without tenancy, TTL, and revocation create a new leakage path.",
     "createdAt": "2026-08-01 15:30:00",
     "category": "mcp"
+  },
+  {
+    "id": 1307510,
+    "title": "Desktop Commander MCP：本机终端与文件权限评估",
+    "role": "developer",
+    "tags": [
+      "MCP",
+      "Desktop Commander",
+      "Terminal",
+      "Filesystem",
+      "Least Privilege",
+      "高Stars"
+    ],
+    "content": "## 项目定位\nDesktop Commander MCP 同时覆盖终端、文件搜索、diff 编辑、日志读取和后台进程，因此应按高权限执行面评估。\n\n## 试点步骤\n1. 仅连接 disposable workspace，固定允许 roots 和明确命令 allowlist。\n2. 分离只读与写入工具；搜索、读取和状态检查优先，编辑前展示 diff，命令先 dry-run。\n3. 默认拒绝 home、SSH、浏览器资料、env、系统目录、生产配置和网络凭据。\n4. 对子进程、后台服务、网络访问、超时、输出大小和并发设上限。\n5. 构造路径越界、命令注入、symlink、日志泄密和失控进程测试。\n6. 保留调用审计、变更前后证据和撤权路径；隔离试点通过前不接真实工作区。\n\n## 来源\n- wonderwhy-er/DesktopCommanderMCP: https://github.com/wonderwhy-er/DesktopCommanderMCP\n- X 书签线索: https://x.com/yunxi0623/status/2075551241749561582\n- Stars 快照：9028；近期 push：2026-07-30；License: MIT。",
+    "description": "按高权限执行面评估终端、文件、日志和进程一体化 MCP，固定 roots、命令、网络与审计边界。",
+    "scenario": "开发团队希望让 AI 操作本机项目，但需要避免其触达 home、凭据、系统目录或生产环境。",
+    "author": "Desktop Commander MCP · 2026-08-01",
+    "likes": 9028,
+    "views": "9.0K",
+    "comments": 0,
+    "titleEn": "Desktop Commander MCP Local-Terminal and Filesystem Permission Evaluation",
+    "tagsEn": [
+      "MCP",
+      "Desktop Commander",
+      "Terminal",
+      "Filesystem",
+      "Least Privilege",
+      "High Stars"
+    ],
+    "descriptionEn": "Evaluates an integrated terminal, file, log, and process MCP as a privileged execution surface with fixed roots, commands, networking, and audits.",
+    "scenarioEn": "Engineering teams letting AI operate local projects without exposing home directories, credentials, system paths, or production environments.",
+    "problemFocus": "终端与文件工具组合后权限会相乘，单一文件 root 无法约束子进程、网络、日志和间接凭据读取。",
+    "problemFocusEn": "Combining terminal and filesystem tools multiplies privilege; a file root alone cannot constrain subprocesses, networking, logs, or indirect credential access.",
+    "createdAt": "2026-08-01 18:15:00",
+    "category": "mcp"
+  },
+  {
+    "id": 1307511,
+    "title": "Langflow：Agent Flow 转 MCP Tool 发布验收",
+    "role": "developer",
+    "tags": [
+      "Langflow",
+      "MCP",
+      "Agent Builder",
+      "Workflow",
+      "Tool Contract",
+      "高Stars"
+    ],
+    "content": "## 目标\n选择一个低风险 Langflow flow 暴露为单一 MCP tool，并把可视化流程转成可测试的工具契约。\n\n## 验收步骤\n1. 固定 Langflow 版本、flow 导出和所有 component 版本，不默认信任 community component。\n2. 定义最窄 input/output schema、身份、密钥来源、只读或写入副作用。\n3. 设置并发、超时、重试、幂等、速率限制和结构化错误码。\n4. 用正常、边界、恶意输入和依赖失败样例验证 tool-call 结果与 trace。\n5. 生产写操作必须有认证、授权、审计和人工批准，不将整个 workspace 暴露为工具集合。\n6. 发布前演练密钥轮换、撤权、版本回滚和旧客户端兼容。\n\n## 来源\n- langflow-ai/langflow: https://github.com/langflow-ai/langflow\n- X 书签线索: https://x.com/Ryrenz/status/2075459754302808123\n- Stars 快照：152698；近期 push：2026-08-01；License: MIT。",
+    "description": "把低风险 Langflow flow 发布为有 schema、权限、副作用、trace 和回滚边界的 MCP tool。",
+    "scenario": "低代码 Agent 团队希望将可视化流程供其他 Agent 调用，同时保留生产级工具契约。",
+    "author": "Langflow · 2026-08-01",
+    "likes": 152698,
+    "views": "152.7K",
+    "comments": 0,
+    "titleEn": "Langflow Agent-Flow to MCP-Tool Release Acceptance",
+    "tagsEn": [
+      "Langflow",
+      "MCP",
+      "Agent Builder",
+      "Workflow",
+      "Tool Contract",
+      "High Stars"
+    ],
+    "descriptionEn": "Publishes one low-risk Langflow flow as an MCP tool with explicit schemas, permissions, side effects, traces, and rollback.",
+    "scenarioEn": "Low-code agent teams exposing visual workflows to other agents while preserving a production-grade tool contract.",
+    "problemFocus": "可视化 flow 能运行不代表适合成为公共工具；缺少 schema、权限和副作用契约时错误会跨 Agent 扩散。",
+    "problemFocusEn": "A runnable visual flow is not automatically a safe shared tool; without schemas, permissions, and side-effect contracts, failures spread across agents.",
+    "createdAt": "2026-08-01 18:15:00",
+    "category": "mcp"
   }
 ]

@@ -2937,5 +2937,75 @@
     "problemFocusEn": "Issue automation without rationale, confidence, and a review queue can silently spread misclassification and corrupt project views.",
     "createdAt": "2026-08-01 15:30:00",
     "category": "hook"
+  },
+  {
+    "id": 1307508,
+    "title": "OpenSpec Plus 规格就绪与 TDD 分片门禁 Hook",
+    "role": "developer",
+    "tags": [
+      "OpenSpec",
+      "Spec-Driven Development",
+      "TDD",
+      "Vertical Slice",
+      "Quality Gate",
+      "书签精选"
+    ],
+    "content": "## 触发阶段\n在 proposal → spec → design → tasks → apply 的每次状态迁移前触发。\n\n## 阻断条件\n1. 问题、用户、范围与非目标尚未明确。\n2. 验收场景无法写成可测试的输入、行为和结果。\n3. 关键设计取舍及影响未获用户确认。\n4. tasks 未拆成可独立验证、可回滚的 vertical slices。\n5. 实现前没有失败测试，或测试/验证失败被静默绕过。\n\n## 每个 Slice 的证据\n- 对应 spec 与验收场景\n- 先失败后通过的测试或等价可复验证据\n- 实际 diff 与无关变更检查\n- 失败升级、回滚和未解决项\n\n安装或升级前先备份目标 skill 目录；任何覆盖必须展示目标路径并经人工确认。\n\n## 来源\n- sudokar/openspec-plus: https://github.com/sudokar/openspec-plus\n- X 书签线索: https://x.com/AISuperDomain/status/2080450323861393567\n- Stars 快照：139；近期 push：2026-07-23；License: MIT。",
+    "description": "在 OpenSpec 各阶段迁移前检查问题发现、可测场景、设计确认、vertical slice 与 TDD 证据。",
+    "scenario": "使用 spec-driven development 管理 AI 编码任务，并希望阻止模糊需求直接进入实现。",
+    "author": "X Bookmarks · OpenSpec Plus · 2026-08-01",
+    "likes": 139,
+    "views": "139",
+    "comments": 0,
+    "titleEn": "OpenSpec Plus Spec-Readiness and TDD Vertical-Slice Gate Hook",
+    "tagsEn": [
+      "OpenSpec",
+      "Spec-Driven Development",
+      "TDD",
+      "Vertical Slice",
+      "Quality Gate",
+      "Bookmark Selection"
+    ],
+    "descriptionEn": "Checks problem discovery, testable scenarios, design approval, vertical slices, and TDD evidence before OpenSpec phase transitions.",
+    "scenarioEn": "Teams using spec-driven development for AI coding and preventing ambiguous requirements from flowing directly into implementation.",
+    "problemFocus": "规格流程如果只产生文档而没有状态门禁、可测场景和分片证据，仍会把需求歧义推迟到实现阶段。",
+    "problemFocusEn": "A specification process without transition gates, testable scenarios, and slice evidence merely postpones ambiguity until implementation.",
+    "createdAt": "2026-08-01 18:15:00",
+    "category": "hook"
+  },
+  {
+    "id": 1307509,
+    "title": "BrowserAct 敏感浏览器动作确认与人工接管 Hook",
+    "role": "operations",
+    "tags": [
+      "BrowserAct",
+      "Browser Automation",
+      "Confirmation Gate",
+      "Human Handoff",
+      "Session Isolation",
+      "高Stars"
+    ],
+    "content": "## 触发时机\n浏览器任务启动、身份或登录态变化，以及任何可能产生外部副作用的动作之前。\n\n## Hook 流程\n1. 固定授权身份、允许域名、页面、动作、数据范围和输出 schema。\n2. 默认先读后写；Cookie、密码、OTP 和支付信息不得进入 prompt 或日志。\n3. 浏览器创建/删除、登录态导入、2FA/CAPTCHA、付款、发布、账号设置、授权和数据删除一律标记 `NEEDS_APPROVAL` 或转人工。\n4. 禁止使用反检测或验证码能力绕过网站规则；站点拒绝时返回 `BLOCKED`。\n5. 完成后附最终 URL、截图、可见状态、执行过的动作和未执行原因。\n6. 任务结束撤销临时 session，清理敏感下载并保存最小审计记录。\n\n## 来源\n- browser-act/skills: https://github.com/browser-act/skills\n- 官方方法页: https://pay.browseract.com/blog/claude-code-browser-automation\n- X 书签线索: https://x.com/Vincent_AINotes/status/2074769374154719370\n- Stars 快照：5053；近期 push：2026-07-21；License: MIT。",
+    "description": "用域名、身份、动作和数据边界约束浏览器 Agent，并把登录、付款、发布与删除交给显式确认。",
+    "scenario": "Agent 需要复用浏览器完成网页研究、表单处理或后台操作，但不能静默使用登录态执行敏感动作。",
+    "author": "BrowserAct · 2026-08-01",
+    "likes": 5053,
+    "views": "5.1K",
+    "comments": 0,
+    "titleEn": "BrowserAct Sensitive-Action Confirmation and Human-Handoff Hook",
+    "tagsEn": [
+      "BrowserAct",
+      "Browser Automation",
+      "Confirmation Gate",
+      "Human Handoff",
+      "Session Isolation",
+      "High Stars"
+    ],
+    "descriptionEn": "Constrains browser agents by domain, identity, action, and data scope while routing login, payment, publishing, and deletion to explicit approval.",
+    "scenarioEn": "Agents researching the web or operating forms and dashboards without silently using authenticated sessions for sensitive actions.",
+    "problemFocus": "浏览器 Agent 一旦继承真实登录态，读取与外部写入之间的边界会迅速模糊，并可能产生不可逆操作。",
+    "problemFocusEn": "Once a browser agent inherits a real session, the boundary between reading and external side effects blurs and can cause irreversible actions.",
+    "createdAt": "2026-08-01 18:15:00",
+    "category": "hook"
   }
 ]

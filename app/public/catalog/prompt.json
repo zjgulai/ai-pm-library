@@ -6763,5 +6763,75 @@
     "problemFocusEn": "Without steerable checkpoints, coding agents can keep editing on false assumptions and apply unreviewed diffs.",
     "createdAt": "2026-08-01 15:30:00",
     "category": "prompt"
+  },
+  {
+    "id": 1307504,
+    "title": "产品系统拆解提示词：从 JTBD、核心循环到下一步机会",
+    "role": "productManager",
+    "tags": [
+      "产品拆解",
+      "JTBD",
+      "核心循环",
+      "商业模式",
+      "AI Readiness",
+      "书签精选"
+    ],
+    "content": "你是 Principal Product Manager。请基于产品名或 URL 先收集一手证据，再完成系统级产品拆解。\n\n## 输入\n- 产品与入口：[名称 / URL]\n- 目标用户或市场：[可选]\n- 需要回答的决策：[定位、增长、迭代或竞品]\n\n## 分析顺序\n1. 列出可验证事实及来源；事实不足时明确待验证项。\n2. 描述用户、核心 JTBD、触发情境与被替代方案。\n3. 画出 acquisition → activation → value → retention 的核心循环。\n4. 拆解产品原语、信息架构、关键交互和 UX 质量。\n5. 分析商业模式、增长机制、网络效应或其他护城河。\n6. 评估 AI Readiness：数据、反馈、自动化、可控性与风险边界。\n7. 将摩擦点按影响与证据强度排序，提出 3–5 个下一季度可验证机会。\n8. 输出 Principal PM verdict，并把事实、推断、假设和未知项分栏。\n\n## 输出\n证据表、JTBD、核心循环、产品原语、商业/增长、AI Readiness、机会清单、最终判断。\n\n## 来源\n- Product Teardown Skill: https://github.com/yanliudesign/product-teardown-skill\n- X 书签线索: https://x.com/yanliudreamer/status/2080849249189929176\n- 仓库近期 push：2026-07-23；Stars 快照：67；未声明 license，仅抽象方法结构，不复制品牌模板。",
+    "description": "以一手证据为起点，从 JTBD、核心循环、产品原语、商业模式与 AI Readiness 形成可执行产品判断。",
+    "scenario": "产品经理需要系统拆解竞品、复盘自有产品，或识别下一季度的优先机会。",
+    "author": "X Bookmarks · Product Teardown · 2026-08-01",
+    "likes": 67,
+    "views": "67",
+    "comments": 0,
+    "titleEn": "Product-System Teardown Prompt: From JTBD and Core Loops to Next Bets",
+    "tagsEn": [
+      "Product Teardown",
+      "JTBD",
+      "Core Loop",
+      "Business Model",
+      "AI Readiness",
+      "Bookmark Selection"
+    ],
+    "descriptionEn": "Builds an evidence-first product judgment across JTBD, core loops, product primitives, business model, and AI readiness.",
+    "scenarioEn": "Product managers analyzing competitors, reviewing their product, or prioritizing next-quarter opportunities.",
+    "problemFocus": "常规竞品分析容易停留在功能清单，缺少用户任务、价值循环、商业机制与下一步实验之间的因果连接。",
+    "problemFocusEn": "Typical competitive analysis stops at feature lists and fails to connect user jobs, value loops, business mechanics, and next experiments.",
+    "createdAt": "2026-08-01 18:15:00",
+    "category": "prompt"
+  },
+  {
+    "id": 1307505,
+    "title": "女性人像提示词导演：约束锁定、风格路由与负面约束",
+    "role": "creator",
+    "tags": [
+      "人像摄影",
+      "提示词导演",
+      "约束锁定",
+      "风格路由",
+      "负面约束",
+      "书签精选"
+    ],
+    "content": "你是女性人像视觉导演。只处理虚构且明确成年的主体；涉及真人参考时，先确认肖像、素材和生成用途均已授权，不进行身份冒用。\n\n## 输入\n- 主体与年龄确认：[明确成年]\n- 必须保留的条件：[服装、动作、环境、品牌限制]\n- 期望媒介与画幅：[摄影 / 插画 / 视频帧]\n- 可选风格方向：[自然、电影、编辑、复古等]\n\n## 工作流\n1. 先锁定用户明确条件，列出不得改变项与仍需确认项。\n2. 只选择一个视觉路线，说明其叙事目标，不混搭互相冲突的风格。\n3. 将主体、动作、服装、场景、构图、镜头、光线、色彩和后期组织成一个可拍摄瞬间。\n4. 添加负面约束：非成人、身份冒用、畸形肢体、文字水印、过度磨皮、冲突光源和不安全情境。\n5. 输出锁定参数、成品提示词、负面提示词与可安全替换变量。\n\n## 来源\n- Female Portrait Director: https://github.com/liyue-aigc/female-portrait-director\n- X 书签线索: https://x.com/liyue_ai/status/2082489124758720992\n- Stars 快照：1242；License: MIT；README 仅确认 Codex runtime-tested。",
+    "description": "先锁定主体与授权边界，再用单一路线组织镜头、光线和负面约束的人像生成模板。",
+    "scenario": "创作者为明确成年且获得授权的虚构或真人主体设计摄影、插画或视频关键帧提示词。",
+    "author": "X Bookmarks · Female Portrait Director · 2026-08-01",
+    "likes": 1242,
+    "views": "1.2K",
+    "comments": 0,
+    "titleEn": "Female-Portrait Prompt Director: Constraint Locking, Style Routing, and Negative Guards",
+    "tagsEn": [
+      "Portrait Photography",
+      "Prompt Direction",
+      "Constraint Locking",
+      "Style Routing",
+      "Negative Constraints",
+      "Bookmark Selection"
+    ],
+    "descriptionEn": "Locks subject and consent boundaries before composing a single visual route with camera, lighting, and negative constraints.",
+    "scenarioEn": "Creators directing photography, illustration, or video keyframes for clearly adult fictional subjects or authorized real people.",
+    "problemFocus": "人像提示词容易在多轮修改中丢失硬约束、混杂风格，或忽略年龄、肖像授权和身份冒用边界。",
+    "problemFocusEn": "Portrait prompts often lose hard constraints, mix conflicting styles, or overlook age, likeness consent, and impersonation boundaries.",
+    "createdAt": "2026-08-01 18:15:00",
+    "category": "prompt"
   }
 ]

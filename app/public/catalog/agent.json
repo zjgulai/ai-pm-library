@@ -3034,5 +3034,75 @@
     "problemFocusEn": "Static configuration does not show how an agent actually works; without session evidence teams optimize the wrong loop and overstate gains.",
     "createdAt": "2026-08-01 15:30:00",
     "category": "agent"
+  },
+  {
+    "id": 1307512,
+    "title": "DeepTutor：终身个性化学习 Agent 试点评估",
+    "role": "researcher",
+    "tags": [
+      "DeepTutor",
+      "Personalized Learning",
+      "RAG Citations",
+      "Mastery Path",
+      "Agent Sandbox",
+      "高Stars"
+    ],
+    "content": "## 项目定位\nDeepTutor 将知识库、深度解题、研究、自动出题/批改与 mastery path 组合为个性化学习 Agent。\n\n## 试点评估\n1. 固定 v1.5.7 或已审 commit，只使用公开或已授权教材。\n2. 建立含标准答案与引用的题集，验证知识检索、推理、纠错和不知道时的行为。\n3. 检查每个关键结论能否回到资料页，错误答案能否被老师纠正并阻止写入长期记忆。\n4. 验证 per-account MCP Services、CLI Apps、sandbox 与 credentials 隔离，不给学生会话高权限工具。\n5. 测试用户/课程/租户之间的知识、记忆和日志隔离。\n6. 自动出题、批改与 mastery 决策保留老师复核；生成解法不是权威答案。\n\n## 来源\n- HKUDS/DeepTutor: https://github.com/HKUDS/DeepTutor\n- X 书签线索: https://x.com/IndieDevHailey/status/2080918734747918836\n- Stars 快照：31706；Release v1.5.7：2026-07-31；License: Apache-2.0。",
+    "description": "从引用、纠错、记忆隔离、工具权限和教师复核评估高热度个性化学习 Agent。",
+    "scenario": "教育团队用公开或获授权教材试点长期学习助手、题目生成与 mastery path。",
+    "author": "DeepTutor · 2026-08-01",
+    "likes": 31706,
+    "views": "31.7K",
+    "comments": 0,
+    "titleEn": "DeepTutor Lifelong Personalized-Learning Agent Pilot Evaluation",
+    "tagsEn": [
+      "DeepTutor",
+      "Personalized Learning",
+      "RAG Citations",
+      "Mastery Path",
+      "Agent Sandbox",
+      "High Stars"
+    ],
+    "descriptionEn": "Evaluates a high-visibility personalized-learning agent across citations, correction, memory isolation, tool permissions, and teacher review.",
+    "scenarioEn": "Education teams piloting long-term tutors, question generation, and mastery paths with public or authorized materials.",
+    "problemFocus": "学习 Agent 同时生成解释、评分和长期记忆时，错误答案可能被固化并跨用户传播，且学生数据会触及隐私边界。",
+    "problemFocusEn": "When a learning agent generates explanations, grades, and memory, wrong answers can become persistent and cross-user data can breach privacy boundaries.",
+    "createdAt": "2026-08-01 18:15:00",
+    "category": "agent"
+  },
+  {
+    "id": 1307513,
+    "title": "Fractal：递归分层 Agent Loop 安全试点",
+    "role": "developer",
+    "tags": [
+      "Fractal",
+      "Hierarchical Agents",
+      "Recursive Loop",
+      "Git Worktree",
+      "Sandbox",
+      "近30天"
+    ],
+    "content": "## 项目定位\nFractal 把复杂目标拆成递归 Agent 节点树，每个节点在独立 git worktree 迭代并向父节点回传结果。worktree 只隔离分支，不隔离文件系统、网络或凭据。\n\n## 安全试点\n1. 固定已审 commit，在 disposable sandbox 中运行无 secrets、无生产网络的低风险任务。\n2. 设置最大递归深度、节点数、并发、token/费用预算、wall time 和明确终止条件。\n3. 每个节点只获得任务所需目录与命令；禁用默认 `danger-full-access` 和跳过审批配置。\n4. 验证父子任务契约、工作树合并、冲突处理、节点失败、重启和取消传播。\n5. 保留节点输入、工具轨迹、产物、成本和合并决策，禁止只看最终答案。\n6. 构造失控递归、重复工作、跨 worktree 读取和网络外传测试；任何越界都 fail closed。\n\n## 来源\n- plasma-ai/fractal: https://github.com/plasma-ai/fractal\n- X 书签线索: https://x.com/geekbb/status/2080252819400233243\n- Stars 快照：652；近期 push：2026-07-29；License: Apache-2.0。",
+    "description": "以深度、节点、预算、权限和 trace 上限约束递归分层 Agent，并明确 worktree 不是安全沙箱。",
+    "scenario": "研究团队评估能递归拆解复杂目标的多 Agent 架构，但只允许在一次性隔离环境试点。",
+    "author": "Fractal · 2026-08-01",
+    "likes": 652,
+    "views": "652",
+    "comments": 0,
+    "titleEn": "Fractal Recursive Hierarchical-Agent Loop Safety Pilot",
+    "tagsEn": [
+      "Fractal",
+      "Hierarchical Agents",
+      "Recursive Loop",
+      "Git Worktree",
+      "Sandbox",
+      "30-Day Selection"
+    ],
+    "descriptionEn": "Constrains recursive hierarchical agents with depth, node, budget, permission, and trace limits while stating that worktrees are not sandboxes.",
+    "scenarioEn": "Research teams evaluating recursive multi-agent architectures only inside disposable isolated environments.",
+    "problemFocus": "递归 Agent 若默认跳过审批并拥有完整文件系统权限，会同时放大成本、错误、数据外传和不可控并发。",
+    "problemFocusEn": "Recursive agents that skip approvals and retain full filesystem access amplify cost, errors, data exfiltration, and uncontrolled concurrency.",
+    "createdAt": "2026-08-01 18:15:00",
+    "category": "agent"
   }
 ]

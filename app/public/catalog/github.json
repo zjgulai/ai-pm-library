@@ -3517,5 +3517,75 @@
     "problemFocusEn": "Treating unverified findings, coverage gaps, or generated patches as certain results creates false positives, misses, and remediation regressions.",
     "createdAt": "2026-08-01 15:30:00",
     "category": "github"
+  },
+  {
+    "id": 1307514,
+    "title": "MarkItDown：多格式文档转 Markdown 安全评估卡",
+    "role": "developer",
+    "tags": [
+      "MarkItDown",
+      "Markdown",
+      "Document Conversion",
+      "OCR",
+      "Untrusted Input",
+      "高Stars"
+    ],
+    "content": "## 项目定位\nMicrosoft MarkItDown 将 PDF、Office、图片/OCR、音频、HTML、CSV/JSON/XML、ZIP、EPUB 和 URL 等内容转换为 Markdown，适合作为知识摄取前置层。\n\n## 评估步骤\n1. 固定 v0.1.7 或已审 commit，只安装任务所需 optional dependencies。\n2. 为每种格式准备带标题、表格、链接、脚注、图片和异常结构的金标样例。\n3. 比较文本保真、层级、表格、链接、元数据、OCR 与空白页，记录不可恢复信息。\n4. 对不可信输入使用最窄 `convert_*` 接口、隔离进程、文件/页数/时间/内存上限和无默认网络。\n5. 测试 ZIP 路径、Office 解析、URL 跳转、超大文件和提示注入；转换结果不直接作为 Agent 指令。\n6. 记录来源哈希、工具版本、警告与人工抽样结果；格式转换不代表语义正确。\n\n## 来源\n- microsoft/markitdown: https://github.com/microsoft/markitdown\n- X 书签线索: https://x.com/mdancho84/status/2074819073620275264\n- Stars 快照：170592；Release v0.1.7：2026-07-29；License: MIT。",
+    "description": "从格式保真、资源上限、解析攻击和提示注入评估高热度多格式 Markdown 转换器。",
+    "scenario": "知识库或 RAG 管线需要把多种文档摄取为 Markdown，同时隔离不可信文件。",
+    "author": "Microsoft MarkItDown · 2026-08-01",
+    "likes": 170592,
+    "views": "170.6K",
+    "comments": 0,
+    "titleEn": "MarkItDown Multi-Format Document-to-Markdown Security Evaluation Card",
+    "tagsEn": [
+      "MarkItDown",
+      "Markdown",
+      "Document Conversion",
+      "OCR",
+      "Untrusted Input",
+      "High Stars"
+    ],
+    "descriptionEn": "Evaluates a high-visibility multi-format Markdown converter across fidelity, resource limits, parser attacks, and prompt injection.",
+    "scenarioEn": "Knowledge-base and RAG pipelines ingesting diverse documents as Markdown while isolating untrusted files.",
+    "problemFocus": "文档转换器以当前进程权限读取复杂格式时，恶意解析、资源耗尽和内容提示注入会进入后续知识链路。",
+    "problemFocusEn": "A converter parsing complex formats with process privileges can introduce malicious parsing, resource exhaustion, and prompt injection into downstream knowledge pipelines.",
+    "createdAt": "2026-08-01 18:15:00",
+    "category": "github"
+  },
+  {
+    "id": 1307515,
+    "title": "CLI-Anything：让 GUI 软件 Agent-Native 的 Harness 评估卡",
+    "role": "developer",
+    "tags": [
+      "CLI-Anything",
+      "Agent-Native",
+      "CLI Harness",
+      "Structured Output",
+      "E2E",
+      "高Stars"
+    ],
+    "content": "## 项目定位\nCLI-Anything 为既有 GUI 软件构造可被 Agent 调用的结构化 CLI harness。覆盖面大不等于每个生成 CLI 都具备同等质量。\n\n## 单软件试点\n1. 只选择一个已安装、低风险目标软件，固定 CLI-Anything 与目标应用版本。\n2. 枚举核心 UI 行为并映射到命令、参数、稳定 JSON、错误码和退出码。\n3. 检查查询与写入是否分离，重复执行是否幂等，失败是否可回滚。\n4. 用端到端样例对照 GUI 最终状态，记录未覆盖动作、版本差异和隐藏副作用。\n5. 将 skill 按需加载，不安装全部 registry 项；命令权限限定到目标应用和 disposable data。\n6. 对路径、网络、插件、脚本执行和输出注入做威胁测试，生产采用前必须人工审计生成 harness。\n\n## 来源\n- HKUDS/CLI-Anything: https://github.com/HKUDS/CLI-Anything\n- X 书签线索: https://x.com/Huahuazo/status/2079902025790414993\n- Stars 快照：46448；近期 push：2026-07-09；License: Apache-2.0。",
+    "description": "用结构化输出、错误码、幂等、回滚和 UI 对照测试评估单个 GUI 软件的 Agent-Native CLI harness。",
+    "scenario": "团队希望让 Agent 自动操作现有桌面软件，但需要先验证生成 CLI 的覆盖率和权限边界。",
+    "author": "CLI-Anything · 2026-08-01",
+    "likes": 46448,
+    "views": "46.4K",
+    "comments": 0,
+    "titleEn": "CLI-Anything Agent-Native Harness Evaluation Card for GUI Software",
+    "tagsEn": [
+      "CLI-Anything",
+      "Agent-Native",
+      "CLI Harness",
+      "Structured Output",
+      "E2E",
+      "High Stars"
+    ],
+    "descriptionEn": "Evaluates one GUI application's agent-native CLI harness through structured output, error codes, idempotency, rollback, and UI parity tests.",
+    "scenarioEn": "Teams automating existing desktop applications with agents after validating generated CLI coverage and permission boundaries.",
+    "problemFocus": "给 GUI 包一层 CLI 只能解决可调用性，若缺少稳定契约、状态验证和权限限制，Agent 仍会静默误操作。",
+    "problemFocusEn": "Wrapping a GUI with a CLI improves callability but still permits silent agent errors without stable contracts, state validation, and permission limits.",
+    "createdAt": "2026-08-01 18:15:00",
+    "category": "github"
   }
 ]
