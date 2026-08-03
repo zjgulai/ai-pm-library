@@ -5,7 +5,7 @@ module: content
 topic: weekly-refresh
 status: stable
 created: 2026-06-02
-updated: 2026-08-01
+updated: 2026-08-03
 owner: self
 source: human+ai
 ---
@@ -704,6 +704,49 @@ GitHub API stars/forks 快照采集于 2026-08-01 14:59–15:03（Asia/Shanghai�
 - 独立 E8：容器内 manifest 与公网 manifest 均为 211/324/89/89/92/107，总计 912；新增 GitHub ID `1307502`、`1307503` 可读取；legacy `prompts.list` 为 `404 NOT_FOUND`；容器内 ping 和 nginx-to-app 均为 200，`nginx -t` 成功。
 - `.env.prod` 保持 `600`，远端 Compose 仍只含 `app`。`promptforge_mysql` 继续使用部署前镜像 `sha256:6cd09145362dfe6831b14545de3d5fd6cc75c37cfd6ef8561429c1fc73518b39`，状态 healthy 且只在 `promptforge_net`。
 - 共宿主最终状态：`kg`、根域名、`video`、`person` 为 200；`mkt` 为指向共享登录页的 302；`voc` 为指向 Superset welcome 的 302。共享 nginx 配置未修改。
+
+## 2026-08-03 运行时与容器供应链风险修复
+
+本轮不改 catalog 内容和六类计数，目标是关闭上一轮保留的生产依赖漏洞、容器可复现性和开发/生产启动边界风险。
+
+### 风险与修复
+
+- `@hono/node-server` 1.19.17 同时是直接生产依赖和开发插件传递依赖，命中
+  [GHSA-frvp-7c67-39w9](https://github.com/advisories/GHSA-frvp-7c67-39w9)；
+  项目升级并固定到官方已修复版本 2.0.12，同时将 `hono` 固定到 4.12.34。
+- `@hono/vite-dev-server` 升级到 0.26.1。其声明范围仍停留在 node-server 1.x，因此使用 npm override 将直接依赖与传递依赖统一到 2.0.12，并以开发态 API 实测和锁文件唯一版本断言作为兼容门禁。
+- `verify` 从只阻断 high 风险改为执行 `audit:full`，生产审计显式使用 `--audit-level=moderate`；修复后完整依赖树和生产依赖树均为 0 vulnerability。
+- Browserslist 数据由 8 个月前版本刷新到 `caniuse-lite` 1.0.30001806；目标浏览器集合未发生变化。
+- Docker 基座升级并固定为
+  `node:22.23.1-alpine3.24@sha256:16e22a550f3863206a3f701448c45f7912c6896a62de43add43bb9c86130c3e2`。
+  生产层移除 npm/npx，改为 UID 1000 的 `node` 用户直接执行 `node dist/boot.js`。
+- 升级开发插件后发现旧 `process.env.VITE` 判定失效，Vite 会误启动第二个 HTTP server。启动边界改为使用 Vite 原生 `import.meta.env.DEV`，生产 esbuild 明确定义为 `false`，同时覆盖开发态和独立生产 bundle。
+
+### 本地验证证据
+
+- `npm ci --ignore-scripts` 和 `npm run verify` 通过：TypeScript、ESLint、catalog contract、50 个 Markdown 文档治理与链接检查、10 个 Vitest 文件共 39 个测试、Vite/API build 与 moderate audit 均为绿。
+- Vite 开发态首页和 `/api/trpc/ping` 实测通过，修复后无第二个 server、静态目录或端口竞争日志。
+- 本地 production bundle 独立启动成功，容器内 Node 为 `v22.23.1`、用户为 `node`、npm 不存在；编码反斜杠路径返回 404。
+- production image `promptforge-app:risk-remediation` 为
+  `sha256:e6eee9b8cd082b6cf7795e3932eade7ec6c92a4cf5aa3001c7e88f376e1de8bc`。
+  Docker Scout 扫描 262 个包，结果为 0 critical、0 high、0 moderate、0 low。
+- 本地 production smoke 的 11 项功能全部通过，1 项仅因本地地址而跳过共宿主检查；桌面、移动端、目录计数、只读 API 和浏览器 console 均为绿。
+
+### Commit、部署与独立 E8 证据
+
+- 风险修复 commit 为 `ad121c261ceded172cff38b8a98c375be56bd4bc`，已 push 到 `origin/main`；提交仅含 5 个修复文件，用户既有跨境电商草稿、`tmp/`、PEM、env 和 secrets 均未入库。
+- 部署前备份为 `/opt/promptforge/.deploy-backups/20260803232532-ad121c2-risk-remediation`，目录权限 `700`、内部证据文件为 `600`；旧生产镜像保留为 `promptforge_app:rollback-20260803232532-ad121c2`，指向 `sha256:e6b74c063aab5cd060acf6ee6227945c145391f78aedbaa1416b7053fe65fe98`。
+- `deploy.sh --smoke` 只同步、构建和替换 `promptforge_app`，没有使用 `--remove-orphans`。生产 smoke 12 项全部通过，报告为 `tmp/outputs/smoke-e2e-report-20260803152720.json`。
+- 新生产镜像为 `sha256:ccbb8de19f8d35c28dc199c23eb5238dcc0936e91f831ccd7fc39b0a080f8af7`；`promptforge_app` 为 healthy，运行用户为 UID 1000 的 `node`，Node 为 `v22.23.1`，npm 不存在，`@hono/node-server` 为 2.0.12，`hono` 为 4.12.34。
+- 独立 E8：容器与公网 manifest 均为 213/326/91/91/94/109，总计 924；容器 ping 与 nginx-to-app 均为 200，`nginx -t` 成功，legacy `prompts.list` 和编码反斜杠探测均为 404，`.env.prod` 保持 `600`，远端 Compose 仍只含 `app`。
+- 旧 `promptforge_mysql` 未重启、删除或换网，仍使用
+  `sha256:6cd09145362dfe6831b14545de3d5fd6cc75c37cfd6ef8561429c1fc73518b39`，
+  启动时间仍为 `2026-07-19T16:22:44.020085209Z`，且只连接 `promptforge_net`。
+
+### 仍需单独授权的残余风险
+
+- 根目录 `DDDD.pem` 当前权限为 `600` 且被 Git 忽略，但迁移到专用 `~/.ssh/` 路径涉及本地凭据位置和部署配置，应作为独立变更执行。
+- 旧 MySQL 容器、`promptforge_net` 和相关 volume 当前不参与 static-first 生产链路；归档或删除前仍需单独备份、业务归属确认和明确授权。
 
 ## 2026-08-01 X 全量书签增量（924 条）
 
