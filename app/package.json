@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && esbuild api/boot.ts --platform=node --bundle --format=esm --outdir=dist --banner:js=\"import { createRequire } from 'module';const require = createRequire(import.meta.url);\"",
+    "build": "vite build && esbuild api/boot.ts --platform=node --bundle --format=esm --outdir=dist --define:import.meta.env.DEV=false --banner:js=\"import { createRequire } from 'module';const require = createRequire(import.meta.url);\"",
     "predev": "npm run catalog:generate",
     "prebuild": "npm run catalog:generate",
     "pretest": "npm run catalog:generate",
@@ -15,9 +15,9 @@
     "check": "tsc -b",
     "format": "prettier --write .",
     "test": "vitest run",
-    "verify": "npm run check && npm run lint && npm run catalog:check && npm run docs:check && npm run test && npm run build && npm run audit:high",
+    "verify": "npm run check && npm run lint && npm run catalog:check && npm run docs:check && npm run test && npm run build && npm run audit:full",
     "audit:high": "npm audit --audit-level=high",
-    "audit:prod": "npm audit --omit=dev",
+    "audit:prod": "npm audit --omit=dev --audit-level=moderate",
     "audit:full": "npm audit --audit-level=moderate",
     "catalog:generate": "node scripts/generate-catalog.mjs",
     "catalog:export": "npm run catalog:generate",
@@ -31,7 +31,7 @@
     "db:push:local": "PROMPTFORGE_ALLOW_DB_PUSH=local-only node scripts/guard-db-push.mjs"
   },
   "dependencies": {
-    "@hono/node-server": "^1.14.3",
+    "@hono/node-server": "2.0.12",
     "@hookform/resolvers": "^5.2.2",
     "@radix-ui/react-accordion": "^1.2.12",
     "@radix-ui/react-alert-dialog": "^1.1.15",
@@ -67,7 +67,7 @@
     "cmdk": "^1.1.1",
     "date-fns": "^4.1.0",
     "embla-carousel-react": "^8.6.0",
-    "hono": "^4.8.3",
+    "hono": "4.12.34",
     "input-otp": "^1.4.2",
     "lucide-react": "^0.562.0",
     "next-themes": "^0.4.6",
@@ -86,7 +86,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
-    "@hono/vite-dev-server": "^0.19.0",
+    "@hono/vite-dev-server": "0.26.1",
     "@tanstack/react-query": "^5.90.16",
     "@trpc/client": "^11.8.1",
     "@trpc/react-query": "^11.8.1",
@@ -119,6 +119,7 @@
     "zod": "^4.3.5"
   },
   "overrides": {
+    "@hono/node-server": "$@hono/node-server",
     "@esbuild-kit/core-utils": {
       "esbuild": "^0.25.12"
     }

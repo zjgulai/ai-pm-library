@@ -1,3 +1,5 @@
+/// <reference types="vite/client" />
+
 import { Hono } from "hono";
 import { bodyLimit } from "hono/body-limit";
 import type { HttpBindings } from "@hono/node-server";
@@ -20,8 +22,11 @@ app.all("/api/*", (c) => c.json({ error: "Not Found" }, 404));
 
 export default app;
 
-// Start server when not being used as vite dev middleware
-if (!process.env.VITE) {
+// Vite loads this module through SSR middleware; only the production bundle owns a socket.
+const isViteDevelopmentRuntime =
+  Boolean(process.env.VITE) || import.meta.env.DEV;
+
+if (!isViteDevelopmentRuntime) {
   const { serve } = await import("@hono/node-server");
   const { serveStaticFiles } = await import("./lib/vite");
   serveStaticFiles(app);

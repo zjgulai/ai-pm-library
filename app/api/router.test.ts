@@ -40,6 +40,57 @@ describe("appRouter", () => {
     }
   });
 
+  it("pins the patched Hono adapter and blocks moderate audit findings", () => {
+    const pkg = JSON.parse(
+      readFileSync(path.resolve(import.meta.dirname, "../package.json"), "utf-8"),
+    ) as {
+      dependencies?: Record<string, string>;
+      devDependencies?: Record<string, string>;
+      overrides?: Record<string, string>;
+      scripts?: Record<string, string>;
+    };
+    const lock = JSON.parse(
+      readFileSync(path.resolve(import.meta.dirname, "../package-lock.json"), "utf-8"),
+    ) as {
+      packages?: Record<string, { version?: string }>;
+    };
+    const nodeServerVersions = Object.entries(lock.packages ?? {})
+      .filter(([packagePath]) => packagePath.endsWith("node_modules/@hono/node-server"))
+      .map(([, entry]) => entry.version);
+
+    expect(pkg.dependencies?.["@hono/node-server"]).toBe("2.0.12");
+    expect(pkg.devDependencies?.["@hono/vite-dev-server"]).toBe("0.26.1");
+    expect(pkg.overrides?.["@hono/node-server"]).toBe("$@hono/node-server");
+    expect(pkg.scripts?.build).toContain("--define:import.meta.env.DEV=false");
+    expect(pkg.scripts?.verify).toContain("npm run audit:full");
+    expect(pkg.scripts?.["audit:prod"]).toContain("--audit-level=moderate");
+    expect(nodeServerVersions).toEqual(["2.0.12"]);
+  });
+
+  it("pins the production image and runs the application as a non-root user", () => {
+    const dockerfile = readFileSync(
+      path.resolve(import.meta.dirname, "../Dockerfile"),
+      "utf-8",
+    );
+
+    expect(dockerfile).toMatch(
+      /^ARG NODE_IMAGE=node:22\.23\.1-alpine3\.24@sha256:[a-f0-9]{64}$/m,
+    );
+    expect(dockerfile).toContain("USER node");
+    expect(dockerfile).toContain('CMD ["node", "dist/boot.js"]');
+    expect(dockerfile).not.toContain('CMD ["npm", "start"]');
+  });
+
+  it("does not start a second HTTP server when Vite loads the API module", () => {
+    const bootSource = readFileSync(
+      path.resolve(import.meta.dirname, "boot.ts"),
+      "utf-8",
+    );
+
+    expect(bootSource).toContain("import.meta.env.DEV");
+    expect(bootSource).toMatch(/if \(!isViteDevelopmentRuntime\)/);
+  });
+
   it("does not expose legacy DB-backed catalog routers publicly", () => {
     const source = readFileSync(path.join(import.meta.dirname, "router.ts"), "utf-8");
 
