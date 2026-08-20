@@ -5,7 +5,7 @@ module: content
 topic: weekly-refresh
 status: stable
 created: 2026-06-02
-updated: 2026-08-03
+updated: 2026-08-21
 owner: self
 source: human+ai
 ---
@@ -14,11 +14,11 @@ source: human+ai
 
 ## 目标
 
-每周为 PromptForge 六大类内容补充一批高质量、可复核、可执行的新内容，并形成从网络检索、候选评分、增量入库、本地验证、Git 远端同步、腾讯云轻量服务器部署到线上 smoke 的完整闭环。
+每周为 PromptForge 七大类内容补充一批高质量、可复核、可执行的新内容，并形成从网络检索、候选评分、增量入库、本地验证、Git 远端同步、腾讯云轻量服务器部署到线上 smoke 的完整闭环。
 
 默认策略是“小批量高置信 + 可扩展 loop”：常规迭代每类先补 2 条；用户要求扩容时执行 50 个检索 loop，按质量评分和去重结果增量入库。
 
-六大类：
+七大类：
 
 - `prompt`: 可直接复用的提示词模板
 - `skill`: 可迁移到 AI coding agent / 产品工作流的技能
@@ -26,6 +26,7 @@ source: human+ai
 - `mcp`: 可连接外部系统、数据或安全能力的 MCP 工具
 - `agent`: 可作为智能体设计参考的架构、模型或工作流
 - `github`: 可被团队评估或采用的开源项目
+- `plugin`: 可安装、可分发且具备明确 Harness 与权限边界的插件包
 
 ## 迭代总览
 
@@ -34,10 +35,10 @@ source: human+ai
 | 阶段 | 名称 | 核心产出 | 通过标准 |
 | --- | --- | --- | --- |
 | E0 | 状态恢复 | 当前生产入口、Git 状态、内容规模、检索窗口 | 确认生产入口为 `https://kg.lute-tlz-dddd.top/`，工作树风险明确 |
-| E1 | 检索设计 | 六大类关键词、来源矩阵、loop 配额 | 每类至少覆盖 T1/T2 来源和 GitHub 活跃源 |
+| E1 | 检索设计 | 七大类关键词、来源矩阵、loop 配额 | 每类至少覆盖 T1/T2 来源和 GitHub 活跃源 |
 | E2 | 采集执行 | 候选池 JSON 或审计记录 | 候选包含来源、时间、类别、评分依据 |
 | E3 | 质量评估 | 入库候选清单 | 低于 75 分淘汰，硬性拒绝项不得入库 |
-| E4 | 增量入库 | `catalogSource.json`、catalog JSON、计数元数据 | 六大类计数一致，来源可追溯 |
+| E4 | 增量入库 | `catalogSource.json`、catalog JSON、计数元数据 | 七大类计数一致，来源可追溯 |
 | E5 | 本地深度检查 | 测试、构建、Docker、local smoke 证据 | `npm run verify` 和本地 smoke 通过 |
 | E6 | Git 同步 | 原子提交和远端分支 | 无密钥、无临时产物、远端分支可追溯 |
 | E7 | 腾讯云轻量部署 | 远端备份、app-only 部署、生产 smoke | 只触碰 `promptforge_app`，不污染同机服务 |
@@ -98,13 +99,14 @@ git remote -v
 
 | 类别 | 最低 loop | 重点 |
 | --- | ---: | --- |
-| `prompt` | 8 | 官方模型能力、agent use-case、评估/迁移/成本模板 |
-| `skill` | 8 | AI coding skill、团队规范、工作流封装、跨工具迁移 |
-| `hook` | 8 | 安全门禁、命令拦截、测试后置、证据采集 |
-| `mcp` | 8 | MCP server、权限隔离、安全扫描、数据连接 |
-| `agent` | 8 | agent 架构、sandbox、memory、evaluation、workflow |
-| `github` | 8 | 最近 push/release 的可用开源项目 |
-| 机动 | 2 | 分配给高信号类别或补足证据链 |
+| `prompt` | 7 | 官方模型能力、agent use-case、评估/迁移/成本模板 |
+| `skill` | 7 | AI coding skill、团队规范、工作流封装、跨工具迁移 |
+| `hook` | 7 | 安全门禁、命令拦截、测试后置、证据采集 |
+| `mcp` | 7 | MCP server、权限隔离、安全扫描、数据连接 |
+| `agent` | 7 | agent 架构、sandbox、memory、evaluation、workflow |
+| `github` | 7 | 最近 push/release 的可用开源项目 |
+| `plugin` | 7 | Codex、DeepSeek Harness 与跨 Harness 插件的 manifest、权限、安装与回滚 |
+| 机动 | 1 | 分配给高信号类别或补足证据链 |
 
 每个 loop 的最小记录字段：
 
@@ -146,7 +148,7 @@ git remote -v
 
 高质量候选必须回答四个问题：
 
-1. 它解决六大类中的哪个具体问题。
+1. 它解决七大类中的哪个具体问题。
 2. 它为什么属于最近一周的新增或更新信号。
 3. 它比现有库中的近似内容新增了什么能力。
 4. 它如何被用户直接执行、迁移或评估。
@@ -339,7 +341,7 @@ npm run smoke:e2e:prod
 
 - 候选来源和拒绝理由可追溯。
 - 入库内容均超过 75 分且无硬性拒绝项。
-- 六大类 catalog JSON、元数据计数、README 计数一致。
+- 七大类 catalog JSON、元数据计数、README 计数一致。
 - 本地 `npm run verify` 通过。
 - 本地或生产形态 `npm run smoke:e2e` 通过。
 - Git 远端分支已同步或明确记录未同步原因。
