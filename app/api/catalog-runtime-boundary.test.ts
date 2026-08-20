@@ -3,7 +3,7 @@ import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
 const repoRoot = resolve(import.meta.dirname, "../..");
-const categories = ["prompt", "skill", "hook", "mcp", "agent", "github"] as const;
+const categories = ["prompt", "skill", "hook", "mcp", "agent", "github", "plugin"] as const;
 
 function readRepoFile(path: string): string {
   return readFileSync(resolve(repoRoot, path), "utf8");

@@ -64,13 +64,14 @@
     --accent-primary-light: var(--zhu-sha-100);
     --accent-primary-ghost: var(--zhu-sha-50);
 
-    /* 六维分类色——东方色谱 */
+    /* 七维分类色——东方色谱 */
     --cat-prompt: #C84B31;      /* 朱砂 */
     --cat-skill:  #4A6FA5;      /* 黛蓝 */
     --cat-hook:   #7C5295;      /* 藕紫 */
     --cat-mcp:    #2E8B8B;      /* 石青 */
     --cat-agent:  #5B8C5A;      /* 竹青 */
     --cat-github: #8A6E4B;      /* 赭石 */
+    --cat-plugin: #B35C8D;      /* 苏木 */
 
     /* 阴影层级 */
     --shadow-1: 0 1px 2px rgba(28,26,23,0.04);

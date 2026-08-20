@@ -1,7 +1,7 @@
 import { Outlet, useLocation, Link } from 'react-router'
 import { useState, useEffect, useMemo } from 'react'
 import {
-  MessageSquare, Terminal, GitBranch, Puzzle, Bot, Github,
+  MessageSquare, Terminal, GitBranch, Puzzle, Bot, Github, Package,
   Menu, X, ChevronRight
 } from 'lucide-react'
 import { getAllCounts } from '@/data/catalogMeta'
@@ -19,6 +19,7 @@ const NAV_BASE = [
   { path: '/mcp', label: 'MCP', icon: Puzzle, color: 'var(--cat-mcp)', countKey: 'mcp' as const },
   { path: '/agents', label: '智能体', icon: Bot, color: 'var(--cat-agent)', countKey: 'agent' as const },
   { path: '/github', label: '开源', icon: Github, color: 'var(--cat-github)', countKey: 'github' as const },
+  { path: '/plugins', label: '插件', icon: Package, color: 'var(--cat-plugin)', countKey: 'plugin' as const },
 ]
 
 export default function Layout() {

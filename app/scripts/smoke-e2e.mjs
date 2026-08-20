@@ -31,9 +31,10 @@ const categoryRoutes = [
   { hash: '/mcp', label: 'MCP', category: 'mcp', cards: 48 },
   { hash: '/agents', label: '智能体', category: 'agent', cards: 48 },
   { hash: '/github', label: '开源', category: 'github', cards: 48 },
+  { hash: '/plugins', label: '插件', category: 'plugin', cards: 8 },
 ]
 
-const categoryOrder = ['prompt', 'skill', 'hook', 'mcp', 'agent', 'github']
+const categoryOrder = ['prompt', 'skill', 'hook', 'mcp', 'agent', 'github', 'plugin']
 let catalogCountsCache = null
 
 const report = {
@@ -387,6 +388,40 @@ async function runDesktopChecks(browser) {
     return { search: 'amazon=102', roleFilter: 'ecommerce=180', resetValue }
   })
 
+  await step('plugins filters, search, card actions, and overflow are functional', async () => {
+    await gotoHash(page, '/plugins')
+    await waitForCards(page, 8)
+
+    const roleExpectations = [
+      { name: 'Codex (3)', count: 3 },
+      { name: 'DeepSeek Harness (2)', count: 2 },
+      { name: '跨 Harness (3)', count: 3 },
+    ]
+    for (const role of roleExpectations) {
+      await page.getByRole('button', { name: role.name, exact: true }).click()
+      await waitForCards(page, role.count)
+      await page.getByText(`${role.count} 个结果`).waitFor({ timeout: 5000 })
+    }
+
+    await page.getByRole('button', { name: '全部 (8)', exact: true }).click()
+    await waitForCards(page, 8)
+
+    const input = page.getByRole('combobox', { name: '搜索内容' })
+    await input.fill('OpenDesign')
+    await page.getByText('1 个结果').waitFor({ timeout: 8000 })
+    await waitForCards(page, 1)
+    await page.getByRole('button', { name: '清除搜索' }).first().click()
+    await waitForCards(page, 8)
+
+    await page.getByRole('button', { name: '展开详情' }).first().click()
+    await page.getByRole('button', { name: '收起详情' }).first().waitFor({ timeout: 5000 })
+    await page.getByRole('button', { name: '复制内容' }).first().click()
+    await page.getByRole('button', { name: '已复制' }).first().waitFor({ timeout: 5000 })
+    const overflow = await assertNoHorizontalOverflow(page)
+    await takeScreenshot(page, 'desktop-plugins-interactions')
+    return { roles: roleExpectations, search: 'OpenDesign=1', visibleCards: 8, overflow }
+  })
+
   await step('desktop browser console has no runtime errors', async () => {
     assert(browserErrors.length === 0, browserErrors.join('\n'))
     return { errors: browserErrors.length }
@@ -426,6 +461,18 @@ async function runMobileChecks(browser) {
     const overflow = await assertNoHorizontalOverflow(page)
     await takeScreenshot(page, 'mobile-skills')
     return { overflow }
+  })
+
+  await step('mobile plugins render all cards without overflow', async () => {
+    await gotoHash(page, '/plugins')
+    await page.getByRole('heading', { name: '插件' }).first().waitFor({ timeout: 10000 })
+    await waitForCards(page, 8)
+    await page.getByRole('button', { name: 'Codex (3)', exact: true }).waitFor({ timeout: 5000 })
+    await page.getByRole('button', { name: 'DeepSeek Harness (2)', exact: true }).waitFor({ timeout: 5000 })
+    await page.getByRole('button', { name: '跨 Harness (3)', exact: true }).waitFor({ timeout: 5000 })
+    const overflow = await assertNoHorizontalOverflow(page)
+    await takeScreenshot(page, 'mobile-plugins')
+    return { visibleCards: 8, overflow }
   })
 
   await step('mobile browser console has no runtime errors', async () => {

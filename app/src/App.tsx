@@ -9,6 +9,7 @@ const HooksPage = lazy(() => import('@/pages/HooksPage'))
 const McpPage = lazy(() => import('@/pages/McpPage'))
 const AgentsPage = lazy(() => import('@/pages/AgentsPage'))
 const GithubPage = lazy(() => import('@/pages/GithubPage'))
+const PluginsPage = lazy(() => import('@/pages/PluginsPage'))
 
 function PageFallback() {
   return (
@@ -30,6 +31,7 @@ export default function App() {
           <Route path="/mcp" element={<McpPage />} />
           <Route path="/agents" element={<AgentsPage />} />
           <Route path="/github" element={<GithubPage />} />
+          <Route path="/plugins" element={<PluginsPage />} />
         </Route>
       </Routes>
     </Suspense>

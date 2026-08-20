@@ -1,5 +1,5 @@
-export type Category = 'prompt' | 'skill' | 'hook' | 'mcp' | 'agent' | 'github'
-export const CATEGORIES: Category[] = ['prompt', 'skill', 'hook', 'mcp', 'agent', 'github']
+export type Category = 'prompt' | 'skill' | 'hook' | 'mcp' | 'agent' | 'github' | 'plugin'
+export const CATEGORIES: Category[] = ['prompt', 'skill', 'hook', 'mcp', 'agent', 'github', 'plugin']
 
 export interface Item {
   id: number
@@ -40,6 +40,7 @@ const CATALOG_PATHS: Record<Category, string> = {
   mcp: '/catalog/mcp.json',
   agent: '/catalog/agent.json',
   github: '/catalog/github.json',
+  plugin: '/catalog/plugin.json',
 }
 
 let manifestPromise: Promise<CatalogManifest> | null = null
@@ -149,6 +150,7 @@ export const CATEGORY_META: Record<Category, { label: string; subtitle: string; 
   mcp: { label: 'MCP', subtitle: 'Model Context Protocol', color: 'var(--cat-mcp)', colorLight: '#2E8B8B15', desc: '模型上下文协议工具，连接AI与外部世界' },
   agent: { label: '智能体', subtitle: 'AI Agents', color: 'var(--cat-agent)', colorLight: '#5B8C5A15', desc: 'AI Agent框架与编排，从单智能体到多智能体协作' },
   github: { label: '开源', subtitle: 'Open Source', color: 'var(--cat-github)', colorLight: '#8A6E4B15', desc: '精选开源项目与工具，站在巨人的肩膀上' },
+  plugin: { label: '插件', subtitle: 'Plugins', color: 'var(--cat-plugin)', colorLight: '#B35C8D15', desc: '面向 Codex、DeepSeek Harness 与跨客户端标准的可安装能力包' },
 }
 
 export const ROLE_LABELS: Record<string, string> = {
@@ -156,5 +158,6 @@ export const ROLE_LABELS: Record<string, string> = {
   growth: '增长', founder: '创始人', strategist: '策略', operations: '运营',
   dataScientist: '数据', writer: '写作者', researcher: '研究', sales: '销售',
   ecommerce: '跨境电商', claude: 'Claude Code', claudeCode: 'Claude Code',
-  prompt: '提示词', skill: '技能', hook: '钩子', mcp: 'MCP', agent: '智能体', github: '开源',
+  codex: 'Codex', deepseekHarness: 'DeepSeek Harness', crossHarness: '跨 Harness',
+  prompt: '提示词', skill: '技能', hook: '钩子', mcp: 'MCP', agent: '智能体', github: '开源', plugin: '插件',
 }

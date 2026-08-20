@@ -223,6 +223,7 @@ function buildCatalogFiles(catalogSource, contract) {
     mcp: skills.filter((item) => item.category === "mcp"),
     agent: skills.filter((item) => item.category === "agent"),
     github: skills.filter((item) => item.category === "github"),
+    plugin: skills.filter((item) => item.category === "plugin"),
   };
   const manifest = {
     generatedFrom: contract.generatedFrom,

@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "1.1.0",
   "generatedFrom": "src/data/catalogSource.json",
   "collections": {
     "prompts_full": {
@@ -49,14 +49,16 @@
       "hook",
       "mcp",
       "agent",
-      "github"
+      "github",
+      "plugin"
     ],
     "publicSkillCategories": [
       "skill",
       "hook",
       "mcp",
       "agent",
-      "github"
+      "github",
+      "plugin"
     ],
     "publicCatalogCategories": [
       "prompt",
@@ -64,7 +66,8 @@
       "hook",
       "mcp",
       "agent",
-      "github"
+      "github",
+      "plugin"
     ]
   }
 }

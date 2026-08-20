@@ -1,7 +1,7 @@
 import { useState, useMemo, useCallback, useRef, useEffect } from "react";
 import {
   Search, Copy, Check, Heart, Eye, Trash2, AlertTriangle,
-  LayoutGrid, Terminal, GitBranch, Puzzle, Bot, Github, BookOpen,
+  LayoutGrid, Terminal, GitBranch, Puzzle, Bot, Github, Package, BookOpen,
   Sparkles, Wrench, Code2, Zap, Globe, TrendingUp, Settings,
   MessageSquare, Layers, Cpu, Rocket
 } from "lucide-react";
@@ -12,12 +12,12 @@ import type { Category, Item } from "@/data/dataUtils";
 
 const CAT_ICONS: Record<string, typeof Terminal> = {
   prompt: MessageSquare, skill: Terminal, hook: GitBranch,
-  mcp: Puzzle, agent: Bot, github: Github,
+  mcp: Puzzle, agent: Bot, github: Github, plugin: Package,
 };
 
 const CAT_COLORS: Record<string, string> = {
   prompt: "var(--cat-prompt)", skill: "var(--cat-skill)", hook: "var(--cat-hook)",
-  mcp: "var(--cat-mcp)", agent: "var(--cat-agent)", github: "var(--cat-github)",
+  mcp: "var(--cat-mcp)", agent: "var(--cat-agent)", github: "var(--cat-github)", plugin: "var(--cat-plugin)",
 };
 
 // Role definitions per category
@@ -61,6 +61,12 @@ const ROLE_DEFS: Record<string, { id: string; name: string; icon: typeof Termina
     { id: "all", name: "全部", icon: LayoutGrid },
     { id: "developer", name: "开发者", icon: Code2 },
     { id: "creator", name: "创作者", icon: Sparkles },
+  ],
+  plugin: [
+    { id: "all", name: "全部", icon: LayoutGrid },
+    { id: "codex", name: "Codex", icon: Terminal },
+    { id: "deepseekHarness", name: "DeepSeek Harness", icon: Bot },
+    { id: "crossHarness", name: "跨客户端", icon: Package },
   ],
 };
 

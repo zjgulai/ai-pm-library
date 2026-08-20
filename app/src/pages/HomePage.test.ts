@@ -12,6 +12,7 @@ describe("HomePage navigation", () => {
     expect(source).toContain("path: '/mcp'");
     expect(source).toContain("path: '/agents'");
     expect(source).toContain("path: '/github'");
+    expect(source).toContain("path: '/plugins'");
     expect(source).not.toContain("key === 'prompt' ? 'prompts' : key");
   });
 

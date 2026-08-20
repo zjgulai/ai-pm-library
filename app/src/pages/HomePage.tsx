@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router'
 import {
-  MessageSquare, Terminal, GitBranch, Puzzle, Bot, Github,
+  MessageSquare, Terminal, GitBranch, Puzzle, Bot, Github, Package,
   ArrowRight, Sparkles, BookOpen, Compass, Flame
 } from 'lucide-react'
 import { getAllCounts, CATEGORY_META } from '@/data/catalogMeta'
@@ -14,10 +14,11 @@ const CATS: { key: Category; path: string; icon: typeof MessageSquare; statLabel
   { key: 'mcp', path: '/mcp', icon: Puzzle, statLabel: '模型上下文协议' },
   { key: 'agent', path: '/agents', icon: Bot, statLabel: 'AI智能体框架' },
   { key: 'github', path: '/github', icon: Github, statLabel: '精选开源项目' },
+  { key: 'plugin', path: '/plugins', icon: Package, statLabel: 'Codex 与 DSH 插件' },
 ]
 
 const FEATURES = [
-  { icon: BookOpen, title: '深度分类', desc: '六维体系覆盖提示词、技能、钩子、MCP、智能体、开源' },
+  { icon: BookOpen, title: '深度分类', desc: '七维体系覆盖提示词、技能、钩子、MCP、智能体、开源、插件' },
   { icon: Sparkles, title: '即用即取', desc: '每条内容都包含完整的使用说明和场景描述' },
   { icon: Compass, title: '持续进化', desc: '基于达尔文进化论，内容库持续迭代优化' },
   { icon: Flame, title: '社区精选', desc: '汇聚全网优质AI资源，经过人工筛选和整理' },
@@ -98,7 +99,7 @@ export default function HomePage() {
               灵词
             </h1>
             <p className="text-lg md:text-xl max-w-2xl mx-auto leading-relaxed" style={{ color: 'var(--text-tertiary)' }}>
-              六维分类体系的AI知识库 — 提示词、技能、钩子、MCP、智能体、开源
+              七维分类体系的AI知识库 — 提示词、技能、钩子、MCP、智能体、开源、插件
             </p>
           </div>
 
@@ -113,7 +114,7 @@ export default function HomePage() {
               </div>
               <div className="w-px h-8" style={{ background: 'var(--border-subtle)' }} />
               <div className="text-center">
-                <div className="text-2xl font-bold" style={{ color: 'var(--cat-skill)' }}><AnimatedCounter value={6} /></div>
+                <div className="text-2xl font-bold" style={{ color: 'var(--cat-skill)' }}><AnimatedCounter value={7} /></div>
                 <div className="text-[11px]" style={{ color: 'var(--text-quaternary)' }}>分类</div>
               </div>
               <div className="w-px h-8" style={{ background: 'var(--border-subtle)' }} />
@@ -124,8 +125,8 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Six-dimension matrix */}
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+          {/* Seven-dimension matrix */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {CATS.map(({ key, path, icon: Icon, statLabel }) => {
               const meta = CATEGORY_META[key]
               return (
