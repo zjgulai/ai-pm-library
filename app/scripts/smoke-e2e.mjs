@@ -64,7 +64,7 @@ function assert(condition, message) {
 }
 
 function record(status, name, details = {}) {
-  report.checks.push({ status, name, ...details })
+  report.checks.push({ ...details, status, name })
   const prefix = status === 'pass' ? 'PASS' : status === 'skip' ? 'SKIP' : 'FAIL'
   console.log(`[${prefix}] ${name}${details.message ? ` - ${details.message}` : ''}`)
 }
@@ -224,7 +224,7 @@ async function runStaticAndApiChecks() {
   await step('favicon responds', async () => {
     const response = await fetch(new URL('/favicon.svg', baseUrl))
     assert(response.status === 200, `favicon status ${response.status}`)
-    return { status: response.status }
+    return { httpStatus: response.status }
   })
 
   await step('catalog JSON counts match baseline', async () => {
