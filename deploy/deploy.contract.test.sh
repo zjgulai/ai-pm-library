@@ -265,7 +265,11 @@ cat > "$rollback_bin/stat" <<'EOF'
 #!/usr/bin/env bash
 set -euo pipefail
 if [[ "${1:-}" == "-c" ]] && [[ "${2:-}" == "%a" ]]; then
-  /usr/bin/stat -f '%Lp' "$3"
+  if /usr/bin/stat -c '%a' "$3" >/dev/null 2>&1; then
+    /usr/bin/stat -c '%a' "$3"
+  else
+    /usr/bin/stat -f '%Lp' "$3"
+  fi
 else
   /usr/bin/stat "$@"
 fi
