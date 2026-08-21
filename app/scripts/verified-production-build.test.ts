@@ -5,6 +5,7 @@ import {
   readFileSync,
   rmSync,
   statSync,
+  symlinkSync,
   writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
@@ -29,6 +30,16 @@ type FixtureOptions = {
 function writeExecutable(path: string, contents: string) {
   writeFileSync(path, contents, "utf8");
   chmodSync(path, 0o700);
+}
+
+function exposeRequiredHostTools(targetDirectory: string) {
+  for (const tool of ["awk", "cat", "chmod", "date", "dirname", "grep", "mkdir", "mv", "sed"]) {
+    const resolved = spawnSync("/bin/sh", ["-c", `command -v ${tool}`], { encoding: "utf8" });
+    if (resolved.status !== 0 || resolved.stdout.trim() === "") {
+      throw new Error(`required test host tool is unavailable: ${tool}`);
+    }
+    symlinkSync(resolved.stdout.trim(), join(targetDirectory, tool));
+  }
 }
 
 function createFixture(options: FixtureOptions = {}) {
@@ -121,7 +132,7 @@ esac
     ...(options.proxy ? { PROMPTFORGE_REGISTRY_PROXY: options.proxy } : {}),
   };
 
-  return { appDir, buildCountFile, dockerArgsFile, env, root, script: fixtureScript };
+  return { appDir, buildCountFile, dockerArgsFile, env, fakeBin, root, script: fixtureScript };
 }
 
 function runBuild(
@@ -325,8 +336,9 @@ describe("verified production build contract", () => {
 
   it("records a missing Docker tool without starting a build", () => {
     const fixture = createFixture();
-    fixture.env.PATH = `${join(fixture.root, "fake-bin")}:/usr/bin:/bin`;
-    rmSync(join(fixture.root, "fake-bin", "docker"));
+    exposeRequiredHostTools(fixture.fakeBin);
+    rmSync(join(fixture.fakeBin, "docker"));
+    fixture.env.PATH = fixture.fakeBin;
     const result = runBuild(fixture);
 
     expect(result.status).not.toBe(0);
