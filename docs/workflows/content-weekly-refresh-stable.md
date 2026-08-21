@@ -825,3 +825,37 @@ Stars 为 2026-08-01 GitHub API 快照，只用作活跃度/采用面信号，�
 
 - 根目录 `DDDD.pem` 当前权限为 `600` 且被 Git 忽略，但迁移到专用 `~/.ssh/` 路径涉及本地凭据位置和部署配置，应作为独立变更执行。
 - 旧 MySQL 容器、`promptforge_net` 和相关 volume 当前不参与 static-first 生产链路；归档或删除前仍需单独备份、业务归属确认和明确授权。
+
+## 2026-08-21 DeepSeek Harness 常用插件增量融合
+
+本轮仅更新本地候选目录，不执行插件安装、Git commit、push 或生产部署。来源以
+[`0xsline/awesome-deepseek-harness`](https://github.com/0xsline/awesome-deepseek-harness)
+的 README/CATALOG 为发现层，并逐项回查上游公开仓库。
+
+### 选择门禁
+
+- 必须被 `awesome-deepseek-harness` README 或 `CATALOG.md` 收录。
+- 上游仓库公开、未归档、最近仍有维护活动，并返回明确 SPDX License。
+- 根 `package.json` 必须声明 `dsh.bundle.patch`，证明它是当前 DSH bundle，而不是只有 `dsh-plugin` topic 的相关项目。
+- 必须覆盖常用 Harness 场景，并与现有 Awesome 索引、OpenDesign、DSH Web UI 和多模态条目去重。
+- stars 只作为采用面信号；聚合收录、stars 和 manifest 均不等于实际安装、安全审计或兼容性通过。
+
+### 已融合条目
+
+| 插件 | 版本 | Stars 快照 | 主要场景 |
+| --- | --- | ---: | --- |
+| `dsh-market/dsh-market` | 1.16.2 | 1453 | 插件发现、搜索与一键试装 |
+| `ccch1mneyyy/dsh-TUI` | 0.8.6 | 2184 | 终端流式状态、中断与回滚 |
+| `a903067276-rgb/dsh-todo-guard` | 0.1.0 | 1 | Todo 重启恢复与三态证据核验 |
+| `toolclub/dsh-agent-team-gui` | 1.0.0 | 111 | 有界 DAG 多模型小队 |
+| `PerryLink/dsh-background-agents` | 0.5.4 | 5 | 持久后台子代理与中断 |
+| `zoahdev/dsh-github-intelligence` | 2.9.0 | 8 | 只读跨开发生态情报 |
+| `Zhenyu98/dsh-context-doctor` | 0.5.0 | 16 | 上下文成本与冲突审计 |
+| `labmimors/dsh-mcp-lens` | 0.1.0-rc.9 | 5 | 大型 MCP 目录渐进披露 |
+| `anweat/dsh-web-search-pro` | 0.1.2 | 28 | 多引擎网页搜索与缓存治理 |
+| `xiaoyuyu6420/dsh-backup` | 0.7.1 | 6 | 加固备份、轮换与恢复演练 |
+
+Stars、版本、License、最近 push 和 bundle manifest 均为 2026-08-21 GitHub API/原仓库快照；没有安装量遥测，因此“常用”指高频场景覆盖和可安装性证据，不表示真实活跃安装排名。
+
+本轮融合后 `plugin` 从 8 增至 18；七类总量从 956 增至 966。候选和拒绝理由记录在
+`tmp/outputs/deepseek-harness-plugin-candidates-20260821.json`。

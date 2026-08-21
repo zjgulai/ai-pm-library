@@ -18,7 +18,7 @@ const expectedCounts: Record<Category, number> = {
   mcp: 95,
   agent: 98,
   github: 113,
-  plugin: 8,
+  plugin: 18,
 };
 
 const sampleItems: Item[] = [
