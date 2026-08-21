@@ -5,7 +5,7 @@ module: deploy
 topic: production-deployment
 status: stable
 created: 2026-05-31
-updated: 2026-08-21
+updated: 2026-08-22
 owner: self
 source: human+ai
 ---
@@ -29,6 +29,7 @@ source: human+ai
 ## 本地前置条件
 
 - Docker Compose v2 已在远端服务器可用。
+- 本地已安装并登录 GitHub CLI；GHCR 部署前会用 `gh attestation verify` 校验 signed OCI provenance。
 - 本地 SSH key 位于 `~/.ssh/promptforge_ai_video.pem`，权限为 `600`。
 - 如使用其他 key 路径，执行前设置 `PROMPTFORGE_SSH_KEY=/absolute/path/to/key.pem`。
 - `deploy/.env.prod` 只保留在本地和远端部署目录，不提交 Git。
@@ -68,6 +69,43 @@ cd deploy
 
 不支持任意 mirror hostname，也不会在 Docker Hub 失败后自动回退到 GCR。每次调用最多执行一次 build。
 
+### GHCR 固定摘要交付
+
+当生产主机无法访问 Docker Hub/GCR 基础镜像源时，不允许关闭 manifest
+校验或反复重试。CI 在 production image smoke 通过后，将同一份
+`linux/amd64` 镜像通过独立的 push-only job 发布到 GHCR、生成 signed
+OCI provenance，并输出：
+
+```text
+ghcr-publish-receipt-<runId>.json
+```
+
+下载 exact-head CI 的该 receipt 后执行：
+
+```bash
+cd deploy
+PROMPTFORGE_SSH_KEY=~/.ssh/promptforge_ai_video.pem \
+  ./deploy.sh --ghcr-receipt ../tmp/outputs/ghcr-publish-receipt-<runId>.json --smoke
+```
+
+该入口不接受手工 tag 或 digest。脚本从 CI receipt 派生
+`ghcr.io/zjgulai/ai-pm-library@sha256:...`，并要求 receipt 的
+`sourceRevision` 等于本地完整 `HEAD`。脚本还要求 GitHub run 已成功完成，并以
+repository、workflow、source ref 和 exact SHA 约束签名证明。远端使用临时空
+Docker config 匿名 pull 一次该 digest，核对
+`RepoDigests`、`linux/amd64` 和 image ID 后写入独立 pull receipt，再执行：
+
+```bash
+docker compose up -d --force-recreate --no-build app
+```
+
+GHCR 是 image-only 模式：不同步 `app/`、`docker-compose.yml` 或 `.env.prod`，
+只读验证远端 Compose 的 SHA-256 与 exact-head 文件一致且仍仅含 `app`、现有
+`.env.prod` 权限为 `600`；它不运行
+远端 builder，也不把 Registry token 放到生产。
+如果 package 不能匿名按 digest 拉取、receipt 不一致或镜像核验失败，部署在
+app replacement 前失败。
+
 无副作用部署计划预检：
 
 ```bash
@@ -75,9 +113,10 @@ cd deploy
 ./deploy.sh --dry-run
 ./deploy.sh --dry-run --smoke
 ./deploy.sh --dry-run --node-mirror gcr --smoke
+./deploy.sh --dry-run --ghcr-receipt ../tmp/outputs/ghcr-publish-receipt-<runId>.json --smoke
 ```
 
-`--dry-run` 只从 Dockerfile 解析 canonical ref，输出 source、planned effective ref、digest、同步/回滚/健康检查和可选 smoke 计划；不执行 Registry probe、Docker、SSH、rsync、生产 smoke 或 provider call。
+`--dry-run` 只解析本地固定契约并输出 source、digest、provenance、同步/回滚/健康检查和可选 smoke 计划；不执行 attestation、Registry probe、Docker、SSH、rsync、生产 smoke 或 provider call。
 
 部署后执行线上 E2E smoke：
 
@@ -113,9 +152,9 @@ npm run smoke:e2e:prod
 - `deploy/`
 - `.github/workflows/ci.yml`
 
-这些路径存在 tracked diff 或未跟踪文件时，脚本以 `WORKTREE_NOT_CLEAN` 在 SSH/rsync 前失败。`drafts/`、`tmp/` 和不会同步的用户材料不阻塞，也不会被暂存或传输。该完整 SHA 会作为 `PROMPTFORGE_SOURCE_REVISION` 传给远端统一构建器。
+这些路径存在 tracked diff 或未跟踪文件时，脚本以 `WORKTREE_NOT_CLEAN` 在 SSH/rsync 前失败。`drafts/`、`tmp/` 和不会同步的用户材料不阻塞，也不会被暂存或传输。build 模式把完整 SHA 传给远端统一构建器；GHCR 模式则用它约束 successful run 与 signed OCI provenance。
 
-## Build 与 deploy receipts
+## Build、pull 与 deploy receipts
 
 远端构建器写入：
 
@@ -123,7 +162,21 @@ npm run smoke:e2e:prod
 /opt/promptforge/.deploy-receipts/docker-build-receipt-<runId>.json
 ```
 
-只有 receipt 同时满足 `outcome=built`、`buildAttempt=1`、source/scope/mode/runId/worktree 契约、expected/observed digest 相等、`sourceRevision` 与本地完整 SHA 一致且权限为 `600` 时，编排器才执行 `docker compose up -d --force-recreate app`。最终部署回执写入：
+只有 receipt 同时满足 `outcome=built`、`buildAttempt=1`、source/scope/mode/runId/worktree 契约、expected/observed digest 相等、`sourceRevision` 与本地完整 SHA 一致且权限为 `600` 时，编排器才执行 `docker compose up -d --force-recreate app`。
+
+GHCR 路径保留 CI publish receipt，并在生产写入：
+
+```text
+/opt/promptforge/.deploy-receipts/ghcr-publish-receipt-<runId>.json
+/opt/promptforge/.deploy-receipts/docker-pull-receipt-<runId>.json
+```
+
+pull receipt 将 `sourceRevision`、immutable image ref、expected/observed digest、
+image ID、platform、单次 pull 和 `anonymousPull=true` 绑定；它不冒充 build receipt。GHCR deploy receipt
+的 `buildReceiptPath` 为空，并通过 `artifactReceiptPath`、
+`deliveryReceiptPath` 和 `deliveryMode=ghcr` 指向正确证据层。
+
+最终部署回执写入：
 
 ```text
 /opt/promptforge/.deploy-receipts/deploy-receipt-<runId>.json
@@ -169,7 +222,7 @@ receipt 目录权限为 `700`、文件为 `600`，通过同目录临时文件原
 promptforge_app:rollback-<runId>
 ```
 
-新 app 的直接健康门禁失败时，脚本将 rollback tag 重新指向 Compose 使用的 `promptforge_app` image，然后只执行：
+首次 `docker compose up` 返回非零或新 app 的直接健康门禁失败时，脚本将 rollback tag 重新指向 Compose 使用的 `promptforge_app` image，然后只执行：
 
 ```bash
 cd /opt/promptforge

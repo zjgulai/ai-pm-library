@@ -5,7 +5,7 @@ module: release
 topic: agent-callable-verified-docker-build
 status: stable
 created: 2026-08-21
-updated: 2026-08-21
+updated: 2026-08-22
 owner: self
 source: human+ai
 ---
@@ -425,7 +425,9 @@ CI 不读取 SSH key、不访问生产、不执行 rsync、deploy 或 provider c
 - 不修改 Docker Desktop、ClashX、DNS 或系统代理。
 - 不使用 `npm audit fix --force` 或更换固定 digest 规避网络问题。
 - 不提交 `tmp/`、receipt、截图、env 或 PEM。
-- CI 权限保持 `contents: read`。
+- verify/smoke job 保持 `contents: read`；只有受限 publisher job 额外获得
+  `packages: write`、`id-token: write`、`attestations: write` 和
+  `artifact-metadata: write`。
 - 生产变更必须 app-only，旧 DB 和共享服务保持隔离。
 
 ## 预期文件变更
@@ -465,4 +467,28 @@ CI 不读取 SSH key、不访问生产、不执行 rsync、deploy 或 provider c
 
 ## 当前实施状态
 
-截至 2026-08-21，本设计已由用户确认并完成本地实现与验收：统一构建器、契约测试、CI production-image smoke 编排、deploy fail-closed 健康与回滚编排均已落盘；本地同摘要 GCR build 和隔离 Playwright smoke 已通过。实现改动尚未 commit/push，exact-head CI 与真实生产部署尚未执行，不能据此声明生产能力已验证。
+截至 2026-08-22，remote-build 实现已 commit/push，exact-head CI run
+`32484415897` 使用固定摘要 `linux/amd64` production image 完成 verify 和 smoke。
+首次授权生产调用在 `buildAttempt=0`、app replacement 前因生产主机无法连接
+GCR/Docker Hub 而失败；运行容器未替换，失败后 production smoke 14/14 通过。
+
+用户随后批准 GHCR immutable delivery 扩展。当前本地实现增加以下能力，仍需
+新的 commit/push、exact-head CI、GHCR 匿名 digest pull 和真实部署证据后才能
+提升为生产完成：
+
+- 只读 verify/smoke job 导出已验证镜像、build receipt 和 SHA-256 handoff；
+- 独立 push-only job 独占 `packages: write`，验证 handoff 后发布同一镜像；
+- 所有 Actions 固定到完整 commit SHA，publisher 仅允许 `main` 和当前唯一候选分支；
+- CI 使用 Sigstore-backed GitHub artifact attestation 签署 OCI digest；部署在 SSH 前按
+  repository、workflow、source ref 和 exact SHA 验证该证明；
+- publish receipt 区分 image ID 与 Registry digest，并按 digest 回拉验证；
+- `deploy.sh --ghcr-receipt PATH` 只接受固定仓库的成功 CI receipt，不接受手工 tag；
+- 生产以临时空 Docker config 执行一次 anonymous linux/amd64 digest pull，验证 RepoDigest/image ID/platform，
+  写独立 pull receipt，再 app-only `--no-build` replacement；
+- 继续复用 rollback、120 秒 direct health、production smoke 和 E8 门禁。
+
+GHCR 路径不向生产分发 Registry token，不同步 app source、Compose 或 `.env.prod`，
+只读验证远端 Compose SHA-256 与 exact-head 对齐、scope 仅含 `app` 及 env 权限，
+不运行远端 build，也不触碰 MySQL、
+network、volume 或共享 nginx。package 首次发布后必须单独验证
+public visibility；push 成功本身不等于匿名生产可拉取。

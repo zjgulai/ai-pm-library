@@ -5,7 +5,7 @@ on:
   push:
     branches:
       - main
-      - 'codex/**'
+      - "codex/**"
 
 permissions:
   contents: read
@@ -17,10 +17,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
       - name: Setup Node.js
-        uses: actions/setup-node@v7
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
         with:
           node-version: 20
           cache: npm
@@ -117,6 +117,57 @@ jobs:
         working-directory: app
         run: npm run smoke:e2e
 
+      - name: Export verified image handoff
+        if: github.event_name == 'push' && github.repository == 'zjgulai/ai-pm-library' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/codex/catalog-plugin-refresh-202608')
+        run: |
+          set -euo pipefail
+          mkdir -p tmp/image-handoff
+
+          shopt -s nullglob
+          receipts=(tmp/outputs/docker-build-receipt-*.json)
+          if [[ "${#receipts[@]}" -ne 1 ]]; then
+            echo "Expected exactly one Docker build receipt, found ${#receipts[@]}"
+            exit 1
+          fi
+
+          node - "${receipts[0]}" <<'NODE'
+          import { execFileSync } from 'node:child_process';
+          import fs from 'node:fs';
+
+          const receipt = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'));
+          const imageId = execFileSync(
+            'docker',
+            ['image', 'inspect', '--format', '{{.Id}}', 'promptforge-app:ci'],
+            { encoding: 'utf8' },
+          ).trim();
+          if (
+            receipt.outcome !== 'built' ||
+            receipt.scope !== 'ci' ||
+            receipt.sourceRevision !== process.env.GITHUB_SHA ||
+            receipt.imageId !== imageId ||
+            receipt.platform !== 'linux/amd64'
+          ) {
+            throw new Error('CI image handoff is not bound to the exact verified build receipt');
+          }
+          NODE
+
+          cp "${receipts[0]}" tmp/image-handoff/docker-build-receipt.json
+          docker save --output tmp/image-handoff/promptforge-app-ci.tar promptforge-app:ci
+          (
+            cd tmp/image-handoff
+            sha256sum docker-build-receipt.json promptforge-app-ci.tar > SHA256SUMS
+          )
+
+      - name: Upload verified image handoff
+        if: github.event_name == 'push' && github.repository == 'zjgulai/ai-pm-library' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/codex/catalog-plugin-refresh-202608')
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: promptforge-ci-image-${{ github.run_id }}-${{ github.run_attempt }}
+          path: tmp/image-handoff/
+          if-no-files-found: error
+          retention-days: 1
+          compression-level: 0
+
       - name: Collect production image diagnostics
         if: always()
         run: |
@@ -136,10 +187,106 @@ jobs:
 
       - name: Upload smoke artifacts
         if: always()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: promptforge-smoke-artifacts
           path: |
             tmp/outputs/
             tmp/screenshots/
           if-no-files-found: ignore
+
+  publish-ghcr:
+    name: Publish Verified GHCR Image
+    if: github.event_name == 'push' && github.repository == 'zjgulai/ai-pm-library' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/codex/catalog-plugin-refresh-202608')
+    needs: app
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+      attestations: write
+      artifact-metadata: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - name: Download verified image handoff
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          name: promptforge-ci-image-${{ github.run_id }}-${{ github.run_attempt }}
+          path: tmp/image-handoff
+
+      - name: Verify and load image handoff
+        run: |
+          set -euo pipefail
+          (
+            cd tmp/image-handoff
+            sha256sum --check SHA256SUMS
+          )
+          docker load --input tmp/image-handoff/promptforge-app-ci.tar
+
+          node - tmp/image-handoff/docker-build-receipt.json <<'NODE'
+          import { execFileSync } from 'node:child_process';
+          import fs from 'node:fs';
+
+          const receipt = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'));
+          const imageId = execFileSync(
+            'docker',
+            ['image', 'inspect', '--format', '{{.Id}}', 'promptforge-app:ci'],
+            { encoding: 'utf8' },
+          ).trim();
+          const platform = execFileSync(
+            'docker',
+            ['image', 'inspect', '--format', '{{.Os}}/{{.Architecture}}', 'promptforge-app:ci'],
+            { encoding: 'utf8' },
+          ).trim();
+          if (
+            receipt.outcome !== 'built' ||
+            receipt.scope !== 'ci' ||
+            receipt.sourceRevision !== process.env.GITHUB_SHA ||
+            receipt.imageId !== imageId ||
+            receipt.platform !== 'linux/amd64' ||
+            platform !== 'linux/amd64'
+          ) {
+            throw new Error('Downloaded image handoff does not match the exact-head CI receipt');
+          }
+          NODE
+
+      - name: Log in to GHCR
+        env:
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: printf '%s' "$GHCR_TOKEN" | docker login ghcr.io --username "${GITHUB_ACTOR}" --password-stdin
+
+      - name: Publish exact-head image by immutable digest
+        id: publish
+        working-directory: app
+        env:
+          PROMPTFORGE_BUILD_RECEIPT_PATH: ../tmp/image-handoff/docker-build-receipt.json
+          PROMPTFORGE_GHCR_RUN_ID: ghcr-${{ github.run_id }}-${{ github.run_attempt }}
+        run: |
+          set -euo pipefail
+          bash scripts/publish-ghcr-image.sh
+          receipt="../tmp/outputs/ghcr-publish-receipt-ghcr-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}.json"
+          digest="$(jq -er '.publishedDigest | select(test("^sha256:[0-9a-f]{64}$"))' "$receipt")"
+          printf 'digest=%s\n' "$digest" >> "$GITHUB_OUTPUT"
+
+      - name: Attest published image provenance
+        uses: actions/attest@508db95dd578ae2727ebd6217d5ba78e4fbda05d # v4.2.1
+        with:
+          subject-name: ghcr.io/zjgulai/ai-pm-library
+          subject-digest: ${{ steps.publish.outputs.digest }}
+          push-to-registry: true
+
+      - name: Log out of GHCR
+        if: always()
+        run: docker logout ghcr.io || true
+
+      - name: Upload GHCR publish receipt
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: promptforge-ghcr-publish-receipt-${{ github.run_id }}-${{ github.run_attempt }}
+          path: tmp/outputs/ghcr-publish-receipt-*.json
+          if-no-files-found: error
+          retention-days: 30

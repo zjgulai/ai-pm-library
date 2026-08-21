@@ -101,6 +101,40 @@ if [[ "$dry_run_output" != *"source=gcr"* ]] || [[ "$dry_run_output" != *"No SSH
 fi
 pass "dry-run is zero-side-effect and exposes explicit gcr selection"
 
+ghcr_digest="sha256:$(printf '%064d' 3)"
+ghcr_image_id="sha256:$(printf '%064d' 4)"
+ghcr_receipt="$tmp_root/ghcr-publish-receipt.json"
+cat > "$ghcr_receipt" <<EOF
+{"schemaVersion":1,"runId":"ghcr-1-1","sourceRevision":"$(printf '%040d' 5)","sourceRef":"refs/heads/codex/catalog-plugin-refresh-202608","sourceImageTag":"promptforge-app:ci","sourceImageId":"$ghcr_image_id","platform":"linux/amd64","registry":"ghcr.io","repository":"zjgulai/ai-pm-library","publishedTag":"ghcr.io/zjgulai/ai-pm-library:sha-$(printf '%040d' 5)-run-1-1","publishedDigest":"$ghcr_digest","publishedRef":"ghcr.io/zjgulai/ai-pm-library@$ghcr_digest","eventName":"push","buildRunId":"1","buildRunAttempt":1,"pushAttempt":1,"externalWrite":"occurred","verificationPullAttempt":1,"outcome":"published","failedPhase":"","errorCode":""}
+EOF
+
+: > "$call_log"
+set +e
+ghcr_dry_run_output="$(
+  PATH="$fake_bin:$PATH" \
+  PROMPTFORGE_TEST_CALL_LOG="$call_log" \
+  PROMPTFORGE_DOCKER_BIN="$fake_bin/docker" \
+  bash "$DEPLOY_SCRIPT" --dry-run --ghcr-receipt "$ghcr_receipt" --smoke 2>&1
+)"
+ghcr_dry_run_status=$?
+set -e
+
+if [[ "$ghcr_dry_run_status" -ne 0 ]]; then
+  fail "GHCR receipt dry-run exits successfully without external commands: $ghcr_dry_run_output"
+fi
+if [[ -s "$call_log" ]]; then
+  fail "GHCR receipt dry-run invoked an external command: $(tr '\n' ' ' < "$call_log")"
+fi
+if [[ "$ghcr_dry_run_output" != *"delivery=ghcr"* ]] || \
+   [[ "$ghcr_dry_run_output" != *"Would pull exactly: ghcr.io/zjgulai/ai-pm-library@$ghcr_digest"* ]] || \
+   [[ "$ghcr_dry_run_output" != *"Would replace only app with --no-build"* ]]; then
+  fail "GHCR receipt dry-run does not expose immutable pull and app-only no-build boundaries"
+fi
+if [[ "$ghcr_dry_run_output" == *"Would sync app/"* ]]; then
+  fail "GHCR receipt dry-run incorrectly claims that app source will be synchronized"
+fi
+pass "GHCR receipt dry-run is zero-side-effect and exposes immutable pull delivery"
+
 fixture="$tmp_root/fixture"
 mkdir -p "$fixture/deploy" "$fixture/app/scripts" "$fixture/.github/workflows"
 cp "$DEPLOY_SCRIPT" "$fixture/deploy/deploy.sh"
@@ -169,7 +203,9 @@ cat > "$rollback_bin/docker" <<'EOF'
 #!/usr/bin/env bash
 set -euo pipefail
 printf 'docker %s\n' "$*" >> "$PROMPTFORGE_TEST_CALL_LOG"
+if [[ "$1" == "--config" ]]; then shift 2; fi
 state="$(cat "$PROMPTFORGE_TEST_DOCKER_STATE")"
+delivery="${PROMPTFORGE_TEST_DELIVERY:-build}"
 if [[ "$1" == "compose" ]] && [[ "$*" == *"config --services"* ]]; then
   echo app
   exit 0
@@ -183,19 +219,50 @@ if [[ "$1" == "inspect" ]]; then
     *'.Image'*) printf 'sha256:%064d\n' 1 ;;
     *'.State.Status'*) echo running ;;
     *'.State.Health'*)
-      if [[ "$state" == "new" ]]; then echo unhealthy; else echo healthy; fi
+      if [[ "$state" == "new" ]] && [[ "${PROMPTFORGE_TEST_HEALTH_MODE:-failure}" != "success" ]]; then echo unhealthy; else echo healthy; fi
       ;;
   esac
   exit 0
 fi
-if [[ "$1" == "image" ]] && [[ "$2" == "inspect" ]]; then exit 1; fi
-if [[ "$1" == "image" ]] && [[ "$2" == "tag" ]]; then exit 0; fi
+if [[ "$1" == "image" ]] && [[ "$2" == "inspect" ]]; then
+  if [[ "$delivery" == "ghcr" ]] && [[ "${*: -1}" == "$PROMPTFORGE_TEST_GHCR_REF" ]]; then
+    format="$4"
+    case "$format" in
+      *'.Id'*'.Os'*'.Architecture'*) printf '%s|linux/amd64\n' "$PROMPTFORGE_TEST_GHCR_IMAGE_ID" ;;
+      *'.RepoDigests'*) printf '["%s"]\n' "$PROMPTFORGE_TEST_GHCR_REF" ;;
+      *) printf '%s\n' "$PROMPTFORGE_TEST_GHCR_IMAGE_ID" ;;
+    esac
+    exit 0
+  fi
+  exit 1
+fi
+if [[ "$1" == "pull" ]]; then
+  [[ "$delivery" == "ghcr" ]] && [[ "$*" == "pull --platform linux/amd64 $PROMPTFORGE_TEST_GHCR_REF" ]]
+  exit $?
+fi
+if [[ "$1" == "image" ]] && [[ "$2" == "tag" ]]; then
+  if [[ "$delivery" == "ghcr" ]] && [[ "$3" == "$PROMPTFORGE_TEST_GHCR_REF" ]] && [[ "$4" == "promptforge_app" ]]; then
+    printf '%s\n' new > "$PROMPTFORGE_TEST_DOCKER_STATE"
+  elif [[ "$3" == promptforge_app:rollback-* ]] && [[ "$4" == "promptforge_app" ]]; then
+    printf '%s\n' rollback > "$PROMPTFORGE_TEST_DOCKER_STATE"
+  fi
+  exit 0
+fi
 if [[ "$1" == "compose" ]] && [[ "$*" == *" up "* ]]; then
-  if [[ "$*" == *"--no-build app"* ]]; then printf '%s\n' rollback > "$PROMPTFORGE_TEST_DOCKER_STATE"; else printf '%s\n' new > "$PROMPTFORGE_TEST_DOCKER_STATE"; fi
+  if [[ "$delivery" != "ghcr" ]]; then
+    if [[ "$*" == *"--no-build app"* ]]; then
+      printf '%s\n' rollback > "$PROMPTFORGE_TEST_DOCKER_STATE"
+    else
+      printf '%s\n' new > "$PROMPTFORGE_TEST_DOCKER_STATE"
+      if [[ "${PROMPTFORGE_TEST_REPLACEMENT_FAIL:-0}" == "1" ]]; then exit 1; fi
+    fi
+  elif [[ "$state" == "new" ]] && [[ "${PROMPTFORGE_TEST_REPLACEMENT_FAIL:-0}" == "1" ]]; then
+    exit 1
+  fi
   exit 0
 fi
 if [[ "$1" == "exec" ]]; then
-  [[ "$state" != "new" ]]
+  [[ "$state" != "new" ]] || [[ "${PROMPTFORGE_TEST_HEALTH_MODE:-failure}" == "success" ]]
   exit $?
 fi
 exit 0
@@ -224,7 +291,13 @@ for value in "$@"; do
     *) rewritten+=("$value") ;;
   esac
 done
-/bin/bash -s -- "${rewritten[@]}"
+set +e
+remote_output="$(/bin/bash -s -- "${rewritten[@]}")"
+remote_status=$?
+set -e
+remote_prefix=/opt/promptforge
+printf '%s\n' "${remote_output//$PROMPTFORGE_TEST_REMOTE_DIR/$remote_prefix}"
+exit "$remote_status"
 EOF
 
 cat > "$rollback_bin/rsync" <<'EOF'
@@ -241,6 +314,11 @@ case "$destination" in
     ;;
   *:/opt/promptforge/docker-compose.yml) cp "$source_path" "$PROMPTFORGE_TEST_REMOTE_DIR/docker-compose.yml" ;;
   *:/opt/promptforge/.env.prod) cp "$source_path" "$PROMPTFORGE_TEST_REMOTE_DIR/.env.prod" ;;
+  *:/opt/promptforge/.deploy-receipts/*)
+    mkdir -p "$PROMPTFORGE_TEST_REMOTE_DIR/.deploy-receipts"
+    cp "$source_path" "$PROMPTFORGE_TEST_REMOTE_DIR/.deploy-receipts/${destination##*/}"
+    chmod 600 "$PROMPTFORGE_TEST_REMOTE_DIR/.deploy-receipts/${destination##*/}"
+    ;;
 esac
 EOF
 
@@ -274,7 +352,22 @@ else
   /usr/bin/stat "$@"
 fi
 EOF
-chmod +x "$rollback_bin/docker" "$rollback_bin/ssh" "$rollback_bin/rsync" "$rollback_bin/date" "$rollback_bin/sleep" "$rollback_bin/stat"
+cat > "$rollback_bin/gh" <<'EOF'
+#!/usr/bin/env bash
+set -euo pipefail
+printf 'gh %s\n' "$*" >> "$PROMPTFORGE_TEST_CALL_LOG"
+if [[ "$1" == "api" ]]; then
+  printf '{"repository":{"full_name":"zjgulai/ai-pm-library"},"head_repository":{"full_name":"zjgulai/ai-pm-library"},"event":"push","status":"completed","conclusion":"success","path":".github/workflows/ci.yml","head_sha":"%s","head_branch":"codex/catalog-plugin-refresh-202608","run_attempt":1}\n' "$PROMPTFORGE_TEST_GHCR_SOURCE_REVISION"
+  exit 0
+fi
+if [[ "$1" == "attestation" ]] && [[ "$2" == "verify" ]]; then
+  if [[ "${PROMPTFORGE_TEST_ATTESTATION_MODE:-success}" == "fail" ]]; then exit 1; fi
+  printf '%s\n' '[{"verificationResult":{"statement":{"subject":[]}}}]'
+  exit 0
+fi
+exit 2
+EOF
+chmod +x "$rollback_bin/docker" "$rollback_bin/ssh" "$rollback_bin/rsync" "$rollback_bin/date" "$rollback_bin/sleep" "$rollback_bin/stat" "$rollback_bin/gh"
 
 (
   cd "$rollback_fixture"
@@ -313,5 +406,212 @@ if [[ -z "$rollback_receipt" ]] || ! grep -Fq -- '"outcome": "rolled_back"' "$ro
   fail "fake orchestration did not persist a rolled_back deploy receipt"
 fi
 pass "fake direct-health failure executes one app-only no-build rollback and records rolled_back"
+
+build_replace_remote="$tmp_root/build-replace-remote"
+build_replace_log="$tmp_root/build-replace-calls.log"
+build_replace_state="$tmp_root/build-replace-state"
+build_replace_clock="$tmp_root/build-replace-clock"
+mkdir -p "$build_replace_remote"
+: > "$build_replace_log"
+printf '%s\n' old > "$build_replace_state"
+printf '%s\n' 0 > "$build_replace_clock"
+set +e
+build_replace_output="$(
+  cd "$rollback_fixture"
+  PATH="$rollback_bin:$PATH" \
+  PROMPTFORGE_DOCKER_BIN="$rollback_bin/docker" \
+  PROMPTFORGE_SSH_KEY="$rollback_fixture/key.pem" \
+  PROMPTFORGE_TEST_CALL_LOG="$build_replace_log" \
+  PROMPTFORGE_TEST_DOCKER_STATE="$build_replace_state" \
+  PROMPTFORGE_TEST_REMOTE_DIR="$build_replace_remote" \
+  PROMPTFORGE_TEST_CLOCK="$build_replace_clock" \
+  PROMPTFORGE_TEST_REPLACEMENT_FAIL=1 \
+    bash deploy/deploy.sh 2>&1
+)"
+build_replace_status=$?
+set -e
+if [[ "$build_replace_status" -eq 0 ]] || [[ "$build_replace_output" != *"REPLACEMENT_FAILED"* ]]; then
+  fail "build replacement failure must return nonzero after restoring the old app: $build_replace_output"
+fi
+if [[ "$(grep -Fc -- "docker compose up -d --force-recreate app" "$build_replace_log")" -ne 1 ]] || \
+   [[ "$(grep -Fc -- "docker compose up -d --force-recreate --no-build app" "$build_replace_log")" -ne 1 ]]; then
+  fail "build replacement failure did not execute exactly one app-only rollback"
+fi
+build_replace_receipt="$(find "$build_replace_remote/.deploy-receipts" -name 'deploy-receipt-*.json' -print -quit)"
+if [[ -z "$build_replace_receipt" ]] || ! jq -e '.outcome == "rolled_back" and .directHealth == "not_run"' "$build_replace_receipt" >/dev/null; then
+  fail "build replacement failure did not persist rolled_back evidence"
+fi
+pass "build compose-up failure executes one app-only rollback and records rolled_back"
+
+ghcr_remote="$tmp_root/ghcr-remote"
+ghcr_log="$tmp_root/ghcr-calls.log"
+ghcr_state="$tmp_root/ghcr-state"
+ghcr_clock="$tmp_root/ghcr-clock"
+mkdir -p "$ghcr_remote"
+cp "$rollback_fixture/deploy/docker-compose.yml" "$ghcr_remote/docker-compose.yml"
+cp "$rollback_fixture/deploy/.env.prod" "$ghcr_remote/.env.prod"
+chmod 600 "$ghcr_remote/.env.prod"
+: > "$ghcr_log"
+printf '%s\n' old > "$ghcr_state"
+printf '%s\n' 0 > "$ghcr_clock"
+ghcr_source_revision="$(git -C "$rollback_fixture" rev-parse HEAD)"
+ghcr_digest="sha256:$(printf '%064d' 3)"
+ghcr_image_id="sha256:$(printf '%064d' 4)"
+ghcr_ref="ghcr.io/zjgulai/ai-pm-library@$ghcr_digest"
+ghcr_runtime_receipt="$tmp_root/ghcr-runtime-publish-receipt.json"
+cat > "$ghcr_runtime_receipt" <<EOF
+{"schemaVersion":1,"runId":"ghcr-1-1","sourceRevision":"$ghcr_source_revision","sourceRef":"refs/heads/codex/catalog-plugin-refresh-202608","sourceImageTag":"promptforge-app:ci","sourceImageId":"$ghcr_image_id","platform":"linux/amd64","registry":"ghcr.io","repository":"zjgulai/ai-pm-library","publishedTag":"ghcr.io/zjgulai/ai-pm-library:sha-$ghcr_source_revision-run-1-1","publishedDigest":"$ghcr_digest","publishedRef":"$ghcr_ref","eventName":"push","buildRunId":"1","buildRunAttempt":1,"pushAttempt":1,"externalWrite":"occurred","verificationPullAttempt":1,"outcome":"published","failedPhase":"","errorCode":""}
+EOF
+
+set +e
+ghcr_output="$(
+  cd "$rollback_fixture"
+  PATH="$rollback_bin:$PATH" \
+  PROMPTFORGE_DOCKER_BIN="$rollback_bin/docker" \
+  PROMPTFORGE_SSH_KEY="$rollback_fixture/key.pem" \
+  PROMPTFORGE_TEST_CALL_LOG="$ghcr_log" \
+  PROMPTFORGE_TEST_DELIVERY=ghcr \
+  PROMPTFORGE_TEST_DOCKER_STATE="$ghcr_state" \
+  PROMPTFORGE_TEST_GHCR_IMAGE_ID="$ghcr_image_id" \
+  PROMPTFORGE_TEST_GHCR_REF="$ghcr_ref" \
+  PROMPTFORGE_TEST_GHCR_SOURCE_REVISION="$ghcr_source_revision" \
+  PROMPTFORGE_TEST_HEALTH_MODE=success \
+  PROMPTFORGE_TEST_REMOTE_DIR="$ghcr_remote" \
+  PROMPTFORGE_TEST_CLOCK="$ghcr_clock" \
+    bash deploy/deploy.sh --ghcr-receipt "$ghcr_runtime_receipt" 2>&1
+)"
+ghcr_status=$?
+set -e
+
+if [[ "$ghcr_status" -ne 0 ]]; then
+  fail "fake GHCR digest delivery must complete successfully: $ghcr_output"
+fi
+if [[ "$(grep -Ec -- "^docker --config .+ pull --platform linux/amd64 $ghcr_ref$" "$ghcr_log")" -ne 1 ]]; then
+  fail "GHCR delivery did not pull the exact digest exactly once"
+fi
+if grep -Fq -- "compose build" "$ghcr_log" || grep -Fq -- ":/opt/promptforge/app/" "$ghcr_log"; then
+  fail "GHCR delivery rebuilt remotely or synchronized app source"
+fi
+if grep -Fq -- ":/opt/promptforge/docker-compose.yml" "$ghcr_log" || \
+   grep -Fq -- ":/opt/promptforge/.env.prod" "$ghcr_log"; then
+  fail "GHCR image-only delivery synchronized production configuration"
+fi
+if [[ "$(grep -Fc -- "docker compose up -d --force-recreate --no-build app" "$ghcr_log")" -ne 1 ]]; then
+  fail "GHCR delivery did not perform exactly one app-only no-build replacement"
+fi
+if grep -Fq -- "--remove-orphans" "$ghcr_log" || grep -Eq -- 'docker (network|volume)' "$ghcr_log" || \
+   grep -Eq -- '(promptforge_mysql|ai_video_nginx)' "$ghcr_log"; then
+  fail "GHCR delivery attempted an out-of-scope service or Docker mutation"
+fi
+pull_receipt="$(find "$ghcr_remote/.deploy-receipts" -name 'docker-pull-receipt-*.json' -print -quit)"
+deploy_receipt="$(find "$ghcr_remote/.deploy-receipts" -name 'deploy-receipt-*.json' -print -quit)"
+if [[ -z "$pull_receipt" ]] || ! jq -e --arg ref "$ghcr_ref" --arg imageId "$ghcr_image_id" --arg revision "$ghcr_source_revision" \
+  '.outcome == "pulled" and .deliveryMode == "ghcr" and .imageRef == $ref and .imageId == $imageId and .sourceRevision == $revision and .pullAttempt == 1 and .anonymousPull == true and .platform == "linux/amd64"' \
+  "$pull_receipt" >/dev/null; then
+  fail "GHCR delivery did not persist a valid pull receipt"
+fi
+if [[ -z "$deploy_receipt" ]] || ! jq -e --arg ref "$ghcr_ref" \
+  '.outcome == "deployed" and .deliveryMode == "ghcr" and .imageRef == $ref and .directHealth == "passed" and .buildReceiptPath == ""' \
+  "$deploy_receipt" >/dev/null; then
+  fail "GHCR delivery did not persist a valid deploy receipt"
+fi
+if [[ "$(stat -c '%a' "$pull_receipt" 2>/dev/null || stat -f '%Lp' "$pull_receipt")" != "600" ]] || \
+   [[ "$(stat -c '%a' "$deploy_receipt" 2>/dev/null || stat -f '%Lp' "$deploy_receipt")" != "600" ]]; then
+  fail "GHCR pull/deploy receipts are not mode 600"
+fi
+pass "fake GHCR receipt pulls one exact digest and performs one app-only no-build replacement"
+
+provenance_log="$tmp_root/provenance-failure-calls.log"
+: > "$provenance_log"
+set +e
+provenance_output="$(
+  cd "$rollback_fixture"
+  PATH="$rollback_bin:$PATH" \
+  PROMPTFORGE_DOCKER_BIN="$rollback_bin/docker" \
+  PROMPTFORGE_SSH_KEY="$rollback_fixture/key.pem" \
+  PROMPTFORGE_TEST_CALL_LOG="$provenance_log" \
+  PROMPTFORGE_TEST_GHCR_SOURCE_REVISION="$ghcr_source_revision" \
+  PROMPTFORGE_TEST_ATTESTATION_MODE=fail \
+    bash deploy/deploy.sh --ghcr-receipt "$ghcr_runtime_receipt" 2>&1
+)"
+provenance_status=$?
+set -e
+if [[ "$provenance_status" -eq 0 ]] || [[ "$provenance_output" != *"GHCR_PROVENANCE_INVALID"* ]]; then
+  fail "invalid signed provenance must block GHCR deployment: $provenance_output"
+fi
+if grep -Eq -- '^(ssh|rsync|docker) ' "$provenance_log"; then
+  fail "invalid signed provenance reached a production or Docker command"
+fi
+pass "invalid signed OCI provenance blocks before SSH, rsync, or Docker"
+
+compose_drift_remote="$tmp_root/compose-drift-remote"
+compose_drift_log="$tmp_root/compose-drift-calls.log"
+mkdir -p "$compose_drift_remote"
+cp "$rollback_fixture/deploy/docker-compose.yml" "$compose_drift_remote/docker-compose.yml"
+printf '%s\n' '# drift with the same app-only service list' >> "$compose_drift_remote/docker-compose.yml"
+cp "$rollback_fixture/deploy/.env.prod" "$compose_drift_remote/.env.prod"
+chmod 600 "$compose_drift_remote/.env.prod"
+: > "$compose_drift_log"
+set +e
+compose_drift_output="$(
+  cd "$rollback_fixture"
+  PATH="$rollback_bin:$PATH" \
+  PROMPTFORGE_SSH_KEY="$rollback_fixture/key.pem" \
+  PROMPTFORGE_TEST_CALL_LOG="$compose_drift_log" \
+  PROMPTFORGE_TEST_GHCR_SOURCE_REVISION="$ghcr_source_revision" \
+  PROMPTFORGE_TEST_REMOTE_DIR="$compose_drift_remote" \
+    bash deploy/deploy.sh --ghcr-receipt "$ghcr_runtime_receipt" 2>&1
+)"
+compose_drift_status=$?
+set -e
+if [[ "$compose_drift_status" -eq 0 ]] || [[ "$compose_drift_output" != *"REMOTE_CONFIG_INVALID"* ]]; then
+  fail "remote Compose drift must block GHCR deployment: $compose_drift_output"
+fi
+if grep -Eq -- '^(rsync |docker .*(pull| compose up))' "$compose_drift_log"; then
+  fail "remote Compose drift reached receipt sync, image pull, or app replacement"
+fi
+pass "remote Compose hash drift blocks before receipt sync, pull, or replacement"
+
+ghcr_replace_remote="$tmp_root/ghcr-replace-remote"
+ghcr_replace_log="$tmp_root/ghcr-replace-calls.log"
+ghcr_replace_state="$tmp_root/ghcr-replace-state"
+ghcr_replace_clock="$tmp_root/ghcr-replace-clock"
+mkdir -p "$ghcr_replace_remote"
+cp "$rollback_fixture/deploy/docker-compose.yml" "$ghcr_replace_remote/docker-compose.yml"
+cp "$rollback_fixture/deploy/.env.prod" "$ghcr_replace_remote/.env.prod"
+chmod 600 "$ghcr_replace_remote/.env.prod"
+: > "$ghcr_replace_log"
+printf '%s\n' old > "$ghcr_replace_state"
+printf '%s\n' 0 > "$ghcr_replace_clock"
+set +e
+ghcr_replace_output="$(
+  cd "$rollback_fixture"
+  PATH="$rollback_bin:$PATH" \
+  PROMPTFORGE_DOCKER_BIN="$rollback_bin/docker" \
+  PROMPTFORGE_SSH_KEY="$rollback_fixture/key.pem" \
+  PROMPTFORGE_TEST_CALL_LOG="$ghcr_replace_log" \
+  PROMPTFORGE_TEST_DELIVERY=ghcr \
+  PROMPTFORGE_TEST_DOCKER_STATE="$ghcr_replace_state" \
+  PROMPTFORGE_TEST_GHCR_IMAGE_ID="$ghcr_image_id" \
+  PROMPTFORGE_TEST_GHCR_REF="$ghcr_ref" \
+  PROMPTFORGE_TEST_GHCR_SOURCE_REVISION="$ghcr_source_revision" \
+  PROMPTFORGE_TEST_REMOTE_DIR="$ghcr_replace_remote" \
+  PROMPTFORGE_TEST_CLOCK="$ghcr_replace_clock" \
+  PROMPTFORGE_TEST_REPLACEMENT_FAIL=1 \
+    bash deploy/deploy.sh --ghcr-receipt "$ghcr_runtime_receipt" 2>&1
+)"
+ghcr_replace_status=$?
+set -e
+if [[ "$ghcr_replace_status" -eq 0 ]] || [[ "$ghcr_replace_output" != *"REPLACEMENT_FAILED"* ]]; then
+  fail "GHCR replacement failure must return nonzero after restoring the old app: $ghcr_replace_output"
+fi
+if [[ "$(grep -Fc -- "docker compose up -d --force-recreate --no-build app" "$ghcr_replace_log")" -ne 2 ]]; then
+  fail "GHCR replacement failure did not execute one replacement and one app-only rollback"
+fi
+ghcr_replace_receipt="$(find "$ghcr_replace_remote/.deploy-receipts" -name 'deploy-receipt-*.json' -print -quit)"
+if [[ -z "$ghcr_replace_receipt" ]] || ! jq -e '.outcome == "rolled_back" and .directHealth == "not_run"' "$ghcr_replace_receipt" >/dev/null; then
+  fail "GHCR replacement failure did not persist rolled_back evidence"
+fi
+pass "GHCR compose-up failure executes one app-only rollback and records rolled_back"
 
 echo "PASS: $PASS_COUNT deploy contract checks"
