@@ -219,6 +219,8 @@ deploy_receipt="$REMOTE_DIR/.deploy-receipts/deploy-receipt-$run_id.json"
 rollback_tag="promptforge_app:rollback-$run_id"
 ssh_args=(-i "$SSH_KEY" -o StrictHostKeyChecking=accept-new)
 remote_target="$REMOTE_USER@$REMOTE_HOST"
+ssh_empty_arg=__PROMPTFORGE_EMPTY_ARG__
+remote_image_ref_arg="${IMAGE_REF:-$ssh_empty_arg}"
 
 log "=== PromptForge app-only deploy ==="
 log "Run ID: $run_id"
@@ -263,7 +265,7 @@ set +e
 remote_output="$(
   ssh "${ssh_args[@]}" "$remote_target" bash -s -- \
     "$REMOTE_DIR" "$run_id" "$source_revision" "$DELIVERY_MODE" "$BUILD_SOURCE" \
-    "$build_receipt" "$pull_receipt" "$ghcr_publish_receipt" "$IMAGE_REF" \
+    "$build_receipt" "$pull_receipt" "$ghcr_publish_receipt" "$remote_image_ref_arg" \
     "$deploy_receipt" "$rollback_tag" "$HEALTH_TIMEOUT_SECONDS" <<'REMOTE_ORCHESTRATOR'
 set -euo pipefail
 remote_dir="$1"
@@ -275,6 +277,7 @@ build_receipt="$6"
 pull_receipt="$7"
 ghcr_publish_receipt="$8"
 image_ref="$9"
+if [[ "$image_ref" == "__PROMPTFORGE_EMPTY_ARG__" ]]; then image_ref=""; fi
 deploy_receipt="${10}"
 rollback_tag="${11}"
 HEALTH_TIMEOUT_SECONDS="${12}"
@@ -568,15 +571,21 @@ if [[ "$RUN_SMOKE" -eq 1 ]]; then
   if [[ "$smoke_status" -ne 0 ]]; then deploy_outcome=verification_failed; fi
 fi
 
+final_image_ref_arg="${IMAGE_REF:-$ssh_empty_arg}"
+final_build_receipt_arg="${build_receipt_for_receipt:-$ssh_empty_arg}"
+final_smoke_report_arg="${smoke_report_path:-$ssh_empty_arg}"
 ssh "${ssh_args[@]}" "$remote_target" bash -s -- \
-  "$deploy_receipt" "$run_id" "$source_revision" "$DELIVERY_MODE" "$artifact_receipt" "$expected_delivery_receipt" "$IMAGE_REF" "$build_receipt_for_receipt" \
+  "$deploy_receipt" "$run_id" "$source_revision" "$DELIVERY_MODE" "$artifact_receipt" "$expected_delivery_receipt" "$final_image_ref_arg" "$final_build_receipt_arg" \
   "$old_image_id" "$new_image_id" "$old_container_id" "$new_container_id" "$old_health" \
-  "$rollback_tag" "$smoke_report_path" "$deploy_outcome" "$deploy_started_at" <<'REMOTE_FINALIZE'
+  "$rollback_tag" "$final_smoke_report_arg" "$deploy_outcome" "$deploy_started_at" <<'REMOTE_FINALIZE'
 set -euo pipefail
 deploy_receipt="$1"; run_id="$2"; source_revision="$3"; delivery_mode="$4"
 artifact_receipt="$5"; delivery_receipt="$6"; image_ref="$7"; build_receipt="$8"
 old_image_id="$9"; new_image_id="${10}"; old_container_id="${11}"; new_container_id="${12}"; old_health="${13}"
 rollback_tag="${14}"; smoke_report_path="${15}"; outcome="${16}"; started_at="${17}"
+if [[ "$image_ref" == "__PROMPTFORGE_EMPTY_ARG__" ]]; then image_ref=""; fi
+if [[ "$build_receipt" == "__PROMPTFORGE_EMPTY_ARG__" ]]; then build_receipt=""; fi
+if [[ "$smoke_report_path" == "__PROMPTFORGE_EMPTY_ARG__" ]]; then smoke_report_path=""; fi
 finished_at="$(date -u '+%Y-%m-%dT%H:%M:%SZ')"
 umask 077
 receipt_tmp="$deploy_receipt.tmp.$$"

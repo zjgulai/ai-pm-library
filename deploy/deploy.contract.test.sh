@@ -286,6 +286,7 @@ fi
 shift 3
 rewritten=()
 for value in "$@"; do
+  [[ -n "$value" ]] || continue
   case "$value" in
     /opt/promptforge*) rewritten+=("$PROMPTFORGE_TEST_REMOTE_DIR${value#/opt/promptforge}") ;;
     *) rewritten+=("$value") ;;
@@ -442,6 +443,40 @@ if [[ -z "$build_replace_receipt" ]] || ! jq -e '.outcome == "rolled_back" and .
   fail "build replacement failure did not persist rolled_back evidence"
 fi
 pass "build compose-up failure executes one app-only rollback and records rolled_back"
+
+build_success_remote="$tmp_root/build-success-remote"
+build_success_log="$tmp_root/build-success-calls.log"
+build_success_state="$tmp_root/build-success-state"
+build_success_clock="$tmp_root/build-success-clock"
+mkdir -p "$build_success_remote"
+: > "$build_success_log"
+printf '%s\n' old > "$build_success_state"
+printf '%s\n' 0 > "$build_success_clock"
+set +e
+build_success_output="$(
+  cd "$rollback_fixture"
+  PATH="$rollback_bin:$PATH" \
+  PROMPTFORGE_DOCKER_BIN="$rollback_bin/docker" \
+  PROMPTFORGE_SSH_KEY="$rollback_fixture/key.pem" \
+  PROMPTFORGE_TEST_CALL_LOG="$build_success_log" \
+  PROMPTFORGE_TEST_DOCKER_STATE="$build_success_state" \
+  PROMPTFORGE_TEST_REMOTE_DIR="$build_success_remote" \
+  PROMPTFORGE_TEST_CLOCK="$build_success_clock" \
+  PROMPTFORGE_TEST_HEALTH_MODE=success \
+    bash deploy/deploy.sh 2>&1
+)"
+build_success_status=$?
+set -e
+if [[ "$build_success_status" -ne 0 ]]; then
+  fail "fake build delivery without smoke must complete successfully: $build_success_output"
+fi
+build_success_receipt="$(find "$build_success_remote/.deploy-receipts" -name 'deploy-receipt-*.json' -print -quit)"
+if [[ -z "$build_success_receipt" ]] || ! jq -e \
+  '.outcome == "deployed" and .deliveryMode == "build" and .imageRef == "" and .buildReceiptPath != "" and .smokeReportPath == ""' \
+  "$build_success_receipt" >/dev/null; then
+  fail "build delivery without smoke did not preserve empty finalizer arguments"
+fi
+pass "build delivery without smoke preserves empty finalizer arguments"
 
 ghcr_remote="$tmp_root/ghcr-remote"
 ghcr_log="$tmp_root/ghcr-calls.log"
