@@ -828,7 +828,7 @@ Stars 为 2026-08-01 GitHub API 快照，只用作活跃度/采用面信号，�
 
 ## 2026-08-21 DeepSeek Harness 常用插件增量融合
 
-本轮仅更新本地候选目录，不执行插件安装、Git commit、push 或生产部署。来源以
+内容整理阶段先完成本地候选目录，不执行真实插件安装；后续发布批次经完整门禁后完成 Git commit、push 和 app-only 生产部署。来源以
 [`0xsline/awesome-deepseek-harness`](https://github.com/0xsline/awesome-deepseek-harness)
 的 README/CATALOG 为发现层，并逐项回查上游公开仓库。
 
@@ -859,3 +859,14 @@ Stars、版本、License、最近 push 和 bundle manifest 均为 2026-08-21 Git
 
 本轮融合后 `plugin` 从 8 增至 18；七类总量从 956 增至 966。候选和拒绝理由记录在
 `tmp/outputs/deepseek-harness-plugin-candidates-20260821.json`。
+
+### 发布回执
+
+- 内容与验收门禁 commit 为 `64e4ec326e80744f788ceb8f6651aae810c14118`，候选分支和 `origin/main` 均已推送到该 SHA。
+- GitHub CI run `32437689916` 在同一 SHA 完成 `verify`、production server 和 E2E，结论为 success。
+- 部署前备份为 `/opt/promptforge/.deploy-backups/20260821095306-64e4ec3-dsh-plugins`；旧镜像回滚标签为 `promptforge_app:rollback-20260821095306-64e4ec3`。
+- `deploy.sh --smoke` 先远端 build 成功，再只 recreate `promptforge_app`；新镜像为 `sha256:8aab5a54c2379ba2daab4b1639bae14658afed2868adbfc85f5408bdb3da3bb4`。
+- 生产 smoke 14 项全部通过，报告为 `tmp/outputs/smoke-e2e-report-20260821015424.json`；公网与容器目录均为 217/330/95/95/98/113/18，总计 966。
+- 独立 E8 验证新增 ID `1307548` 和 `1307557`、ping 200、legacy `prompts.list` 404、nginx-to-app、`nginx -t`、env `600` 和共宿主状态。
+- 旧 `promptforge_mysql` 的容器 ID、镜像、启动时间和 `promptforge_net` 与部署前一致；没有使用 `--remove-orphans`，没有删除容器、网络或 volume。
+- 本机 Docker build 因 `auth.docker.io` IPv4/IPv6 超时未进入项目构建阶段；远端使用同一固定基础镜像摘要成功构建并通过生产 E8，未修改镜像源或摘要。
