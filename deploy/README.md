@@ -5,7 +5,7 @@ module: deploy
 topic: production-deployment
 status: stable
 created: 2026-05-31
-updated: 2026-07-08
+updated: 2026-08-21
 owner: self
 source: human+ai
 ---
@@ -33,7 +33,7 @@ source: human+ai
 - 如使用其他 key 路径，执行前设置 `PROMPTFORGE_SSH_KEY=/absolute/path/to/key.pem`。
 - `deploy/.env.prod` 只保留在本地和远端部署目录，不提交 Git。
 
-## 首次部署
+## 部署入口
 
 ```bash
 cd deploy
@@ -44,8 +44,11 @@ cd deploy
 
 - 同步 `app/` 到远端 `/opt/promptforge/app`。
 - 同步 `docker-compose.yml` 和 `.env.prod`。
-- 构建 app 镜像。
-- 启动 app 并做基础健康检查。
+- 从 `app/Dockerfile` 读取唯一的 Node image digest，通过 Docker Hub 验证后只构建一次 app 镜像。
+- 为当前健康 app 镜像创建不可覆盖的 rollback tag。
+- 只替换 `app` service，并在 120 秒内验证 container running、Docker healthy 和容器内 ping。
+
+当前编排要求远端已有健康的 `promptforge_app`，以保证替换前具备可验证的回滚基线；缺少或不健康时部署会在 build 前失败。
 
 ## 日常更新
 
@@ -56,15 +59,25 @@ cd deploy
 
 更新代码并重启 app。catalog 数据在 `npm run build` 阶段由 `app/src/data/catalogSource.json` 生成到 `public/catalog/*.json`。
 
+默认 Registry source 仍是 Docker Hub。只有在人工明确选择并确认 mirror manifest digest 与 Dockerfile pin 完全一致时，才使用受控 GCR mirror：
+
+```bash
+./deploy.sh --node-mirror gcr
+./deploy.sh --node-mirror gcr --smoke
+```
+
+不支持任意 mirror hostname，也不会在 Docker Hub 失败后自动回退到 GCR。每次调用最多执行一次 build。
+
 无副作用部署计划预检：
 
 ```bash
 cd deploy
 ./deploy.sh --dry-run
 ./deploy.sh --dry-run --smoke
+./deploy.sh --dry-run --node-mirror gcr --smoke
 ```
 
-`--dry-run` 只输出目标主机、待同步路径、远端 Docker 命令、可选生产 smoke 计划和本地前置状态；不执行 SSH、rsync、远端 Docker、生产 smoke 或 provider call。
+`--dry-run` 只从 Dockerfile 解析 canonical ref，输出 source、planned effective ref、digest、同步/回滚/健康检查和可选 smoke 计划；不执行 Registry probe、Docker、SSH、rsync、生产 smoke 或 provider call。
 
 部署后执行线上 E2E smoke：
 
@@ -88,7 +101,35 @@ cd app
 npm run smoke:e2e:prod
 ```
 
-默认报告写入 `tmp/outputs/`，截图写入 `tmp/screenshots/`。CI 使用本地 `npm run start` 的生产 server 跑同一套 smoke，生产部署使用 `PROMPTFORGE_SMOKE_BASE_URL=https://kg.lute-tlz-dddd.top/`。
+默认报告写入 `tmp/outputs/`，截图写入 `tmp/screenshots/`。CI 对统一构建器产出的 production image 跑同一套 smoke；生产部署使用 `PROMPTFORGE_SMOKE_BASE_URL=https://kg.lute-tlz-dddd.top/`。
+
+直接健康门禁通过后，`--smoke` 失败会写入 `verification_failed` deploy receipt 并返回非零，但不会自动回滚。完整 smoke 可能受公网、浏览器代理或共宿主影响，不能单独证明新 app 是根因；脚本会输出保留的 rollback tag 和精确人工回滚命令。
+
+## 发布前工作区门禁
+
+真实部署要求当前 `HEAD` 可解析为完整 Git SHA，并且会进入发布链路的路径必须干净：
+
+- `app/`
+- `deploy/`
+- `.github/workflows/ci.yml`
+
+这些路径存在 tracked diff 或未跟踪文件时，脚本以 `WORKTREE_NOT_CLEAN` 在 SSH/rsync 前失败。`drafts/`、`tmp/` 和不会同步的用户材料不阻塞，也不会被暂存或传输。该完整 SHA 会作为 `PROMPTFORGE_SOURCE_REVISION` 传给远端统一构建器。
+
+## Build 与 deploy receipts
+
+远端构建器写入：
+
+```text
+/opt/promptforge/.deploy-receipts/docker-build-receipt-<runId>.json
+```
+
+只有 receipt 同时满足 `outcome=built`、`buildAttempt=1`、source/scope/mode/runId/worktree 契约、expected/observed digest 相等、`sourceRevision` 与本地完整 SHA 一致且权限为 `600` 时，编排器才执行 `docker compose up -d --force-recreate app`。最终部署回执写入：
+
+```text
+/opt/promptforge/.deploy-receipts/deploy-receipt-<runId>.json
+```
+
+receipt 目录权限为 `700`、文件为 `600`，通过同目录临时文件原子发布。receipt 不记录 Registry token、proxy URL、SSH key、env 内容或完整 Docker config。
 
 ## DB-backed 路线
 
@@ -122,15 +163,20 @@ npm run smoke:e2e:prod
 
 ## 回滚
 
-应用代码回滚：
+替换前，脚本盘点当前 container/image/health，并创建：
 
-```bash
-ssh -i ~/.ssh/promptforge_ai_video.pem ubuntu@101.34.52.232
-cd /opt/promptforge
-git status
+```text
+promptforge_app:rollback-<runId>
 ```
 
-当前部署脚本以 rsync 同步代码，不保留远端 Git 历史。生产级回滚应补充版本化 release 目录或镜像 tag。在补齐前，推荐通过本地 Git 回退到上一个稳定提交后重新部署。
+新 app 的直接健康门禁失败时，脚本将 rollback tag 重新指向 Compose 使用的 `promptforge_app` image，然后只执行：
+
+```bash
+cd /opt/promptforge
+docker compose up -d --force-recreate --no-build app
+```
+
+自动回滚成功仍以 `rolled_back` 返回非零；回滚本身失败则为 `rollback_failed`。rollback tag 不自动清理，镜像清理属于需要另行盘点和授权的破坏性维护任务。禁止使用 `--remove-orphans`，部署和回滚都只指定 `app`，不操作旧 MySQL、network、volume 或共享 nginx。
 
 数据库回滚：
 

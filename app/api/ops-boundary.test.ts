@@ -34,9 +34,13 @@ describe("ops boundary", () => {
 
     expect(output).toContain("=== PromptForge Deploy Dry Run ===");
     expect(output).toContain("Would run: rsync app/");
-    expect(output).toContain("Would run remotely: docker compose build --no-cache app");
+    expect(output).toContain(
+      "Would run remotely: app/scripts/verified-production-build.sh --source dockerhub --scope deploy --mode compose",
+    );
     expect(output).toContain("Would run local production E2E smoke");
-    expect(output).toContain("No SSH, rsync, remote Docker, production smoke, or provider call executed.");
+    expect(output).toContain(
+      "No SSH, rsync, Registry, Docker, production smoke, or provider call executed.",
+    );
   });
 
   it("guards db:push behind explicit local-only confirmation", () => {

@@ -38,27 +38,101 @@ jobs:
         working-directory: app
         run: npx playwright install --with-deps chromium
 
-      - name: Start production server
+      - name: Build verified production image
         working-directory: app
+        env:
+          DOCKER_DEFAULT_PLATFORM: linux/amd64
         run: |
           mkdir -p ../tmp/outputs ../tmp/screenshots
-          npm run start > ../tmp/outputs/ci-app-server.log 2>&1 &
-          echo "$!" > ../tmp/outputs/ci-app-server.pid
+          npm run docker:build:verified -- --source gcr --scope ci --mode docker
 
-      - name: Wait for production server
+          shopt -s nullglob
+          receipts=(../tmp/outputs/docker-build-receipt-*.json)
+          if [[ "${#receipts[@]}" -ne 1 ]]; then
+            echo "Expected exactly one Docker build receipt, found ${#receipts[@]}"
+            exit 1
+          fi
+
+          node - "${receipts[0]}" <<'NODE'
+          import fs from 'node:fs';
+
+          const receipt = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'));
+          if (
+            receipt.outcome !== 'built' ||
+            receipt.scope !== 'ci' ||
+            receipt.imageTag !== 'promptforge-app:ci' ||
+            receipt.platform !== 'linux/amd64'
+          ) {
+            throw new Error('Docker build receipt does not match the fixed CI image contract');
+          }
+          NODE
+
+          actual_platform="$(docker image inspect --format '{{.Os}}/{{.Architecture}}' promptforge-app:ci)"
+          if [[ "$actual_platform" != "linux/amd64" ]]; then
+            echo "Expected linux/amd64 image, got $actual_platform"
+            exit 1
+          fi
+          docker image inspect promptforge-app:ci > ../tmp/outputs/ci-production-image-inspect.json
+
+      - name: Start production image on random port
         run: |
-          for i in {1..30}; do
-            if curl -fsS http://127.0.0.1:3000/api/trpc/ping?batch=1\&input=%7B%7D > /dev/null; then
+          container_name="promptforge-ci-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          printf '%s\n' "$container_name" > tmp/outputs/ci-container-name.txt
+          docker run -d \
+            --name "$container_name" \
+            --platform linux/amd64 \
+            -p 127.0.0.1::3000 \
+            promptforge-app:ci > tmp/outputs/ci-container-id.txt
+
+          endpoint="$(docker port "$container_name" 3000/tcp | head -n 1)"
+          port="${endpoint##*:}"
+          if [[ ! "$port" =~ ^[0-9]+$ ]]; then
+            echo "Unable to resolve the random localhost port"
+            exit 1
+          fi
+          printf 'PROMPTFORGE_SMOKE_BASE_URL=http://127.0.0.1:%s/\n' "$port" >> "$GITHUB_ENV"
+
+      - name: Wait for production image
+        run: |
+          container_name="$(<tmp/outputs/ci-container-name.txt)"
+          for i in {1..60}; do
+            if curl -fsS "${PROMPTFORGE_SMOKE_BASE_URL}api/trpc/ping?batch=1&input=%7B%7D" > /dev/null \
+              && docker exec "$container_name" node -e '
+                fetch("http://127.0.0.1:3000/api/trpc/ping?batch=1&input=%7B%7D")
+                  .then(async response => {
+                    const body = await response.text();
+                    if (!response.ok || !body.includes("\"ok\"")) process.exit(1);
+                  })
+                  .catch(() => process.exit(1));
+              ' > /dev/null 2>&1; then
               exit 0
             fi
-            sleep 1
+            sleep 2
           done
-          cat tmp/outputs/ci-app-server.log
+          docker logs "$container_name" > tmp/outputs/ci-production-image.log 2>&1
+          cat tmp/outputs/ci-production-image.log
           exit 1
 
       - name: Run E2E smoke
         working-directory: app
         run: npm run smoke:e2e
+
+      - name: Collect production image diagnostics
+        if: always()
+        run: |
+          if [[ -s tmp/outputs/ci-container-name.txt ]]; then
+            container_name="$(<tmp/outputs/ci-container-name.txt)"
+            docker logs "$container_name" > tmp/outputs/ci-production-image.log 2>&1 || true
+            docker inspect "$container_name" > tmp/outputs/ci-production-container-inspect.json 2>&1 || true
+          fi
+
+      - name: Stop production image
+        if: always()
+        run: |
+          if [[ -s tmp/outputs/ci-container-name.txt ]]; then
+            container_name="$(<tmp/outputs/ci-container-name.txt)"
+            docker rm -f "$container_name" || true
+          fi
 
       - name: Upload smoke artifacts
         if: always()

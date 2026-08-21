@@ -3,7 +3,7 @@ title: 智能体可调用的固定摘要 Docker 构建与部署门禁设计
 doc_type: architecture
 module: release
 topic: agent-callable-verified-docker-build
-status: review
+status: stable
 created: 2026-08-21
 updated: 2026-08-21
 owner: self
@@ -462,3 +462,7 @@ CI 不读取 SSH key、不访问生产、不执行 rsync、deploy 或 provider c
 ## 实施边界
 
 本设计批准后先创建实现计划，再实施本地和 CI 变更。Commit、push、真实部署分别遵循独立授权；设计批准不自动授权 push 或生产变更。
+
+## 当前实施状态
+
+截至 2026-08-21，本设计已由用户确认并完成本地实现与验收：统一构建器、契约测试、CI production-image smoke 编排、deploy fail-closed 健康与回滚编排均已落盘；本地同摘要 GCR build 和隔离 Playwright smoke 已通过。实现改动尚未 commit/push，exact-head CI 与真实生产部署尚未执行，不能据此声明生产能力已验证。
